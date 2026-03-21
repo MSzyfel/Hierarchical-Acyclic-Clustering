@@ -1,0 +1,49 @@
+\begin{algorithm}[H]
+\caption{Main \textsc{HAC} Procedure}
+\label{alg:main-hac}
+\DontPrintSemicolon
+\KwIn{A weighted graph $G=(V,E,c)$}
+\KwOut{A clustering tree for $G$}
+\tcp{Preprocessing}
+Solve \textsc{LP-HAC} on $G$ and obtain a fractional solution $(x,y)$\;
+\ForEach{$t\in [n]$ and $i\in V$}{
+    Set $\hat{y}_i^t \gets 1$ if $y_i^t \geq 1/2$, and set $\hat{y}_i^t \gets 0$ otherwise\;
+}
+\ForEach{$t\in [n]$ and $ij\in E$}{
+    $\hat{x}_{i,j}^t\gets \min\brc{1, 2\cdot x_{i,j}^t}$\;
+}
+Solve \textsc{SDP-MILP-HAC} induced by $\hat{\mathbf{y}}$ to obtain $\hat{\mathbf{v}}$\;
+\tcp{Clustering phase}
+\Return{$\textsc{Recursive-HAC}(G,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$}\;
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Recursive \textsc{HAC} Procedure}
+\label{alg:recursive-hac}
+\DontPrintSemicolon
+\KwIn{A connected subgraph $H$, together with the guides $(\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$ restricted to $V(H)$}
+\KwOut{A clustering tree for $H$}
+\If{$H$ is a tree}{
+    \Return{empty clustering}\;
+}
+Set $r\gets n\br{H}$ and $t\gets r/4$\;
+Set $X_H\gets \brc{i\in V\br{H}: \hat{y}_i^t = 1}$\;
+Run the \textsc{FES} rounding algorithm on \textsc{LP-FES} guide on $H$ at level $t$ from $(\hat{\mathbf{x}},\hat{\mathbf{y}})$ and let $F_H\subseteq E(H)$ be the returned cut\;
+
+Initialize a root node $u_H$ of the output tree and label it by $F_H$\;
+\ForEach{$A\in H\setminus F_H$}{
+    \If{$A$ is a tree or $n\br{A}\leq r/2$}{
+        Recursively compute $T_A\gets \textsc{Recursive-HAC}(A,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$\;
+        Attach $T_A$ as a child of $u_H$\;
+    }
+    \Else{
+        Run the \textsc{$4$-BP} rounding algorithm on \textsc{SDP-$4$-BP} guide on $A$ at level $t$ from $\hat{\mathbf{v}}$ and let $B_A\subseteq E(A)$ be the returned cut\;
+        Create a child node $u_A$ of $u_H$ and label it by $B_A$\;
+        \ForEach{$B\in A\setminus B_A$}{
+            Recursively compute $T_B\gets \textsc{Recursive-HAC}(B,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$\;
+            Attach $T_B$ as a child of $u_A$\;
+        }
+    }
+}
+\Return{the clustering tree rooted at $u_H$}\;
+\end{algorithm}
