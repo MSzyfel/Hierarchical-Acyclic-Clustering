@@ -1,0 +1,81 @@
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \begin{tikzpicture}[scale=0.95, every node/.style={circle,draw,inner sep=1.5pt,font=\scriptsize}]
+            \node (a1) at (-2.6,1.8) {$a$};
+            \node (a2) at (-3.6,0.8) {$b$};
+            \node (a3) at (-3.0,-0.6) {$c$};
+            \node (a4) at (-1.8,-0.6) {$d$};
+            \draw[cutB,very thick] (a1)--(a2);
+            \draw (a2)--(a3);
+            \draw (a3)--(a4);
+            \draw[cutB,very thick] (a4)--(a1);
+            \draw (a1)--(a3);
+
+            \node (b1) at (-0.2,1.4) {$e$};
+            \node (b2) at (0.7,0.9) {$f$};
+            \node (b3) at (0.3,-1.1) {$g$};
+            \node (b4) at (-1.0,0.0) {$h$};
+            \draw[cutD,very thick] (b1)--(b2);
+            \draw (b2)--(b3);
+            \draw (b3)--(b4);
+            \draw (b4)--(b1);
+
+            \node (c1) at (2.8,1.8) {$i$};
+            \node (c2) at (3.8,0.8) {$j$};
+            \node (c3) at (3.2,-0.6) {$k$};
+            \node (c4) at (2.0,-0.6) {$l$};
+            \draw[cutE,very thick] (c1)--(c2);
+            \draw[cutF,very thick] (c2)--(c3);
+            \draw (c3)--(c4);
+            \draw[cutE,very thick] (c4)--(c1);
+            \draw (c2)--(c4);
+
+            \node (x1) at (-1.5,1.1) {$m$};
+            \node (x2) at (1.95,1.95) {$n$};
+            \draw[cutB,very thick] (x1)--(a1);
+            \draw (x1)--(a4);
+            \draw[cutA,very thick] (x1)--(b1);
+            \draw[cutC,very thick] (x2)--(b2);
+            \draw[cutC,very thick] (x2)--(b3);
+            \draw (x2)--(c1);
+            \draw[cutE,very thick] (x2)--(c4);
+            \draw[cutA,very thick] (a4)--(b4);
+            \draw[cutC,very thick] (b4)--(c4);
+        \end{tikzpicture}
+        \\\smallskip
+        {\small Input graph $G$ (14 vertices).}
+    \end{minipage}
+    \begin{minipage}[t]{0.5\textwidth}
+        \centering
+        \begin{tikzpicture}[x=1.15cm,y=0.85cm, every node/.style={draw,rounded corners,inner sep=2pt,font=\scriptsize,align=center}]
+            \node (r) at (0,0) {$V(G)$\\cut: $\{\textcolor{cutA}{em},\textcolor{cutA}{dh}\}$};
+            \node (u1) at (-1.4,-1.2) {$\{a,b,c,d,m\}$\\cut: $\{\textcolor{cutB}{ab},\textcolor{cutB}{ad},\textcolor{cutB}{am}\}$};
+            \node (u2) at (1.4,-1.2) {$\{e,f,g,h,i,j,k,l,n\}$\\cut: $\{\textcolor{cutC}{fn},\textcolor{cutC}{gn},\textcolor{cutC}{lh}\}$};
+            \node (v1) at (-2.0,-2.35) {$\{a,b,c,d\}$};
+            \node (v2) at (-0.8,-2.35) {$\{m\}$};
+            \node (w1) at (0.6,-2.35) {$\{e,f,g,h\}$\\cut: $\{\textcolor{cutD}{ef}\}$};
+            \node (w2) at (2.2,-2.35) {$\{i,j,k,l,n\}$\\cut: $\{\textcolor{cutE}{nl},\textcolor{cutE}{li},\textcolor{cutE}{ij}\}$};
+            \node (z1) at (0.1,-3.35) {$\{e,f,g,h\}$};
+            \node (z2) at (1.6,-3.35) {$\{i,n\}$};
+            \node (z3) at (3.3,-3.35) {$\{j,k,l\}$\\cut: $\{\textcolor{cutF}{kj}\}$};
+            \node (t1) at (3.3,-4.35) {$\{j,k,l\}$};
+
+            \draw (r)--(u1);
+            \draw (r)--(u2);
+            \draw (u1)--(v1);
+            \draw (u1)--(v2);
+            \draw (u2)--(w1);
+            \draw (u2)--(w2);
+            \draw (w1)--(z1);
+            \draw (w2)--(z2);
+            \draw (w2)--(z3);
+            \draw (z3)--(t1);
+        \end{tikzpicture}
+        \\\smallskip
+        {\small A hierarchical acyclic clustering tree $T$.}
+    \end{minipage}
+    \caption{Example of an instance for \textsc{HAC} and one feasible hierarchical acyclic clustering: recursion stops once each remaining component is a tree.}
+    \label{fig:hac-intro-example}
+\end{figure}

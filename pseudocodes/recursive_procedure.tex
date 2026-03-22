@@ -1,0 +1,30 @@
+\begin{algorithm}[H]
+\caption{Recursive \textsc{HAC} Procedure}
+\label{alg:recursive-hac}
+\DontPrintSemicolon
+\KwIn{A connected subgraph $H$, together with the guides $(\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$ restricted to $V(H)$}
+\KwOut{A clustering tree for $H$}
+\If{$H$ is a tree}{
+    \Return{$T$ a clustering tree consisting of a single node labeled by $H$}\;
+}
+Set $r\gets n\br{H}$ and $t\gets r/4$\;
+Set $X_H\gets \brc{i\in V\br{H}: \hat{y}_i^t = 1}$\;
+Run the \textsc{FES} rounding algorithm on \textsc{LP-FES} guide on $H$ at level $t$ from $(\hat{\mathbf{x}},\hat{\mathbf{y}})$ and let $F_H\subseteq E(H)$ be the returned cut\;
+
+Initialize a root node $u_H$ of the output tree and label it by $F_H$\;
+\ForEach{$A\in H\setminus F_H$}{
+    \If{$A$ is a tree or $n\br{A}\leq r/2$}{
+        Recursively compute $T_A\gets \textsc{Recursive-HAC}(A,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$\;
+        Attach $T_A$ as a child of $u_H$\;
+    }
+    \Else{
+        Run the \textsc{$4$-BP} rounding algorithm on \textsc{SDP-$4$-BP} guide on $A$ at level $t$ from $\hat{\mathbf{v}}$ and let $B_A\subseteq E(A)$ be the returned cut\;
+        Create a child node $u_A$ of $u_H$ and label it by $B_A$\;
+        \ForEach{$C\in A\setminus B_A$}{
+            Recursively compute $T_C\gets \textsc{Recursive-HAC}(C,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$\;
+            Attach $T_C$ as a child of $u_A$\;
+        }
+    }
+}
+\Return{the clustering tree rooted at $u_H$}\;
+\end{algorithm}

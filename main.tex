@@ -14,18 +14,7 @@
 \usepackage{hyperref}                   % Hyperlinks
 \SetArgSty{textnormal}
 
-
-\newcommand{\br}[1]{\mathopen{}\left( #1 \right)}
-\newcommand{\brc}[1]{\mathopen{}\left\{ #1 \right\}}
-\newcommand{\spr}[1]{\mathopen{}\left| #1 \right|}
-\newcommand{\fl}[1]{\mathopen{}\left\lfloor #1 \right\rfloor}
-\newcommand{\cl}[1]{\mathopen{}\left\lceil #1 \right\rceil}
-\newcommand{\angl}[1]{\mathopen{}\langle #1 \rangle}
-\newcommand{\e}[1]{\exp\left\{ #1 \right\}}
-\newcommand{\Cent}{\texttt{Cent}}
-\newcommand{\APP}{\texttt{APP}}
-\newcommand{\OPT}{\texttt{OPT}}
-\newcommand{\COST}{{c}}
+\input{macros.tex}
 
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{lemma}[theorem]{Lemma}
@@ -53,7 +42,7 @@
 
 % Abstract
 \begin{abstract}
-    We consider a variation on the classical hierarchical clustering problem, in which we modify the halting condition of the recursive process to stop when the remaining cluster is a tree. We call this problem \textsc{Hierarchical Acyclic Clustering}. This problem is a hierarchical version of the \textsc{Feedback Edge Set}. We measure the quality of a hierarchical clustering tree by adapted Dasgupta's clustering objective. We show that this problem admits an $O\br{\log n\log\log n}$-approximation algorithm. The main technical contribution is a novel two-fold relaxation of the problem, in which we use \textsc{LP} relaxation of the problem to gain information about the vertices whose cycle we need to cut at each level of the recursion and a further \textsc{SDP} relaxation in order to gain information about the edges we need to cut in order to decrease the size of the instance efficiently. The key ingredient in our algorithm is that both of the relaxed solutions can be decomposed into several solutions to the relaxations of the \textsc{FES} and \textsc{$k$-Balanced Partitioning} problems respectively. which we use to lower bound the cost of the clustering tree returned by our algorithm.
+    We consider a variation on the classical \textsc{Hierarchical Clustering} problem, in which we modify the halting condition of the recursive process to stop when the remaining cluster is a tree. We call this problem \textsc{Hierarchical Acyclic Clustering} and we measure the quality of a solution using adapted Dasgupta's clustering objective. This problem can be seen as marriage between \textsc{Feedback Edge Set} and \textsc{Hierarchical Clustering}. By exploiting these connections we obtain an $O\br{\log n\log\log n}$-approximation algorithm. The main technical contribution of our work is a novel, two-fold way of relaxing the ILP formulation of \textsc{HAC} in order to extract valuable information in polynomial time. Firstly, we use an \textsc{LP} relaxation of the ILP to gain information about the vertices whose cycles we need to cut at each level of the recursion. Secondly, we use a further \textsc{SDP} relaxation in order to gain information about the edges we need to cut in order to decrease the size of the instance efficiently. The key ingredient in our algorithm is that both LP and SDP solutions can be decomposed into several solutions to the relaxations of the \textsc{FES} and \textsc{$k$-Balanced Partitioning} instances respectively. This allows us to use already known rounding procedures for the aforementioned problems as essential subroutines in our procedure. To complement this result, we show that the problem cannot be approximated within any constant factor under the Small Set Expansion Hypothesis.
 \end{abstract}
 
 % Keywords
@@ -62,146 +51,10 @@
 
 \bigskip
 
-% Introduction
-\section{Introduction}
-Hierarchical clustering is a way to recursively partition data into clusters. Given a weighted graph $G = (V, E, c)$, where $c\colon E\to \mathbb{N}$, the goal is to find a clustering tree $T$, in which the root node $u$ corresponds to a subset of edges $S_u$ to be deleted first. Each child node $v$ is then associated with a connected component of $G\setminus S_u$. The process continues recursively until all edges are deleted and the remaining vertices are singletons. For each node $u$, define $G_u$ to be the graph in which $u$ is the root of the subtree. The \textit{Dasgupta's clustering objective} is defined as $\COST\br{T} = \sum_{u\in T} c(S_u) \cdot |V(G_u)|$. The problem of finding a hierarchical clustering tree with minimum cost is known as the \textsc{Hierarchical Clustering} problem.
-
-In this work we focus on a variant of the above problem, in which we modify the halting condition of the recursive process. Instead of stoping when all edges are deleted, the cluster tree stops when the remaining cluster is a tree. We call this problem \textsc{Hierarchical Acyclic Clustering}. This problem is a hierarchical version of the \textsc{Feedback Edge Set}. The goal is again to minimize $\COST\br{T} = \sum_{u\in T} c(S_u) \cdot |V(G_u)|$.
-
-
-Hierarchical clustering is a clusterization technique far richer in its structure and applications. Since such a object encodes a hierarchical decomposition of data, one may treat each node of $T$ as a way to encode an iteratively refined way of partitioning the domain. For example any phylogenetic tree is a clusterization as well as file system, management hierarchy in a company, socio-political divisions of people and many more. The motivation of relaxing the halting condition of the clustering is due to the fact that trees are among simplest classes of graphs and therefore most of their properties are well understood. Moreover, many problems which are hard on general graphs can be solved efficiently on trees. Since the usual clustering tree consists of cutting all edges of the input graph, such an object might becomes too large to store. Since many real life networks are sparse, it is sensible to ask whether we can get a more compact representation of the hierarchical decomposition of the data. 
-
-Among possible usages of this problem, we can build a heuristic for the \textsc{Hierarchical Clustering} problem by solving the \textsc{Hierarchical Acyclic Clustering}. The idea is as follows: we firstly run the algorithm for \textsc{HAC} to get a clustering tree $T$, such that each occurring cluster $A$ is a tree. Then, for each such $A$ we run any algorithm for \textsc{HC} on $A$ to find the remaining levels of clusterization. Since \textsc{HC} of a tree with a constant factor error can be found in polynomial time \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics} the most expensive part of the cost of the clustering tree will be the cost of the \textsc{HAC}. Therefore, the better approximation algorithm we have for \textsc{HAC}, the better the performance of the heuristic becomes. 
-Note that one can also use this heuristic dynamically, in the sense that the \textsc{HAC} is stored statically and whenever any cluster needs to be refined, we can run the \textsc{HC} algorithm on the corresponding tree cluster. This way we can get a dynamic clustering tree which is not stored in its entirety but rather built on demand.
-
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}[every node/.style={circle,draw,inner sep=1.4pt,font=\small}]
-        \node (u) at (0.8,0) {$u$};
-        \node (a1) at (-2.2,-1.7) {$a_1$};
-        \node (a2) at (-1.0,-1.7) {$a_2$};
-        \node (a3) at (0.2,-1.7) {$a_3$};
-        \node (ak) at (1.8,-1.7) {$a_k$};
-        \node (dots) [draw=none] at (1.0,-1.7) {$\cdots$};
-
-        \node (b1) at (3.5,-0.6) {$b_1$};
-        \node (b2) at (2.9,-1.7) {$b_2$};
-        \node (b3) at (4.1,-1.7) {$b_3$};
-
-        \draw (u) -- (a1);
-        \draw (u) -- (a2);
-        \draw (u) -- (a3);
-        \draw (u) -- (ak);
-        \draw (u) -- (b1);
-
-        \draw (b1) -- (b2);
-        \draw (b2) -- (b3);
-        \draw (b3) -- (b1);
-    \end{tikzpicture}
-    \caption{Example of graph for which the multiplicative difference between values of both clustering objective functions is $\Theta\br{n}$.}
-    \label{fig:star-triangle-example}
-\end{figure}
-We also observe that despite similariies, the objective of \textsc{HAC} can be much lower then the objective of \textsc{HC}. Let $G$ by a star with one of the vertices of the star being replaced by a triangle. The optimal clustering tree for \textsc{HC} will have cost $\Theta\br{n^2}$, since at least $(n-2)/2$ vertices have need to have at least $(n-2)/2$ edges cut before they become singletions. On the other hand, the optimal clustering tree for \textsc{HAC} will have cost $\Theta\br{n}$, since the  optimal clustering consists of cutting one edge of the triangle.
-
-% Literature Review
-
-\section{$O\br{\log n\log\log n}$-approximation for \textsc{HAC}}
-
-Below we show how to devise an approximation algorithm for \textsc{HAC} consisiting of two steps. In the preprocessing step we use mathemathical programming in order to build a guide for our next algorithmic step. To do so, we start by encoding the problem using an \textsc{ILP}. We merge the properties of the \textsc{ILP} for \textsc{FES} used by \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} with the \textsc{SDP} for \textsc{HC} used by Charikar et. al in \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}.
-% These two properties will come useful during the rounding process in which we will show, that we can decompose our SDP either into several solutions to an SPD relaxation of $k$-Balanced Partitioning Problem or into several solutions to an LP relaxation of FES. 
-Our relaxation of this \textsc{ILP} is twofold and each step serves two purposes, either choosing the subset of vertices, whose cycle we need to cut at each level or hoosing the edges which need to be cut in order to decrease the size of the instance efficiently. To achieve the former of these goals, we relax the integrality of the variables to get an \textsc{LP} relaxation which can be solved in polynomial time using the ellipsoid method. Then, we do a partial rounding routine to get an integral solution for the variables responsible for choosing the subset of vertices, whose cycle we need to cut at each level. By doing so, we obtain an partially integral solution to the \textsc{LP} relaxation without excessive increase in cost. This relaxation can be then decomposed into several instances of the \textsc{FES-LP} relaxation which will come useful during the rercursive processing. In the second step of preprocessing, we remove the variables reponsible for the above choice and we relax the remaining variables using the $\ell_2^2$-metric constraints to get an \textsc{SDP} relaxation. This \textsc{SDP} relaxation can be solved in polynomial time using interior point methods. Similarly, as before we decompose this \textsc{SDP} into several instances of the \textsc{SDP} relaxation for \textsc{$k$-BP} which we will use during the recursive step.
-
-During the recursive step, we use the above decomposition of both \textsc{LP} and \textsc{SDP} relaxations to guide our recursive algorithm. At each level of the recursion, we pick the level $t=n\br{G}/4$ and we use the solution for the \textsc{LP} at $t$ as a valid solution for the \textsc{FES} problem. Therefore, we can use the rounding algorithm by \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} to find a subset of edges $S$ to cut at level $t$ such that the cost of cutting these edges is comparable to the cost of the \textsc{LP} solution at level $t$. After cutting these edges, we get several connected components. Let $H$ be such a component. If $H$ is a tree, we are done with this component. If $n\br{H}\leq n\br{G}/2$, we can process $H$ recursively. Otherwise, we use the solution for the \textsc{SDP} at level $t$ as a valid solution for the \textsc{$k$-BP} with $k=4$. Therefore, we can use the rounding algorithm by \cite{PartitioningGraphsIntoBalancedComponents} to find a subset of edges $S'$ to cut such that the size of all connected components after cutting $S'$ is at most $n\br{G}/2$ and the cost of cutting these edges is comparable to the cost of the \textsc{SDP} solution at level $t$. After cutting these edges, we get several connected components which we process recursively.
-
-Since we decompose the \textsc{LP} into separate levels by summing up over all the levels of the recursion we will be able to show that our algorithm achieves an approximation ratio of $O\br{\alpha\br{n}+\beta\br{n}}$, where $\alpha\br{n}$ is the approximation ratio of the rounding algorithm for \textsc{$k$-BP} and $\beta\br{n}$ is the approximation ratio of the rounding algorithm for \textsc{FES}. Since $\alpha\br{n}=O\br{\log n\log\log n}$ and $\beta\br{n}=O\br{\sqrt{\log n}}$, we get an approximation ratio of $O\br{\log n\log\log n}$ for \textsc{HAC}.
-
-\subsection{\textsc{ILP} formulation of \textsc{HAC} and its two relaxations}
-    We decompose the clustering tree $T$ into $n$ separate edge cut levels. For each level $t$, we require one of the two properties to hold. Each cluster is either of size at most $t$ or it is a tree. The partition at level $t-1$ is a superset of partition at level $t$. For each pair of vertices $i,j\in V$ and level $1\in [n]$ we define a variable $x_{i,j}^t$ to be $1$ if $i$ and $j$ are in different clusters at level $t$ and $0$ otherwise. We also define a variable $y_i^t$ to be $1$ if all cycles in $G$ containing $i$ are cut at level $t$ and $0$ otherwise. We have the following constraints:
-    \begin{enumerate}
-        \item \textbf{refinement:} $x_{i,j}^t \leq x_{i,j}^{t-1}$ for all $i,j\in V$ and $t\in [n]$. This is because if vertices $i$ and $j$ are in different clusters at level $t$, they must also be in different clusters at level $t-1$. Moreover, $y_i^t \leq y_i^{t-1}$ for all $i\in V$ and $t\in [n]$. This is because if all cycles containing vertex $i$ are cut at level $t$, they must also be cut at level $t-1$.
-        \item \textbf{triangle inequality:} $x_{i,k}^t \leq x_{i,j}^t + x_{j,k}^t$ for all $i,j,k\in V$ and $t\in [n]$. This is because if vertices $i$ and $k$ are in the same cluster at level $t$, then vertices $i$ and $j$ must be in the same cluster or vertices $j$ and $k$ must be in the same cluster at level $t$.
-        \item \textbf{$\ell_2^2$-metric:} $x_{i,j}^t = \frac{1}{2}\|v_i^t - v_j^t\|_2^2$ for all $i,j\in V$ and $t\in [n]$. The triangle inequality is implied by the $\ell_2^2$-metric constraint. With each vertex $i$ we associate a unit vector $v_i^t$ in a high-dimensional space. All vertices in one cluster at level $t$ are mapped to the same vector, while vertices in different clusters are mapped to orthogonal vectors. For completeness we also include $y_{i}^t = \frac{1}{2}\|u_{i,1}^t - u_{i,2}^t\|_2^2$. Note that this constraint is merely a vehicle to simulate $y_i^t\in[0,1]$ as a semidefinite constraint.
-        \item \textbf{cycle cutting:} For every cycle $C$ in $G$, every vertex $i\in C$ and every level $t\in [n]$ we have $\sum_{ij\in C} x_{i,j}^t \geq y_{i}^t$. This is because if all cycles containing vertex $i$ are cut at level $t$, then at least one edge in every cycle containing vertex $i$ must be cut at level $t$. Additionally, we have $y_i^1=1$, since every cycle eventually needs to be cut.
-        \item \textbf{spreading:} For every vertex $i\in V$ and every level $t\in [n]$ we have $\sum_{j\in V} x_{i,j}^t \geq \br{1-y_i^t}\cdot (n-t)$. This is because if the cluster containing vertex $i$ at level $t$ has size at most $t$, then either all cycles containing vertex $i$ are cut at level $t$ or at least $n-t$ vertices are in different clusters than vertex $i$ at level $t$.
-    \end{enumerate}
-
-    Our relaxation is two-fold. Firstly, we introduce the following \textsc{ILP} formulation \textsc{ILP-HAC} for the \textsc{HAC} problem:
-    \begin{align}
-        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c_{ij} \cdot x_{i,j}^t\\
-        \text{subject to} \quad &x_{i,j}^t \leq x_{i,j}^{t-1} \quad \forall i,j\in V, t\in [n],\\
-        &y_i^t \leq y_i^{t-1} \quad \forall i\in V, t\in [n],\\
-        &y_i^1 = 1 \quad \forall i\in V,\\
-        &x_{i,k}^t \leq x_{i,j}^t + x_{j,k}^t \quad \forall i,j,k\in V, t\in [n],\\
-        &\sum_{ij\in C} x_{i,j}^t \geq y_{i}^t \quad \forall \text{ cycles } C, i\in C, t\in [n],\\ \label{cycle_constraint_ILP}
-        &\sum_{j\in V} x_{i,j}^t \geq \br{1-y_i^t}\cdot (n-t) \quad \forall i\in V, t\in [n],\\ \label{spreading_constraint_ILP}
-        &x_{i,j}^t \in \{0,1\} \quad \forall i,j\in V, t\in [n],\\
-        &y_i^t \in \{0,1\} \quad \forall i\in V, t\in [n].
-    \end{align}
-
-    Observe, that the \textsc{LP} relaxation \textsc{LP-HAC} of the above \textsc{ILP} has an exponential number of constraints, since there can be exponentially many cycles in $G$. However, by \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} we know that there exists a polynomial time separation oracle for the cycle cutting constraints. Therefore, we can solve this \textsc{LP} in polynomial time using the ellipsoid method.
-
-    \begin{lemma}
-        Round the values of $y_i^t$ to get $\hat{y}_i^t = 1$ if $y_i^t \geq 1/2$ and $\hat{y}_i^t = 0$ otherwise and $\hat{x}_{i,j}^t=\min \brc{1,2y_i^t}$. Then, $\hat{x}, \hat{y}$ is a feasible solution for \textsc{LP-HAC} with cost at most $2\cdot \sum_{t=1}^n \sum_{ij\in E} c_{ij} \cdot x_{i,j}^t$.
-    \end{lemma}
-    \begin{proof}
-        Consider any constraint of type (\ref{cycle_constraint_ILP}). If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and the constraint is satisfied. If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$. If for any $ij\in C$, $x_{i,j}^t=1$ then the constraint is satisfied. Otherwise $\sum_{ij\in C} \hat{x}_{i,j}^t = \sum_{ij\in C} 2y_i^t \geq 1$. Consider any constraint of type (\ref{spreading_constraint_ILP}). If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$ and the constraint is satisfied. If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and $\sum_{j\in V} \hat{x}_{i,j}^t = \sum_{j\in V} 2y_i^t \geq n-t$. The cost of the solution is at most $2\cdot \sum_{t=1}^n \sum_{ij\in E} c_{ij} \cdot x_{i,j}^t$ since $\hat{x}_{i,j}^t \leq 2x_{i,j}^t$ for all $i,j\in V$ and $t\in [n]$.
-    \end{proof}
-
-    Fix some choice of $\hat{y}_i^t$ in the above \textsc{LP} so we would have a \textsc{MILP} relaxation \textsc{MILP-HAC} of \textsc{ILP-HAC}. Now we relax the integrality of $x_{i,j}^t$ variables by introducing the $\ell_2^2$-metric constraints. We get the following \textsc{SDP} relaxation \textsc{SDP-MILP-HAC} for the \textsc{MILP-HAC} defined above:
-    \begin{align}
-        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c_{ij} \cdot x_{i,j}^t=\sum_{t=1}^n \sum_{ij\in E} c_{ij} \cdot\frac{1}{2}\|v_i^t - v_j^t\|_2^2\\
-        \text{subject to} \quad &x_{i,j}^t \leq x_{i,j}^{t-1} \quad \forall i,j\in V, t\in [n],\\
-        &x_{i,k}^t \leq x_{i,j}^t + x_{j,k}^t \quad \forall i,j,k\in V, t\in [n],\\
-        &x_{i,j}^t = \frac{1}{2}\|v_i^t - v_j^t\|_2^2 \quad \forall i,j\in V, t\in [n],\\
-        &\|v_i^t\|_2^2 = 1 \quad \forall i\in V, t\in [n],\\
-        &\sum_{ij\in C} x_{i,j}^t \geq 1 \quad \forall \text{ cycles } C, i\in C, \hat{y}_{i}^t=1, t\in [n],\\
-        &\sum_{j\in V} x_{i,j}^t \geq n-t \quad \forall i\in V, \hat{y}_{i}^t=0, t\in [n]\\
-        &x_{i,j}^t \in [0,1] \quad \forall i,j\in V, t\in [n].
-    \end{align}
-
-    
-\subsection{\textsc{SDP} for \textsc{$k$-BP} and \textsc{LP} for \textsc{FES}}
-
-    By \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} we have the following \textsc{LP} relaxation \textsc{LP-FES} for the \textsc{FES} problem:
-    \begin{align}
-        \min \quad &\sum_{ij\in E} c_{ij} x_{i,j}\\
-        \text{subject to} \quad &\sum_{ij\in C} x_{i,j} \geq 1, \quad \forall \text{ cycles } C \text{ going through vertex } i\in X,\\
-        &0\leq x_{i,j} \leq 1, \quad \forall ij\in E.
-    \end{align}
-    We have the following theorem \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}:
-    \begin{theorem}[Even et al. \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}]
-        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c_{ij} \leq O\br{\log n\log\log n}\cdot \sum_{ij\in E} c_{ij} x_{i,j}$.
-    \end{theorem}
-    The next lemma allows us to decompose the \textsc{MILP-HAC} into several instances of \textsc{LP-FES}:
-    \begin{lemma}
-        Let $A$ be a non tree cluster of size $r$. Then \textsc{MILP-HAC} restricted to set $A$ a level $r\leq t$ is a valid solution for the \textsc{FES} problem with the set of vertices $X=\brc{i\in V\br{A}\colon \hat{y}_i^t=1}$.
-    \end{lemma}
-    \begin{proof}
-        In \textsc{MILP-HAC} at level $t$, there are some additional constraints of type $x_{i,k}^t\leq x_{i,j}^t + x_{j,k}^t$ and $\sum_{j\in V} x_{i,j}^t \geq n-t$ for every vertex $i$ such that $\hat{y}_i^t=0$. However, this is acceptable since additional constraints yield a stricter relaxation. Now consider any $i\in V$. If $\hat{y}_i^t=0$, then the cycle constraint is always satisfied, which corresponds to the fact that no cycle going through vertex $i$ needs to be cut. If $\hat{y}_i^t=1$, then the cycle constraint is satisfied since it is explicitly included in the \textsc{MILP-HAC} formulation, which corresponds to the fact that every cycle going through vertex $i$ needs to be cut. Moreover, since $i\in X$, we have that all cycle constraints in the \textsc{LP-FES} formulation are included in the \textsc{MILP-HAC} formulation. Therefore, the claim follows.
-    \end{proof}
-    By \cite{PartitioningGraphsIntoBalancedComponents} we have the following \textsc{SDP} relaxation \textsc{SDP-$k$-BP} for the \textsc{$k$-BP}:
-    \begin{align}
-        \min \quad &\sum_{ij\in E} c_{ij}\cdot \frac{1}{2}\|v_i - v_j\|_2^2\\
-        \text{subject to} \quad &\|v_i-v_j\|_2^2+ \|v_j-v_k\|_2^2 \geq \|v_i-v_k\|_2^2, \quad \forall i,j,k\in V,\\
-        &\sum_{j\in S} \|v_i-v_j\|_2^2 \geq \spr{S}-\frac{n}{k},\quad \forall S\subseteq V, i\in S.
-    \end{align}
-    We have the following theorem \cite{PartitioningGraphsIntoBalancedComponents}
-    \begin{theorem}[Krauthgamer et al.\cite{PartitioningGraphsIntoBalancedComponents}]
-        There exists a bicriteria polynomial time algorithm which given an instance of the \textsc{$k$-BP} and a solution to the above \textsc{SDP-$k$-BP}, finds a subset of edges $S$ such that every connected component of $G\setminus S$ has size at most $2n/k$ and $\sum_{ij\in S} c_{ij} \leq O\br{\sqrt{\log n}}\cdot \sum_{ij\in E} c_{ij}\cdot \frac{1}{2}\|v_i - v_j\|_2^2$.
-    \end{theorem}
-    The next lemma is a modification of the argument of \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics} which shows how to decompose the \textsc{SDP-MILP-HAC} into several instances of the above \textsc{SDP-$k$-BP}:
-    \begin{lemma}
-        Let $A$ be a non tree cluster of size $r$. Then \textsc{MILP-HAC} restricted to set $A$ a level $t=r/4$ is a valid solution for \textsc{$k$-BP} with $k=4$.
-    \end{lemma}
-    \begin{proof}
-        In \textsc{SDP-MILP-HAC} at level $t$, there are some additional constraints of type $x_{i,j}^t \in [0,1]$, $\|v_i^t\|_2^2=1$ and $\sum_{ij\in C} x_{i,j}^t \geq 1$ for every cycle $C$ containing vertex $i$ such that $\hat{y}_i^t=1$. However, this is acceptable since additional constraints yield a stricter relaxation. Now consider the spreading constraints. In \textsc{SDP-MILP-HAC} we have $\sum_{j\in V} x_{i,j}^t \geq n-t$ for every vertex $i$ such that $\hat{y}_i^t=0$. Observe that, for no vertex $i\in V\br{A}$ we have $\hat{y}_i^t=1$, therefore, for every $S\subseteq V\br{A}$ we have $\sum_{j\in S} x_{i,j}^t\geq \spr{S}-t$ which is the \textsc{SDP-$k$-BP} spreading constraint. Since the triagnle inequality is equivalent in both \textsc{SDP}s the claim follows.
-    \end{proof}
-
-    \subsection{The Algorithm}
-
-    We now summarize the algorithm in two parts. The main procedure first performs the preprocessing phase, in which it computes the partially rounded \textsc{LP} solution $(\hat{x},\hat{y})$ and the vector solution $\bar{v}$ obtained from the \textsc{SDP}, and then it invokes the recursive routine. The recursive routine only builds the clustering tree, using the guides prepared by the main procedure.
-
-    \input{pseudocodes/hac_procedures.tex}
+\input{sections/introduction.tex}
+\input{sections/preliminaries.tex}
+\input{sections/approximation.tex}
+\input{sections/hardness.tex}
 
 \bibliographystyle{plain}
 \bibliography{references}
