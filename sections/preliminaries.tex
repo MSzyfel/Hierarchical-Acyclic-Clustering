@@ -1,21 +1,22 @@
 \section{Preliminaries}
 
-For convenience denote $[n]=\brc{0,\dots, n}$.
+Denote by $[n]=\brc{1,\dots, n}$.
 
 \subsection{Problems definitions}
 
 Given a weighted graph $\br{G, E, c}$, where $c\colon E\to \mathbb{N}$, we define the following problems:
 \begin{itemize}
-    \item \textsc{Hierarchical Clustering} (\textsc{HC}): find a clustering tree $T$ for $G$ which minimizes $\COST\br{T} = \sum_{u\in T} c(S_u) \cdot |V(G_u)|$, where $S_u$ is the subset of edges cut at node $u$ and $G_u$ is the graph corresponding to the subtree rooted at $u$.
-    \item \textsc{Hierarchical Acyclic Clustering} (\textsc{HAC}): find an acyclic clustering tree $T$ for $G$ which minimizes $\COST\br{T} = \sum_{u\in T} c(S_u) \cdot |V(G_u)|$, where $S_u$ is the subset of edges cut at node $u$ and $G_u$ is the graph corresponding to the subtree rooted at $u$.
-    \item \textsc{Feedback Edge Set} (\textsc{FES}): given additional set $X$ of interesting veritces, find a subset of edges $S\subseteq E$ such that $G\setminus S$ contains no cycles going through vertices in $X$ and $\sum_{e\in S} c(e)$ is minimized.
-    \item \textsc{$k$-Balanced Partitioning} (\textsc{$k$-BP}): find a subset of edges $S\subseteq E$ such that every connected component of $G\setminus S$ has size at most $\frac{n}{k}$ and $\sum_{e\in S} c(e)$ is minimized. An approximation algorithm for $k$-\textsc{BP} is called bicriteria if it returns a subset of edges $S$ such that $\sum_{e\in S} c(e)$ is at most $\alpha$ times the cost of the optimal solution to $k$-\textsc{BP} and every connected component of $G\setminus S$ has size at most $\beta\cdot \frac{n}{k}$.
-    \item \textsc{Minimum Linear Arrangement} (\textsc{MLA}): find a linear arrangement $\pi$ of the vertices of $G$ that minimizes $\COST\br{\pi} = \sum_{uv\in E} c(uv) \cdot |\pi(u) - \pi(v)|$.
+    \item \textsc{Hierarchical Clustering} (\textsc{HC}): find a clustering tree $T$ for $G$ which minimizes $\COST_G\br{T} = \sum_{u\in V\br{T}} c(S_u) \cdot |V(G_u)|$, where $S_u$ is the subset of edges cut at node $u$ and $G_u$ is the graph corresponding to the subtree rooted at $u$.
+    \item \textsc{Hierarchical Acyclic Clustering} (\textsc{HAC}): find an acyclic clustering tree $T$ for $G$ which minimizes $\COST_G\br{T} = \sum_{u\in V\br{T}} c(S_u) \cdot |V(G_u)|$, where $S_u$ is the subset of edges cut at node $u$ and $G_u$ is the graph corresponding to the subtree rooted at $u$.
+    \item \textsc{Feedback Edge Set} (\textsc{FES}): given additional set $X$ of interesting veritces, find a subset of edges $S\subseteq E$ such that $G\setminus S$ contains no cycles going through vertices in $X$ and $\COST_G\br{S} = \sum_{e\in S} c(e)$ is minimized.
+    \item \textsc{$k$-Balanced Partitioning} (\textsc{$k$-BP}): find a subset of edges $S\subseteq E$ such that every connected component of $G\setminus S$ has size at most $\frac{n}{k}$ and $\COST_G\br{S} = \sum_{e\in S} c(e)$ is minimized. An approximation algorithm for $k$-\textsc{BP} is called bicriteria if it returns a subset of edges $S$ such that $\COST_G\br{S}$ is at most $\alpha$ times the cost of the optimal solution to $k$-\textsc{BP} and every connected component of $G\setminus S$ has size at most $\beta\cdot \frac{n}{k}$.
+    \item \textsc{Minimum Linear Arrangement} (\textsc{MLA}): find a linear arrangement $\pi$ of the vertices of $G$ that minimizes $\COST_G\br{\pi} = \sum_{uv\in E} c(uv) \cdot |\pi(u) - \pi(v)|$.
 \end{itemize}
 
+For any node $u$ of the hierarchical clustering tree $T$, we denote by $\COST_G\br{T, u} = c(S_u) \cdot |V(G_u)|$ the contribution of node $u$ to the total cost of the tree. By $\OPT$ we denote the cost of an optimal solution for \textsc{HAC}.   
 \subsection{Level decomposition of HAC}
 
-In order to analyze the structure of HAC trees, we introduce the notion of level decomposition. For a given HAC tree $T$, we define the level decomposition as follows: Let $\cR^T$ denote the family of all clusters in $T$. For $t\in \brc{0,\dots,n}$, by $\cL_t^T$ the set of all maximal clusters in $\cR^T$ of size at most $t$. We call $\cL_t^T$ the $t$-th level of the decomposition. Observe that $\cL_t^T$ is a partition of $V\br{G}$. By $S_t^T$ we denote the set of edges cut at level $t$, that is the set of edges with endpoints in different clusters of $\cL_t^T$. We call $S_t^T$ the $t$-th level cut. We also define $S_0^T = S_1^T$. It is easy to see that the cost of HAC tree $T$ can be expressed as follows:
+In order to analyze the structure of HAC trees, we introduce the notion of level decomposition. For a given HAC tree $T$, we define the level decomposition as follows: Let $\cR^T$ denote the family of all clusters in $T$. For $t\in [n]$, by $\cL_t^T$ the set of all maximal clusters in $\cR^T$ of size at most $t$. We call $\cL_t^T$ the $t$-th level of the decomposition. Observe that $\cL_t^T$ is a partition of $V\br{G}$. By $S_t^T$ we denote the set of edges cut at level $t+1$, that is the set of edges with endpoints in different clusters of $\cL_t^T$. The shift of indices is for the sake of convenience. We call $S_t^T$ the $t$-th level cut. It is easy to see that the cost of HAC tree $T$ can be expressed as follows:
 \begin{observation}\label{obs:cost-decomposition}
-    $\COST\br{T} = \sum_{t=0}^n c\br{S_t^T}$.
+    $\COST_G\br{T} = \sum_{t=1}^n c\br{S_t^T}$.
 \end{observation}

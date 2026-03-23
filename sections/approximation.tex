@@ -20,7 +20,7 @@ Since we decompose the \textsc{LP} into separate levels by summing up over all t
 
     Our relaxation is two-fold. Firstly, we introduce the following \textsc{ILP} formulation \textsc{ILP-HAC} for the \textsc{HAC} problem:
     \begin{align}
-        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c_{ij} \cdot x_{ij}^t\\
+        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c\br{i,j} \cdot x_{ij}^t\\
         \text{subject to} \quad &x_{ij}^t \leq x_{ij}^{t-1} \quad \forall i,j\in V, t\in [n],\\
         &y_i^t \leq y_i^{t-1} \quad \forall i\in V, t\in [n],\\
         &y_i^1 = 1 \quad \forall i\in V,\\
@@ -40,11 +40,11 @@ Since we decompose the \textsc{LP} into separate levels by summing up over all t
         Consider any constraint of type (\ref{cycle_constraint_ILP}). If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and the constraint is satisfied. If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$. If for any $ij\in C$, $x_{ij}^t=1$ then the constraint is satisfied. Otherwise $\sum_{ij\in C} \hat{x}_{ij}^t = \sum_{ij\in C} 2y_i^t \geq 1$. Consider any constraint of type (\ref{spreading_constraint_ILP}). If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$ and the constraint is satisfied. If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and $\sum_{j\in V} \hat{x}_{ij}^t = \sum_{j\in V} 2y_i^t \geq n-t$. The cost of the solution is at most $2\cdot c\br{LP}$ since $\hat{x}_{ij}^t \leq 2x_{ij}^t$ for all $i,j\in V$ and $t\in [n]$.
     \end{proof}
 
-    Fix some choice of $\hat{y}_i^t$ in the above \textsc{LP} so that we have a \textsc{MILP} relaxation \textsc{MILP-HAC} of \textsc{ILP-HAC}. Denote by $MILP$ the solution to \textsc{MILP-HAC} and let $c\br{MILP}$ be the value of its objective function. In what follows, we will need to split this \textsc{MILP} into several instances of \textsc{FES}. We will call such a devided solutions \emph{guides} since they will be used to guide the algorithm about the choice of edges to cut. By $MILP_t^A$ denote the solution of \textsc{MILP-HAC} restricted to the set of vertices $A$ at level $t$ and define $\COST\br{MILP_t^A} = \sum_{ij\in E\br{A}} c_{ij} \cdot x_{ij}^t$.
+    Fix some choice of $\hat{y}_i^t$ in the above \textsc{LP} so that we have a \textsc{MILP} relaxation \textsc{MILP-HAC} of \textsc{ILP-HAC}. Denote by $MILP$ the solution to \textsc{MILP-HAC} and let $c\br{MILP}$ be the value of its objective function. In what follows, we will need to split this \textsc{MILP} into several instances of \textsc{FES}. We will call such a devided solutions \emph{guides} since they will be used to guide the algorithm about the choice of edges to cut. By $MILP_t^A$ denote the solution of \textsc{MILP-HAC} restricted to the set of vertices $A$ at level $t$ and define $\COST\br{MILP_t^A} = \sum_{ij\in E\br{A}} c\br{i,j} \cdot x_{ij}^t$.
 
     Now we relax the integrality of $x_{ij}^t$ variables by introducing the $\ell_2^2$-metric constraints. We get the following \textsc{SDP} relaxation \textsc{SDP-MILP-HAC} for the \textsc{MILP-HAC} defined above:
     \begin{align}
-        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c_{ij} \cdot x_{ij}^t=\sum_{t=1}^n \sum_{ij\in E} c_{ij} \cdot\frac{1}{2}\|v_i^t - v_j^t\|_2^2\\
+        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c\br{i,j} \cdot x_{ij}^t=\sum_{t=1}^n \sum_{ij\in E} c\br{i,j} \cdot\frac{1}{2}\|v_i^t - v_j^t\|_2^2\\
         \text{subject to} \quad &x_{ij}^t \leq x_{ij}^{t-1} \quad \forall i,j\in V, t\in [n],\\
         &x_{ik}^t \leq x_{ij}^t + x_{jk}^t \quad \forall i,j,k\in V, t\in [n],\\
         &x_{ij}^t = \frac{1}{2}\|v_i^t - v_j^t\|_2^2 \quad \forall i,j\in V, t\in [n],\\
@@ -54,7 +54,7 @@ Since we decompose the \textsc{LP} into separate levels by summing up over all t
         &x_{ij}^t \in [0,1] \quad \forall i,j\in V, t\in [n].
     \end{align}
 
-    Denote by $SDP$ the solution to \textsc{SDP-MILP-HAC} and let $c\br{SDP}$ be the value of its objective function. In what follows, we will need to split this \textsc{SDP} into several instances of $k$-\textsc{BP}. By $SDP_t^A$ denote the solution of \textsc{SDP-MILP-HAC} restricted to the set of vertices $A$ at level $t$ and define $\COST\br{SDP_t^A} = \sum_{ij\in E\br{A}} c_{ij} \cdot \frac{1}{2}\|v_i^t - v_j^t\|_2^2$. We have the following lemma:
+    Denote by $SDP$ the solution to \textsc{SDP-MILP-HAC} and let $c\br{SDP}$ be the value of its objective function. In what follows, we will need to split this \textsc{SDP} into several instances of $k$-\textsc{BP}. By $SDP_t^A$ denote the solution of \textsc{SDP-MILP-HAC} restricted to the set of vertices $A$ at level $t$ and define $\COST\br{SDP_t^A} = \sum_{ij\in E\br{A}} c\br{i,j} \cdot \frac{1}{2}\|v_i^t - v_j^t\|_2^2$. We have the following lemma:
 
     \begin{lemma}\label{lem:relaxation-decomposition}
         Let $T$ be any HAC tree. For any cluster $A \in \cR^T$, let $r\br{A}$ be the size of the largest child cluster of $A$ if it exists or $0$ otherwise. Fix some $b\in \mathbb{N}^+$. Then:
@@ -65,7 +65,7 @@ Since we decompose the \textsc{LP} into separate levels by summing up over all t
         \end{align*}
     \end{lemma}
     \begin{proof}
-        It suffices to show that for any fixed edge $ij\in E$ and level $t\in [n]$, the terms $c_{ij}\cdot x_{ij}^t$ and $c_{ij}\cdot\frac{1}{2}\|v_i^t-v_j^t\|_2^2$, respectively, are each counted at most once in the respective sum. Assume for contradiction that there are two clusters $A$ and $B$ both contributing the term at level $t$. By definition of hierarchical clustering one of $A$, $B$ must be an ancestor of the other; without loss of generality assume $A$ is an ancestor of $B$. Then $t\in \left(r\br{A}/b, |A|/b\right]$ and $t\in \left(r\br{B}/b, |B|/b\right]$, so $bt\in \left(r\br{A}, |A|\right]$ and $bt\in \left(r\br{B}, |B|\right]$. Since $A$ is a proper ancestor of $B$ we have $r\br{A}\geq |B|$, hence $bt\in \left(r\br{A}, |A|\right]\cap\left(r\br{B}, |B|\right]=\emptyset$, a contradiction. The two bounds then follow by summing over all edges and levels.
+        It suffices to show that for any fixed edge $ij\in E$ and level $t\in [n]$, the terms $c\br{i,j}\cdot x_{ij}^t$ and $c\br{i,j}\cdot\frac{1}{2}\|v_i^t-v_j^t\|_2^2$, respectively, are each counted at most once in the respective sum. Assume for contradiction that there are two clusters $A$ and $B$ both contributing the term at level $t$. By definition of hierarchical clustering one of $A$, $B$ must be an ancestor of the other; without loss of generality assume $A$ is an ancestor of $B$. Then $t\in \left(r\br{A}/b, |A|/b\right]$ and $t\in \left(r\br{B}/b, |B|/b\right]$, so $bt\in \left(r\br{A}, |A|\right]$ and $bt\in \left(r\br{B}, |B|\right]$. Since $A$ is a proper ancestor of $B$ we have $r\br{A}\geq |B|$, hence $bt\in \left(r\br{A}, |A|\right]\cap\left(r\br{B}, |B|\right]=\emptyset$, a contradiction. The two bounds then follow by summing over all edges and levels.
     \end{proof}
 
     \begin{lemma}\label{lem:milp-sdp-bound}
@@ -79,13 +79,13 @@ Since we decompose the \textsc{LP} into separate levels by summing up over all t
 
     By \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} we have the following \textsc{LP} relaxation \textsc{LP-FES} for the \textsc{FES} problem:
     \begin{align}
-        \min \quad &\sum_{ij\in E} c_{ij} x_{ij}\\
+        \min \quad &\sum_{ij\in E} c\br{i,j} \cdot x_{ij}\\
         \text{subject to} \quad &\sum_{ij\in C} x_{ij} \geq 1, \quad \forall \text{ cycles } C \text{ going through vertex } i\in X,\\
         &0\leq x_{ij} \leq 1, \quad \forall ij\in E.
     \end{align}
     We have the following theorem \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}:
     \begin{theorem}[Even et al. \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}]\label{thm:fes-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c_{ij} \leq O\br{\log n\log\log n}\cdot \sum_{ij\in E} c_{ij} x_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n\log\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
     \end{theorem}
     The next lemma allows us to decompose the \textsc{MILP-HAC} into several instances of \textsc{LP-FES}:
     \begin{lemma}\label{lem:milp-fes}
@@ -96,14 +96,14 @@ Since we decompose the \textsc{LP} into separate levels by summing up over all t
     \end{proof}
     By \cite{PartitioningGraphsIntoBalancedComponents} we have the following \textsc{SDP} relaxation \textsc{SDP-$k$-BP} for the \textsc{$k$-BP}:
     \begin{align}
-        \min \quad &\sum_{ij\in E} c_{ij}\cdot \frac{1}{2}\|v_i - v_j\|_2^2\\
+        \min \quad &\sum_{ij\in E} c\br{i,j}\cdot \frac{1}{2}\|v_i - v_j\|_2^2\\
         \text{subject to} \quad &\|v_i-v_j\|_2^2+ \|v_j-v_k\|_2^2 \geq \|v_i-v_k\|_2^2, \quad \forall i,j,k\in V,\\
         &\sum_{j\in S} \|v_i-v_j\|_2^2 \geq \spr{S}-\frac{n}{k},\quad \forall S\subseteq V, i\in S.
     \end{align}
 
     We have the following theorem \cite{PartitioningGraphsIntoBalancedComponents}
     \begin{theorem}[Krauthgamer et al.\cite{PartitioningGraphsIntoBalancedComponents}]\label{thm:kbp-rounding}
-        There exists a bicriteria polynomial time algorithm which given an instance of the \textsc{$k$-BP} and a solution to the above \textsc{SDP-$k$-BP}, finds a subset of edges $S$ such that every connected component of $G\setminus S$ has size at most $2n/k$ and $\sum_{ij\in S} c_{ij} \leq O\br{\sqrt{\log n}\log k}\cdot \sum_{ij\in E} c_{ij}\cdot \frac{1}{2}\|v_i - v_j\|_2^2$.
+        There exists a bicriteria polynomial time algorithm which given an instance of the \textsc{$k$-BP} and a solution to the above \textsc{SDP-$k$-BP}, finds a subset of edges $S$ such that every connected component of $G\setminus S$ has size at most $2n/k$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\sqrt{\log n}\log k}\cdot \sum_{ij\in E} c\br{i,j}\cdot \frac{1}{2}\|v_i - v_j\|_2^2$.
     \end{theorem}
     The next lemma is a modification of the argument of \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics} which shows how to decompose the \textsc{SDP-MILP-HAC} into several instances of the above \textsc{SDP-$k$-BP}:
     \begin{lemma}\label{lem:sdp-kbp}
@@ -128,16 +128,16 @@ Since we decompose the \textsc{LP} into separate levels by summing up over all t
     \input{pseudocodes/main_procedure.tex}
     \input{pseudocodes/recursive_procedure.tex}
     \begin{lemma}\label{lem:recursive-cost}
-        Fix sume cluster $H$ for which the recursive procedure was called. Let $A_1^H,\dots, A_{p_H}^H$ be the non-tree children of $H$ of size larger than $|H|/2$. Then, $\COST\br{T, u_H}\leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{MILP_t^H}$ and $\sum_{i=1}^{p_H}\COST\br{T, u_{A_i^H}} \leq 8\beta\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{SDP_t^H}$.
+        Fix sume cluster $H$ for which the recursive procedure was called. Let $A_1^H,\dots, A_{p_H}^H$ be the non-tree children of $H$ of size larger than $|H|/2$. Then, $\COST_G\br{T, u_H}\leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{MILP_t^H}$ and $\sum_{i=1}^{p_H}\COST_G\br{T, u_{A_i^H}} \leq 8\beta\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{SDP_t^H}$.
     \end{lemma}
     \begin{proof}
-        Firstly, consider the contribution of $u_H$ to the cost. Since it it being cut in a cluster of size $\spr{H}$, we have that $\COST\br{T, u_H}=\spr{H}\cdot c\br{F_H}$. By applying Lemma \ref{lem:milp-sdp-bound} with $d=8$ we get that:
+        Firstly, consider the contribution of $u_H$ to the cost. Since it it being cut in a cluster of size $\spr{H}$, we have that $\COST_G\br{T, u_H}=\spr{H}\cdot c\br{F_H}$. By applying Lemma \ref{lem:milp-sdp-bound} with $d=8$ we get that:
         \begin{align*}
-            \COST\br{T, u_H} = \spr{H}\cdot c\br{F_H} \leq \spr{H}\cdot \COST\br{MILP_{\spr{H}/4}^H} \leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \COST\br{MILP_t^H}.
+            \COST_G\br{T, u_H} = \spr{H}\cdot c\br{F_H} \leq \spr{H}\cdot \COST\br{MILP_{\spr{H}/4}^H} \leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \COST\br{MILP_t^H}.
         \end{align*}
         Secondly consider the contribution of all $u_{A_i^H}$ to the cost. Applying Lemma \ref{lem:milp-sdp-bound} again with $d=8$ we get:
         \begin{align*}
-             \sum_{i=1}^{p_H}\COST\br{T, u_{A_i^H}} &= \sum_{i=1}^{p_H} \spr{A_i^H}\cdot c\br{S_{A_i^H}}\leq \spr{H}\cdot \sum_{i=1}^{p_H} c\br{S_{A_i^H}} \leq \spr{H}\cdot \sum_{i=1}^{p_H} \beta\br{n}\cdot \COST\br{MILP_t^{A_i^H}}\\
+             \sum_{i=1}^{p_H}\COST_G\br{T, u_{A_i^H}} &= \sum_{i=1}^{p_H} \spr{A_i^H}\cdot c\br{S_{A_i^H}}\leq \spr{H}\cdot \sum_{i=1}^{p_H} c\br{S_{A_i^H}} \leq \spr{H}\cdot \sum_{i=1}^{p_H} \beta\br{n}\cdot \COST\br{MILP_t^{A_i^H}}\\
              &\leq \spr{H}\cdot \COST\br{MILP_{\spr{H}/4}^H} 
              \leq 8\beta\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \COST\br{SDP_t^H}
         \end{align*}
@@ -145,7 +145,7 @@ Since we decompose the \textsc{LP} into separate levels by summing up over all t
     \end{proof}
     Armed with the above lemma we are ready to sum the contribution of all clusters to the cost of the solution. Let $T$ be the clustering tree returned by the algorithm and let $\cR_T$ be the set of all non-tree clusters for which the recursive procedure was called. We have:
     \begin{align*}
-        \COST\br{T} &= \sum_{H \in \cR_T} \br{\COST\br{T, u_H} + \sum_{i=1}^{p_H} \COST\br{T, u_{A_i^H}}}
+        \COST_G\br{T} &= \sum_{H \in \cR_T} \br{\COST_G\br{T, u_H} + \sum_{i=1}^{p_H} \COST_G\br{T, u_{A_i^H}}}
         \\&\leq 8\cdot\sum_{H \in \cH} \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \br{\alpha\br{n}\cdot \COST\br{MILP_t^H} + \beta\br{n}\cdot \COST\br{SDP_t^H}}\\
         &\leq 8\cdot\br{\alpha\br{n}\cdot\COST\br{MILP} + \beta\br{n}\cdot\COST\br{SDP}}\\
         &\leq 16\cdot\br{\alpha\br{n}\cdot\COST\br{LP} + \beta\br{n}\cdot\COST\br{LP}}\\
