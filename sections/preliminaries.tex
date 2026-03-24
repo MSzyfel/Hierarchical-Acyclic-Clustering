@@ -1,6 +1,6 @@
 \section{Preliminaries}
 
-Denote by $[n]=\brc{1,\dots, n}$.
+Throughout the paper, we consider an undirected weighted graph $G=\br{V,E,c}$, where $c\colon E\to \mathbb{N}$, and write $n=|V|$. For a set of edges $F\subseteq E$, we use $c\br{F}=\sum_{e\in F} c(e)$. For a vertex set $U\subseteq V$, by $G[U]$ we denote the subgraph of $G$ induced by $U$. Denote by $[n]=\brc{1,\dots, n}$. By a permutation $\pi$ of $V$ we mean a bijection $\pi\colon V\to [n]$. By a clustering tree for $G$ we mean a rooted tree $T$ in which each node corresponds to a cluster (a subset of $V$), the root corresponds to $V$, and children of a node form a partition of the corresponding cluster into connected components after removing some set of edges. In \textsc{HC} the process continues until singleton clusters, while in \textsc{HAC} the process stops when every leaf cluster induces a tree.
 
 \subsection{Problems definitions}
 
@@ -16,7 +16,7 @@ Given a weighted graph $\br{G, E, c}$, where $c\colon E\to \mathbb{N}$, we defin
 For any node $u$ of the hierarchical clustering tree $T$, we denote by $\COST_G\br{T, u} = c(S_u) \cdot |V(G_u)|$ the contribution of node $u$ to the total cost of the tree. By $\OPT$ we denote the cost of an optimal solution for \textsc{HAC}.   
 \subsection{Level decomposition of HAC}
 
-In order to analyze the structure of HAC trees, we introduce the notion of level decomposition. For a given HAC tree $T$, we define the level decomposition as follows: Let $\cR^T$ denote the family of all clusters in $T$. For $t\in [n]$, by $\cL_t^T$ the set of all maximal clusters in $\cR^T$ of size at most $t$. We call $\cL_t^T$ the $t$-th level of the decomposition. Observe that $\cL_t^T$ is a partition of $V\br{G}$. By $S_t^T$ we denote the set of edges cut at level $t+1$, that is the set of edges with endpoints in different clusters of $\cL_t^T$. The shift of indices is for the sake of convenience. We call $S_t^T$ the $t$-th level cut. It is easy to see that the cost of HAC tree $T$ can be expressed as follows:
+In order to analyze the structure of HAC trees, we introduce the notion of level decomposition. For a given HAC tree $T$, we define the level decomposition as follows: Let $\cC^T$ denote the family of all clusters in $T$. For $t\in [n]$, by $\cL_t^T$ the set of all maximal clusters in $\cC^T$ of size at most $t$. We call $\cL_t^T$ the $t$-th level of the decomposition. Observe that $\cL_t^T$ is a partition of $V\br{G}$. By $S_t^T$ we denote the set of edges cut at level $t+1$, that is the set of edges with endpoints in different clusters of $\cL_t^T$. The shift of indices is for the sake of convenience. We call $S_t^T$ the $t$-th level cut. It is easy to see that the cost of HAC tree $T$ can be expressed as follows:
 \begin{observation}\label{obs:cost-decomposition}
     $\COST_G\br{T} = \sum_{t=1}^n c\br{S_t^T}$.
 \end{observation}

@@ -52,3 +52,246 @@ keywords = {graph expansion, hardness of approximation, spectral profile, unique
 location = {Cambridge, Massachusetts, USA},
 series = {STOC '10}
 }
+
+@inproceedings{ACostFunctionForSimilarityBasedHierarchicalClustering,
+author = {Dasgupta, Sanjoy},
+title = {A cost function for similarity-based hierarchical clustering},
+year = {2016},
+isbn = {9781450341325},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2897518.2897527},
+doi = {10.1145/2897518.2897527},
+abstract = {The development of algorithms for hierarchical clustering has been hampered by a shortage of precise objective functions. To help address this situation, we introduce a simple cost function on hierarchies over a set of points, given pairwise similarities between those points. We show that this criterion behaves sensibly in canonical instances and that it admits a top-down construction procedure with a provably good approximation ratio.},
+booktitle = {Proceedings of the Forty-Eighth Annual ACM Symposium on Theory of Computing},
+pages = {118–127},
+numpages = {10},
+keywords = {Hierarchical clustering, approximation algorithm},
+location = {Cambridge, MA, USA},
+series = {STOC '16}
+}
+
+@inproceedings{Approximating_the_Average_Case_Graph_Search_Problem_with_Non_uniform_Costs,
+author = {Szyfelbein, Micha\l{}},
+title = {Approximating the Average-Case Graph Search Problem with Non-uniform Costs},
+year = {2026},
+isbn = {978-981-95-7126-0},
+publisher = {Springer-Verlag},
+address = {Berlin, Heidelberg},
+url = {https://doi.org/10.1007/978-981-95-7127-7_7},
+doi = {10.1007/978-981-95-7127-7_7},
+abstract = {Consider the following generalization of the classic binary search problem: A searcher is required to find a hidden target vertex x in a graph G. To do so, they iteratively perform queries to an oracle, each about a chosen vertex v. After each such call, the oracle responds whether the target was found and if not, the searcher receives as a reply the connected component in G-v which contains x. Additionally, each vertex v may have a different query cost c(v) and a different weight w(v). The goal is to find the optimal querying strategy which minimizes the weighted average-case cost required to find x. The problem is NP-hard even for uniform weights and query costs. Inspired by the progress on the edge query variant of the problem [SODA ’17], we establish a connection between searching and vertex separation. By doing so, we provide an O(logn)-approximation algorithm for general graphs and a (4+ϵ)-approximation algorithm for the case when the input is a tree.},
+booktitle = {WALCOM: Algorithms and Computation: 20th International Conference and Workshops on Algorithms and Computation, WALCOM 2026, Perugia, Italy, March 4–6, 2026, Proceedings},
+pages = {96–109},
+numpages = {14},
+keywords = {Graph Searching, Binary Search, Decision Trees, Vertex Separators, Graph Theory, Approximation Algorithm},
+location = {Perugia, Italy}
+}
+
+@article{Hierarchical_Clustering_Objective_Functions_and_Algorithms,
+author = {Cohen-addad, Vincent and Kanade, Varun and Mallmann-trenn, Frederik and Mathieu, Claire},
+title = {Hierarchical Clustering: Objective Functions and Algorithms},
+year = {2019},
+issue_date = {August 2019},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {66},
+number = {4},
+issn = {0004-5411},
+url = {https://doi.org/10.1145/3321386},
+doi = {10.1145/3321386},
+abstract = {Hierarchical clustering is a recursive partitioning of a dataset into clusters at an increasingly finer granularity. Motivated by the fact that most work on hierarchical clustering was based on providing algorithms, rather than optimizing a specific objective, Dasgupta framed similarity-based hierarchical clustering as a combinatorial optimization problem, where a “good” hierarchical clustering is one that minimizes a particular cost function [23]. He showed that this cost function has certain desirable properties: To achieve optimal cost, disconnected components (namely, dissimilar elements) must be separated at higher levels of the hierarchy, and when the similarity between data elements is identical, all clusterings achieve the same cost.We take an axiomatic approach to defining “good” objective functions for both similarity- and dissimilarity-based hierarchical clustering. We characterize a set of admissible objective functions having the property that when the input admits a “natural” ground-truth hierarchical clustering, the ground-truth clustering has an optimal value. We show that this set includes the objective function introduced by Dasgupta.Equipped with a suitable objective function, we analyze the performance of practical algorithms, as well as develop better and faster algorithms for hierarchical clustering. We also initiate a beyond worst-case analysis of the complexity of the problem and design algorithms for this scenario.},
+journal = {J. ACM},
+month = jun,
+articleno = {26},
+numpages = {42},
+keywords = {Hierarchical clustering, PCA, stochastic block model}
+}
+
+@article{Approximating_Treewidth_Pathwidth_Frontsize_and_Shortest_Elimination_Tree,
+title = {Approximating Treewidth, Pathwidth, Frontsize, and Shortest Elimination Tree},
+journal = {Journal of Algorithms},
+volume = {18},
+number = {2},
+pages = {238-255},
+year = {1995},
+issn = {0196-6774},
+doi = {https://doi.org/10.1006/jagm.1995.1009},
+url = {https://www.sciencedirect.com/science/article/pii/S0196677485710097},
+author = {H.L. Bodlaender and J.R. Gilbert and H. Hafsteinsson and T. Kloks},
+abstract = {Various parameters of graphs connected to sparse matrix factorization and other applications can be approximated using an algorithm of Leighton et al. that finds vertex separators of graphs. The approximate values of the parameters, which include minimum front size, treewidth, pathwidth, and minimum elimination tree height, are no more than O(log n) (minimum front size and treewidth) and O(log2n) (pathwidth and minimum elimination tree height) times the optimal values. In addition, we show that unless P = NP there are no absolute approximation algorithms for any of the parameters.}
+}
+
+@misc{Precedence-Constrained_Decision_Trees_and_Coverings,
+      title={Precedence-Constrained Decision Trees and Coverings}, 
+      author={Michał Szyfelbein and Dariusz Dereniowski},
+      year={2026},
+      eprint={2602.21312},
+      archivePrefix={arXiv},
+      primaryClass={cs.DS},
+      url={https://arxiv.org/abs/2602.21312}, 
+}
+
+@article{GonzalezKCenter,
+  author  = {Gonzalez, Teofilo F.},
+  title   = {Clustering to Minimize the Maximum Intercluster Distance},
+  journal = {Theoretical Computer Science},
+  year    = {1985},
+  volume  = {38},
+  pages   = {293--306},
+  doi     = {10.1016/0304-3975(85)90224-5}
+}
+
+@article{HochbaumShmoysKCenter,
+  author  = {Hochbaum, Dorit S. and Shmoys, David B.},
+  title   = {A Best Possible Heuristic for the $k$-Center Problem},
+  journal = {Mathematics of Operations Research},
+  year    = {1985},
+  volume  = {10},
+  number  = {2},
+  pages   = {180--184},
+  doi     = {10.1287/moor.10.2.180}
+}
+
+@article{AryaLocalSearchKMedian,
+  author  = {Arya, Vijay and Garg, Naveen and Khandekar, Rohit and Meyerson, Adam and Munagala, Kamesh and Pandit, Vinayaka},
+  title   = {Local Search Heuristics for $k$-Median and Facility Location Problems},
+  journal = {SIAM Journal on Computing},
+  year    = {2004},
+  volume  = {33},
+  number  = {3},
+  pages   = {544--562},
+  doi     = {10.1137/S0097539702415215}
+}
+
+@article{KanungoKMeansLocalSearch,
+  author  = {Kanungo, Tapas and Mount, David M. and Netanyahu, Nathan S. and Piatko, Christine D. and Silverman, Ruth and Wu, Angela Y.},
+  title   = {A Local Search Approximation Algorithm for $k$-Means Clustering},
+  journal = {Computational Geometry},
+  year    = {2004},
+  volume  = {28},
+  number  = {2--3},
+  pages   = {89--112},
+  doi     = {10.1016/j.comgeo.2004.03.003}
+}
+
+@inproceedings{AhmadianKMeansImprovedApprox,
+  author    = {Ahmadian, Sara and Norouzi-Fard, Ashkan and Svensson, Ola and Ward, Justin},
+  title     = {Better Guarantees for $k$-Means and Euclidean $k$-Median by Primal-Dual Algorithms},
+  booktitle = {Proceedings of the 58th IEEE Annual Symposium on Foundations of Computer Science (FOCS)},
+  year      = {2017},
+  pages     = {61--72},
+  doi       = {10.1109/FOCS.2017.16}
+}
+
+@inproceedings{DereniowskiKosowskiUznanskiZouICALP2017,
+  author    = {Dereniowski, Dariusz and Kosowski, Adrian and Uznanski, Przemyslaw and Zou, Mengchuan},
+  title     = {Approximation Strategies for Generalized Binary Search in Weighted Trees},
+  booktitle = {44th International Colloquium on Automata, Languages, and Programming (ICALP 2017)},
+  series    = {Leibniz International Proceedings in Informatics (LIPIcs)},
+  volume    = {80},
+  pages     = {84:1--84:14},
+  year      = {2017},
+  doi       = {10.4230/LIPIcs.ICALP.2017.84},
+  url       = {https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ICALP.2017.84}
+}
+
+@article{RankingsOfGraphs1998,
+  author  = {Bodlaender, Hans L. and Deogun, Jitender S. and Jansen, Klaus and Kloks, Ton and Kratsch, Dieter and M{"u}ller, Haiko and Tuza, Zsolt},
+  title   = {Rankings of Graphs},
+  journal = {SIAM Journal on Discrete Mathematics},
+  volume  = {11},
+  number  = {1},
+  pages   = {168--181},
+  year    = {1998},
+  doi     = {10.1137/S0895480195282550},
+  url     = {https://doi.org/10.1137/S0895480195282550}
+}
+
+@inproceedings{FeigeHajiaghayiLee2005,
+  author    = {Feige, Uriel and Hajiaghayi, MohammadTaghi and Lee, James R.},
+  title     = {Improved Approximation Algorithms for Minimum-Weight Vertex Separators},
+  booktitle = {Proceedings of the Thirty-Seventh Annual ACM Symposium on Theory of Computing},
+  series    = {STOC '05},
+  year      = {2005},
+  pages     = {563--572},
+  doi       = {10.1145/1060590.1060674},
+  url       = {https://doi.org/10.1145/1060590.1060674}
+}
+
+@inproceedings{AlonAzarVainsteinCOLT2020,
+  author    = {Alon, Noga and Azar, Yossi and Vainstein, Danny},
+  title     = {Hierarchical Clustering: A 0.585 Revenue Approximation},
+  booktitle = {Proceedings of Thirty Third Conference on Learning Theory},
+  series    = {Proceedings of Machine Learning Research},
+  volume    = {125},
+  year      = {2020},
+  pages     = {153--162},
+  url       = {https://proceedings.mlr.press/v125/alon20b.html}
+}
+
+@inproceedings{MoseleyWangNIPS2017,
+  author    = {Moseley, Benjamin and Wang, Joshua},
+  title     = {Approximation Bounds for Hierarchical Clustering: Average Linkage, Bisecting $k$-means, and Local Search},
+  booktitle = {Advances in Neural Information Processing Systems 30 (NeurIPS 2017)},
+  year      = {2017},
+  pages     = {3094--3103}
+}
+
+@inproceedings{CharikarChatziafratisNiazadehSODA2019,
+  author    = {Charikar, Moses and Chatziafratis, Vaggos and Niazadeh, Rad},
+  title     = {Hierarchical Clustering Better Than Average-Linkage},
+  booktitle = {Proceedings of the Thirtieth Annual ACM-SIAM Symposium on Discrete Algorithms (SODA)},
+  year      = {2019},
+  pages     = {2291--2304}
+}
+
+@InProceedings{BisectAndConquer2020,
+  title = 	 {Bisect and Conquer: Hierarchical Clustering via Max-Uncut Bisection},
+  author =       {Chatziafratis, Vaggos and Yaroslavtsev, Grigory and Lee, Euiwoong and Makarychev, Konstantin and Ahmadian, Sara and Epasto, Alessandro and Mahdian, Mohammad},
+  booktitle = 	 {Proceedings of the Twenty Third International Conference on Artificial Intelligence and Statistics},
+  pages = 	 {3121--3132},
+  year = 	 {2020},
+  editor = 	 {Chiappa, Silvia and Calandra, Roberto},
+  volume = 	 {108},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {26--28 Aug},
+  publisher =    {PMLR},
+  pdf = 	 {http://proceedings.mlr.press/v108/chatziafratis20a/chatziafratis20a.pdf},
+  url = 	 {https://proceedings.mlr.press/v108/chatziafratis20a.html},
+  abstract = 	 {Hierarchical Clustering is an unsupervised data   analysis   method   which   has   been widely used for decades.  Despite its popularity, it had an underdeveloped analytical foundation and to address this,  Dasgupta recently introduced an optimization viewpoint  of  hierarchical  clustering  with  pairwise similarity information that spurred a line  of  work  shedding  light  on  old  algorithms  (e.g.,  Average-Linkage),  but  also designing  new  algorithms.   Here,  for  the maximization  dual  of  Dasgupta’s  objective  (introduced  by  Moseley-Wang),   we present  polynomial-time  42.46%  approximation  algorithms  that  use Max-Uncut Bisection as  a  subroutine.    The  previous  best  worst-case  approximation  factor in  polynomial  time was 33.6%,  improving only  slightly  over  Average-Linkage  which achieves  33.3%.   Finally,  we  complement our  positive  results  by  providing  APX-hardness (even for 0-1 similarities),  under the Small Set Expansion hypothesis.}
+}
+
+@article{LeightonRao1999,
+  author  = {Leighton, Tom and Rao, Satish},
+  title   = {Multicommodity Max-Flow Min-Cut Theorems and Their Use in Designing Approximation Algorithms},
+  journal = {Journal of the ACM},
+  volume  = {46},
+  number  = {6},
+  pages   = {787--832},
+  year    = {1999},
+  doi     = {10.1145/331524.331526}
+}
+
+@article{AroraRaoVazirani2009,
+  author  = {Arora, Sanjeev and Rao, Satish and Vazirani, Umesh},
+  title   = {Expander Flows, Geometric Embeddings and Graph Partitioning},
+  journal = {Journal of the ACM},
+  volume  = {56},
+  number  = {2},
+  pages   = {5:1--5:37},
+  year    = {2009},
+  doi     = {10.1145/1502793.1502794}
+}
+
+@inproceedings{AndreevRacke2004,
+  author    = {Andreev, Konstantin and R{\"a}cke, Harald},
+  title     = {Balanced Graph Partitioning},
+  booktitle = {Proceedings of the Sixteenth Annual ACM Symposium on Parallelism in Algorithms and Architectures},
+  series    = {SPAA '04},
+  year      = {2004},
+  pages     = {120--124},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/1007912.1007931},
+}

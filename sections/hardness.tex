@@ -1,26 +1,33 @@
 \section{Inapproximability Results}
-In this section, we show that approximating \textsc{Hierarchical Acyclic Clustering} with uniform edge costs is essentially as hard as approximating \textsc{Hierarchical Clustering}. Since the latter problem cannot be approximated within any constant factor under the Small Set Expansion Hypothesis~\cite{GraphExpansionAndTheUniqueGamesConjecture}, we obtain the same inapproximability result for \textsc{Hierarchical Acyclic Clustering}.
+In this section, we show that approximating \textsc{HAC} with uniform edge costs is essentially as hard as approximating \textsc{HC}. Since the latter problem cannot be approximated within any constant factor under the \textsc{Small Set Expansion Hypothesis} (\textsc{SSEH})~\cite{GraphExpansionAndTheUniqueGamesConjecture}, we obtain the same inapproximability result for \textsc{HAC}.
 
 \begin{theorem}[Inapproximability of \textsc{HC} \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}]\label{thm:hc-inapproximability}
-    For every $\epsilon > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance of \textsc{Hierarchical Clustering}:
+    For every $\epsilon > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $G$ of \textsc{HC}:
     \begin{itemize}
-        \item \textbf{YES case:} There exists a HC tree $T$ such that $\COST_G\br{T}\leq \epsilon nm$.
-        \item \textbf{NO case:} For every linear arrangement $\pi$ of $V$, $\COST_G\br{\pi}\geq c\sqrt{\epsilon} nm$, for some constant $c > 0$.
+        \item \textbf{YES case:} There exists a HC tree $T$ such that $\COST_G\br{T}\leq \epsilon \cdot n \cdot m$.
+        \item \textbf{NO case:} For every linear arrangement $\pi$ of $V\br{G}$, $\COST_G\br{\pi}\geq c\sqrt{\epsilon} \cdot n \cdot m$, for some constant $c > 0$.
     \end{itemize}
 \end{theorem}
-Note that since objective of a linear arrangement is a lower bound on the cost of any HC tree, the above result implies that in the \textbf{NO} case, every HC tree $T$ has $\COST_G\br{T}\geq c\sqrt{\epsilon} nm$.
-We now show how to use this result to prove that \textsc{Hierarchical Acyclic Clustering} cannot be approximated within any constant factor under SSEH. 
+Note that since the objective of the
+ \textsc{MLA} is a lower bound on the cost of any HC tree \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}, the above result implies that in the \textbf{NO} case, every HC tree $T$ has $\COST_G\br{T}\geq c\sqrt{\epsilon} \cdot n \cdot m$.
+We now show how to use this result to prove that \textsc{HAC} cannot be approximated within any constant factor under \textsc{SSEH}. 
 \begin{theorem}[Inapproximability of \textsc{HAC}]\label{thm:hac-inapproximability}
-    For every $\delta > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $H$ of \textsc{Hierarchical Acyclic Clustering}:
+    For every $\delta > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $H$ of \textsc{HAC}:
     \begin{itemize}
-        \item \textbf{YES case:} There exists a HAC tree $T$ such that $\COST_H\br{T}\leq \delta nm$.
-        \item \textbf{NO case:} Every HAC tree $T$, $\COST_H\br{T}\geq c'\sqrt{\delta} nm$, for some constant $c' > 0$.
+        \item \textbf{YES case:} There exists a HAC tree $T$ such that $\COST_H\br{T}\leq \delta \cdot n \cdot m$.
+        \item \textbf{NO case:} Every HAC tree $T$, $\COST_H\br{T}\geq c'\sqrt{\delta} \cdot n \cdot m$, for some constant $c' > 0$.
     \end{itemize}
 \end{theorem}
 \begin{proof}
-    Let $G=\br{V,E}$ be an instance of \textsc{Hierarchical Clustering}. We set $\delta = 2\epsilon$ and $c'= c/\sqrt{2}$. We create an \textsc{HAC} instance $H$ as follows: For any vertex $v\in V\br{G}$ we add two new vertices $v_1$ and $v_2$ and we build a triangle on them. 
+    Let $G=\br{V,E}$ be an instance of \textsc{HC}. We set $\delta = 2\epsilon$ and $c'= \frac{c}{9\sqrt{2}}$. We create a \textsc{HAC} instance $H$ as follows: For any vertex $v\in V\br{G}$ we add two new vertices $v_1$ and $v_2$ and we build a triangle on them. 
     
-    Assume that we are in the \textbf{YES} case for $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon nm$. We construct a HAC tree $T'$ for $H$ as follows. We start with $T'=T$. Observe that every leaf cluster in $T'$ is a triangle. Then, we add a new level of the tree, in which we cut each such triangle using one edge. It is easy to see that $\COST_H\br{T'}\leq 3\COST_G\br{T}+ 3n\br{G} \leq 3\epsilon n\br{G}m\br{G} + 3n\br{G} \leq \epsilon nm+n\leq \delta nm$, where we used the fact that $\epsilon \geq 1/m$ for large enough $m$. 
+    Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HAC tree $T'$ for $H$ as follows. We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add $v_1$ and $v_2$ to $A$ as well. This transformation increases the cost of $T'$ be a multiplicative factor of $3$, ensures that all of the clusters in $T'$ satisfy hierarchical acyclic clustering properties except that every leaf cluster in $T'$ is a triangle. To fix this, we add a new level of the tree, in which we cut each such triangle using one edge. It is easy to see that $\COST_H\br{T'} = 3\COST_G\br{T}+ 3n\br{G} \leq 3\epsilon \cdot n\br{G} \cdot m\br{G} + 3n\br{G} \leq \epsilon \cdot n \cdot m+n\leq \delta \cdot n \cdot m$, where we used the fact that $\epsilon \geq 1/m$ for large enough $m$. 
     
-    Assume that we have a \textbf{NO} case for $G$. We want to show that the cost of any clustering tree $T$ for $H$ has cost at least the cost of any linear arrangement of $G$. Firstly, pick all original vertices of $G$ and project them onto a line according to the order they occur in the leaf clusters of $T$, thus obtaining a linear arrangement of $G$, $\pi$. Consider any two vertices $uv \in E\br{G}$. Assume, that they belong to a different leaf clusters in $T$. Then, we know that the edge $uv$ had to be cut in $T$ and the stretch of $uv$ in $H$ is at least the size of the cluster in which $uv$ was cut. Therefore, assume that $uv$ belongs to the same leaf cluster in $T$. Consider the cluster $C$ in which $uv$ belongs. Let $C'$ be this cluster restricted to the vertices of $G$. Since $C'$ is a tree cluster, we know that the contribution of vertices in $C'$ to the cost of $\pi$ is at most $\spr{C'}^2$. On the other hand, we know that for each vertex $v\in C'$, at least one of the edges $vv_1$ and $vv_2$ has to be cut in $T$ and every such edge contributes to the cost of every vertex in $C'$ so the contribution of vertices in $C'$ to the cost of $T$ is at least $\spr{C'}^2$. By summing up the contributions of all clusters, we obtain that $\COST_H\br{T}\geq \COST_G\br{\pi}\geq c\sqrt{\epsilon} nm = c'\sqrt{\delta} nm$.
+    Assume that we have a \textbf{NO} instance $G$. We want to show that the cost of any clustering tree $T$ for $H$ has cost at least the cost of any linear arrangement of $G$. Firstly, pick all original vertices of $G$ and project them onto a line according to the order they occur in the leaf clusters of $T$, thus obtaining a linear arrangement of $G$, $\pi$. Consider an edge $uv \in E\br{G}$. There are two cases:
+    \begin{enumerate}
+    \item $u$ and $v$ belong to different leaf clusters in $T$. Then, we know that the edge $uv$ had to be cut in $T$ and the stretch of $u$ and $v$ in $\pi$, i. e., $\spr{\pi\br{u}-\pi\br{v}}$, is at least the size of the cluster in which $uv$ was cut.
+    \item $u$ and $v$ belong to the same leaf cluster in $T$. Consider the cluster $C$ in which $u$ and $v$ belongs. Let $C'$ be this cluster restricted to the vertices of $G$. Since $C'$ is a tree, we know that the contribution of vertices in $C'$ to the cost of $\pi$ is at most $\spr{C'}^2$. On the other hand, we know that for each vertex $v\in C'$, at least one of the edges $vv_1$ and $vv_2$ has to be cut in $T$ and every such edge contributes to the cost of every vertex in $C'$ so the contribution of these edges to the cost of $T$ is at least $\spr{C'}^2$.
+    \end{enumerate}   
+    
+    By summing up the contributions of all edges, we obtain that $\COST_H\br{T}\geq \COST_G\br{\pi}\geq c\sqrt{\epsilon} \cdot n\br{G} \cdot m\br{G} \geq \frac{c\sqrt{\epsilon}}{9}\cdot n \cdot m = c'\sqrt{\delta} \cdot n \cdot m$, where we used the fact that $n=3n\br{G}$ and $m= m\br{G}+2\cdot n\br{G}\leq 3\cdot m\br{G}$ since we can assume that $G$ is not a tree (for which \textsc{HC} is constant factor approximable), so $n\br{G}\leq m\br{G}$.
 \end{proof}
