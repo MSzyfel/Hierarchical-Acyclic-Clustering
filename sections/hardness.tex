@@ -1,5 +1,5 @@
 \section{Inapproximability Results}
-In this section, we show that approximating \textsc{HAC} with uniform edge costs is essentially as hard as approximating \textsc{HC}. Since the latter problem cannot be approximated within any constant factor under the \textsc{Small Set Expansion Hypothesis} (\textsc{SSEH})~\cite{GraphExpansionAndTheUniqueGamesConjecture}, we obtain the same inapproximability result for \textsc{HAC}.
+In this section, we show that approximating \textsc{HC-$\cT$} and \textsc{HC-$\cD$} with uniform edge costs is essentially as hard as approximating \textsc{HC}. Since the latter problem cannot be approximated within any constant factor under the \textsc{Small Set Expansion Hypothesis} (\textsc{SSEH})~\cite{GraphExpansionAndTheUniqueGamesConjecture}, we obtain the same inapproximability results for \textsc{HC-$\cT$} and \textsc{HC-$\cD$}.
 
 \begin{theorem}[Inapproximability of \textsc{HC} \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}]\label{thm:hc-inapproximability}
     For every $\epsilon > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $G$ of \textsc{HC}:
@@ -10,18 +10,46 @@ In this section, we show that approximating \textsc{HAC} with uniform edge costs
 \end{theorem}
 Note that since the objective of the
  \textsc{MLA} is a lower bound on the cost of any HC tree \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}, the above result implies that in the \textbf{NO} case, every HC tree $T$ has $\COST_G\br{T}\geq c\sqrt{\epsilon} \cdot n \cdot m$.
-We now show how to use this result to prove that \textsc{HAC} cannot be approximated within any constant factor under \textsc{SSEH}. 
-\begin{theorem}[Inapproximability of \textsc{HAC}]\label{thm:hac-inapproximability}
-    For every $\delta > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $H$ of \textsc{HAC}:
+
+We begin with a simpler among our two inapproximability results, which is the one for \textsc{HC-$\cD$}. 
+
+\begin{theorem}[Inapproximability of \textsc{HC-$\cD$}]\label{thm:hac-d-inapproximability}
+    For every $\delta > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $H$ of \textsc{HC-$\cD$} for any given $d\geq 0$:
     \begin{itemize}
-        \item \textbf{YES case:} There exists a HAC tree $T$ such that $\COST_H\br{T}\leq \delta \cdot n \cdot m$.
-        \item \textbf{NO case:} Every HAC tree $T$, $\COST_H\br{T}\geq c'\sqrt{\delta} \cdot n \cdot m$, for some constant $c' > 0$.
+        \item \textbf{YES case:} There exists a HC-$\cD$ tree $T$ such that $\COST_H\br{T}\leq \delta f\br{ n, m, d}$.
+        \item \textbf{NO case:} Every HC-$\cD$ tree $T$, $\COST_H\br{T}\geq c'\sqrt{\delta} \cdot f\br{ n, m, d}$, for some constant $c' > 0$.
+    \end{itemize}
+    For some function $f\br{\cdot n, m, d}$ which is polynomial in $n$ and $m$ and $d$.
+\end{theorem}
+\begin{proof}
+    If $d=0$ then the problem is equivalent to \textsc{HC} and the result follows from Theorem~\ref{thm:hc-inapproximability}. Assume that $d\geq 1$. We create a \textsc{HC-$\cD$} instance $H$ as follows: For any vertex $v\in V\br{G}$ and $i\in [n\br{G}]$ and $j\in [d]$ we create a vertex $u_{i,j}^v$. Then, we connect $v_{i,j}^v$ to $v_{i',j'}^v$ if $\spr{j-j'}=1$. We also connect each $v_{i, 1}^v$ to $v$ for every $i\in [n\br{G}]$. We call this subgraph $H^v$ and note that it has diameter $d$, its minimum cut is of size $n\br{G}$ and $\spr{V\br{H_v}}=n\br{G}\cdot d +1$. 
+
+    Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HC-$\cD$ tree $T'$ for $H$ as follows. We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add all the vertices of $G^v$ to $A$ as well. This transformation increases the cost of $T'$ be a multiplicative factor of $\br{n\br{G}}\cdot d+1$, ensures that $T'$ is a hierarchical clustering tree and all of the leaf clusters in $T'$ have diameter at most $d$. We have that $\COST_H\br{T'} \leq \br{\br{n\br{G}}\cdot d+1}\COST_G\br{T}\leq \epsilon \cdot \br{\br{n\br{G}}\cdot d+1}\cdot n\br{G}\cdot m\br{G}$.
+
+    Assume that we have a \textbf{NO} instance $G$. Observe, that we can assume that the optimal clustering tree never cuts edges of $H^v$. Assume contrary, there are two cases:
+    \begin{enumerate}
+        \item The set of edges cut in $H^v$ is not a cut of $H^v$. Then, we can remove cutting of these edges from $T$ without affecting the structure of clusters. Since the cluster containing $V\br{H_v}$ had diameter at most $d$ before, then it must have only consists of vertices of $H^v$ and thus, after transformation it still has diameter at most $d$.
+        \item The set of edges cut in $H^v$ is a cut of $H_v$. 
+        Let $S\subseteq E\br{H^v}$ be the set of such edges such that $S$ are all the edges occuring in a top-down exploration of $T$ towards the vertices of $H^v$ before it was first cut (all of such edges belong to cuts at clusters of $T$ forming a path). Let $C$ be the first cluster in this top-down exploration such that edges of $E\br{H^v}$ cut in $C$ are a cut of $H^v$. Order these edges in an arbitrary manner, and append to $S$ the largest number of edges of $H_v$ (in order induced by the ordering), such that $S$ is still not a cut of $H^v$. 
+        Observe that $\spr{S}\geq n\br{G} - 1 \geq \deg_G\br{v}$, since the minimum cut of $H^v$ is of size $n\br{G}$. Since $S$ is not a cut of $H^v$, we can remove cutting of these edges from $T$ without affecting the structure of clusters. We replace this with cutting all of the remaining edges of $N_G\br{v}$ in cluster $C$, of which there are at most $\deg_G\br{v}$, and thus, the cost of $T$ does not increase. Observe that upon doing so the cluster containing $V\br{H_v}$ had diameter at most $d$ and therefore, we remove cutting of edges of $H^v$ and $v$ itself from further clusters which cannot increase the cost of the solution or violate the diameter constraint.
+        \end{enumerate}
+    Therefore, the only edges which can be cut be any sensible clustering tree are the edges of $G$. However, in such case the cost of any such clustering tree $T'$ obtained by repeating the cuts of some clustering tree $T$ for $G$ is $\COST_H\br{T'} = \br{\br{n\br{G}}\cdot d+1}\COST_G\br{T} \geq c\sqrt{\epsilon} \cdot \br{\br{n\br{G}}\cdot d+1}\cdot n\br{G}\cdot m\br{G}$.
+
+    By taking $f\br{n, m, d} = \br{\br{n\br{G}}\cdot d+1}\cdot n\br{G}\cdot m\br{G}$, $\delta = \epsilon$ and $c'=c$, we obtain the desired result.
+\end{proof}
+
+We now show how to use this result to prove that \textsc{HC-$\cT$} cannot be approximated within any constant factor under \textsc{SSEH}. 
+\begin{theorem}[Inapproximability of \textsc{HC-$\cT$}]\label{thm:hac-inapproximability}
+    For every $\delta > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $H$ of \textsc{HC-$\cT$}:
+    \begin{itemize}
+        \item \textbf{YES case:} There exists a HC-$\cT$ tree $T$ such that $\COST_H\br{T}\leq \delta \cdot n \cdot m$.
+        \item \textbf{NO case:} Every HC-$\cT$ tree $T$, $\COST_H\br{T}\geq c'\sqrt{\delta} \cdot n \cdot m$, for some constant $c' > 0$.
     \end{itemize}
 \end{theorem}
 \begin{proof}
-    Let $G=\br{V,E}$ be an instance of \textsc{HC}. We set $\delta = 2\epsilon$ and $c'= \frac{c}{9\sqrt{2}}$. We create a \textsc{HAC} instance $H$ as follows: For any vertex $v\in V\br{G}$ we add two new vertices $v_1$ and $v_2$ and we build a triangle on them. 
+    Let $G=\br{V,E}$ be an instance of \textsc{HC}. We set $\delta = 2\epsilon$ and $c'= \frac{c}{9\sqrt{2}}$. We create a \textsc{HC-$\cT$} instance $H$ as follows: For any vertex $v\in V\br{G}$ we add two new vertices $v_1$ and $v_2$ and we build a triangle on them. 
     
-    Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HAC tree $T'$ for $H$ as follows. We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add $v_1$ and $v_2$ to $A$ as well. This transformation increases the cost of $T'$ be a multiplicative factor of $3$, ensures that all of the clusters in $T'$ satisfy hierarchical acyclic clustering properties except that every leaf cluster in $T'$ is a triangle. To fix this, we add a new level of the tree, in which we cut each such triangle using one edge. It is easy to see that $\COST_H\br{T'} = 3\COST_G\br{T}+ 3n\br{G} \leq 3\epsilon \cdot n\br{G} \cdot m\br{G} + 3n\br{G} \leq \epsilon \cdot n \cdot m+n\leq \delta \cdot n \cdot m$, where we used the fact that $\epsilon \geq 1/m$ for large enough $m$. 
+    Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HC-$\cT$ tree $T'$ for $H$ as follows. We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add $v_1$ and $v_2$ to $A$ as well. This transformation increases the cost of $T'$ be a multiplicative factor of $3$, ensures that all of the clusters in $T'$ satisfy hierarchical clustering properties except that every leaf cluster in $T'$ is a triangle. To fix this, we add a new level of the tree, in which we cut each such triangle using one edge. It is easy to see that $\COST_H\br{T'} = 3\COST_G\br{T}+ 3n\br{G} \leq 3\epsilon \cdot n\br{G} \cdot m\br{G} + 3n\br{G} \leq \epsilon \cdot n \cdot m+n\leq \delta \cdot n \cdot m$, where we used the fact that $\epsilon \geq 1/m$ for large enough $m$. 
     
     Assume that we have a \textbf{NO} instance $G$. We want to show that the cost of any clustering tree $T$ for $H$ has cost at least the cost of any linear arrangement of $G$. Firstly, pick all original vertices of $G$ and project them onto a line according to the order they occur in the leaf clusters of $T$, thus obtaining a linear arrangement of $G$, $\pi$. Consider an edge $uv \in E\br{G}$. There are two cases:
     \begin{enumerate}

@@ -1,18 +1,18 @@
 \begin{algorithm}[H]
-\caption{Main \textsc{HAC} Procedure}
+\caption{Main \textsc{HC-$\cF$} Procedure}
 \label{alg:main-hac}
 \DontPrintSemicolon
 \KwIn{A weighted graph $G=(V,E,c)$}
 \KwOut{A clustering tree for $G$}
 \tcp{Preprocessing}
-Solve \textsc{LP-HAC} on $G$ and obtain a fractional solution $(x,y)$\;
+Solve \textsc{LP-HC-$\cF$} on $G$ and obtain a fractional solution $(x,y)$\;
 \ForEach{$t\in [n]$ and $i\in V$}{
     Set $\hat{y}_i^t \gets 1$ if $y_i^t \geq 1/2$, and set $\hat{y}_i^t \gets 0$ otherwise\;
 }
 \ForEach{$t\in [n]$ and $ij\in E$}{
     $\hat{x}_{ij}^t\gets \min\brc{1, 2\cdot x_{ij}^t}$\;
 }
-Solve \textsc{SDP-MILP-HAC} induced by $\hat{\mathbf{y}}$ to obtain $\hat{\mathbf{v}}$\;
+Solve \textsc{SDP-MILP-HC-$\cF$} induced by $\hat{\mathbf{y}}$ to obtain $\hat{\mathbf{v}}$\;
 \tcp{Clustering phase}
-\Return{$\textsc{Recursive-HAC}(G,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$}\;
+\Return{\textsc{Recursive-HC-$\cF$}($G,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$}\;
 \end{algorithm}
