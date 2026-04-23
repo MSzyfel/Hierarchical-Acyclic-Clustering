@@ -4,27 +4,21 @@
 \DontPrintSemicolon
 \KwIn{A connected subgraph $H$, together with the guides $(\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$ restricted to $V(H)$}
 \KwOut{A clustering tree for $H$}
-\If{$H$ is a tree}{
-    \Return{$T$ a clustering tree consisting of a single node labeled by $H$}\;
+\If{$H\in \cF$}{
+    \Return{a clustering tree $T$ consisting of a single node labeled by $H$}\;
 }
 Set $r\gets n\br{H}$ and $t\gets r/4$\;
 Set $X_H\gets \brc{i\in V\br{H}: \hat{y}_i^t = 1}$\;
 Run the \textsc{P-$\cF$} rounding algorithm on \textsc{LP-P-$\cF$} guide on $H$ at level $t$ from $(\hat{\mathbf{x}},\hat{\mathbf{y}})$ and let $F_H\subseteq E(H)$ be the returned cut\;
 
-Initialize a root node $u_H$ of the output tree and label it by $F_H$\;
-\ForEach{$A\in H\setminus F_H$}{
-    \If{$A$ is a tree or $n\br{A}\leq r/2$}{
-        Recursively compute $T_A\gets $\textsc{Recursive-HC-$\cF$}($A,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$\;
+Run the \textsc{$4$-BP} rounding algorithm on \textsc{SDP-$4$-BP} guide on $H$ at level $t$ from $\hat{\mathbf{v}}$ and let $B_H\subseteq E(H)$ be the returned cut\;
+
+$S_H\gets F_H\cup B_H$\;
+
+Initialize a root node $u_H$ of the output tree and label it by $S_H$\;
+\ForEach{$A\in H\setminus S_H$}{
+    Recursively compute $T_A\gets $\textsc{Recursive-HC-$\cF$}($A,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$\;
         Attach $T_A$ as a child of $u_H$\;
-    }
-    \Else{
-        Run the \textsc{$4$-BP} rounding algorithm on \textsc{SDP-$4$-BP} guide on $A$ at level $t$ from $\hat{\mathbf{v}}$ and let $B_A\subseteq E(A)$ be the returned cut\;
-        Create a child node $u_A$ of $u_H$ and label it by $B_A$\;
-        \ForEach{$C\in A\setminus B_A$}{
-            Recursively compute $T_C\gets $\textsc{Recursive-HC-$\cF$}($C,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$\;
-            Attach $T_C$ as a child of $u_A$\;
-        }
-    }
 }
 \Return{the clustering tree rooted at $u_H$}\;
 \end{algorithm}

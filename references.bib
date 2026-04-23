@@ -311,3 +311,283 @@ numpages = {10},
 location = {San Diego, California, USA},
 series = {STOC '93}
 }
+
+@INPROCEEDINGS{AnImprovedGreedyApproximationForMetricKMeans,
+  author={Charikar, Moses and Cohen-Addad, Vincent and Gao, Ruiquan and Grandoni, Fabrizio and Le, Euiwoong and Van Wijland, Ernest},
+  booktitle={2025 IEEE 66th Annual Symposium on Foundations of Computer Science (FOCS)}, 
+  title={An Improved Greedy Approximation for (Metric) k-Means}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={233-240},
+  keywords={Measurement;Computer science;Costs;Data analysis;Clustering algorithms;Machine learning;Approximation algorithms;Partitioning algorithms;Optimization;Approximation Algorithm;Clustering;k-Means},
+  doi={10.1109/FOCS63196.2025.00016}}
+
+@inproceedings{A2-ApproximationAlgorithmForMetricKMedian,
+author = {Cohen-Addad, Vincent and Grandoni, Fabrizio and Lee, Euiwoong and Schwiegelshohn, Chris and Svensson, Ola},
+title = {A (2+ε)-Approximation Algorithm for Metric 𝑘-Median},
+year = {2025},
+isbn = {9798400715105},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3717823.3718299},
+doi = {10.1145/3717823.3718299},
+abstract = {In the classical NP-hard (metric) k-median problem, we are given a set of n clients and centers with metric distances between them, along with an integer parameter k ≥ 1. The objective is to select a subset of k open centers that minimizes the total distance from each client to its closest open center. In their seminal work, Jain, Mahdian, Markakis, Saberi, and Vazirani presented the Greedy algorithm for facility location, which implies a 2-approximation algorithm for k-median that opens k centers in expectation. Since then, substantial research has aimed at narrowing the gap between their algorithm and the best achievable approximation by an algorithm guaranteed to open exactly k centers, as required in the k-median problem. During the last decade, all improvements have been achieved by leveraging their algorithm (or a small improvement thereof), followed by a second step called bi-point rounding, which inherently adds an additional factor to the approximation guarantee. Our main result closes this gap: for any  > 0, we present a (2+)-approximation algorithm for the k-median problem, improving the previous best-known approximation factor of 2.613. Our approach builds on a combination of two key algorithms. First, we present a non-trivial modification of the Greedy algorithm that operates with only O(logn/2) adaptive phases. Through a novel walk-between-solutions approach, this enables us to construct a (2+)-approximation algorithm for k-median that consistently opens at most k + O(logn/2) centers: via known results, this already implies a (2+)-approximation algorithm that runs in quasi-polynomial time. Second, we develop a novel (2+)-approximation algorithm tailored for stable instances, where removing any center from an optimal solution increases the cost by at least an Ω(3/logn) fraction. Achieving this involves several ideas, including a sampling approach inspired by the k-means++ algorithm and a reduction to submodular optimization subject to a partition matroid. This allows us to convert the previous result into a polynomial time algorithm that opens exactly k centers while maintaining the (2+)-approximation guarantee.},
+booktitle = {Proceedings of the 57th Annual ACM Symposium on Theory of Computing},
+pages = {615–624},
+numpages = {10},
+keywords = {Approximation Algorithm, Clustering, k-Median},
+location = {Prague, Czechia},
+series = {STOC '25}
+}
+
+@inproceedings{AConstant-FactorApproximationAlgorithmForTheKMedianProblem,
+author = {Charikar, Moses and Guha, Sudipto and Tardos, \'{E}va and Shmoys, David B.},
+title = {A constant-factor approximation algorithm for the k-median problem (extended abstract)},
+year = {1999},
+isbn = {1581130678},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/301250.301257},
+doi = {10.1145/301250.301257},
+booktitle = {Proceedings of the Thirty-First Annual ACM Symposium on Theory of Computing},
+pages = {1–10},
+numpages = {10},
+location = {Atlanta, Georgia, USA},
+series = {STOC '99}
+}
+
+@article{ApproximationAlgorithmsForMetricFacilityLocationAndKMedianProblemsUsingThePrimal-DualSchemaAndLagrangianRelaxation,
+author = {Jain, Kamal and Vazirani, Vijay V.},
+title = {Approximation algorithms for metric facility location and k-Median problems using the primal-dual schema and Lagrangian relaxation},
+year = {2001},
+issue_date = {March 2001},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {48},
+number = {2},
+issn = {0004-5411},
+url = {https://doi.org/10.1145/375827.375845},
+doi = {10.1145/375827.375845},
+abstract = {We present approximation algorithms for the metric uncapacitated facility location problem and the metric k-median problem achieving guarantees of 3 and 6 respectively. The distinguishing feature of our algorithms is their low running time: O(m logm) and O(m logm(L + log (n))) respectively, where n and m are the total number of vertices and edges in the underlying complete bipartite graph on cities and facilities. The main algorithmic ideas are a new extension of the primal-dual schema and the use of Lagrangian relaxation to derive approximation algorithms.},
+journal = {J. ACM},
+month = mar,
+pages = {274–296},
+numpages = {23},
+keywords = {linear programming, facility location problem, approximation algorithms, Lagrangian relaxation, k-median problem}
+}
+
+@inproceedings{ANewGreedyApproachForFacilityLocationProblems,
+author = {Jain, Kamal and Mahdian, Mohammad and Saberi, Amin},
+title = {A new greedy approach for facility location problems},
+year = {2002},
+isbn = {1581134959},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/509907.510012},
+doi = {10.1145/509907.510012},
+abstract = {We present a simple and natural greedy algorithm for the metric uncapacitated facility location problem achieving an approximation guarantee of 1.61. We use this algorithm to find better approximation algorithms for the capacitated facility location problem with soft capacities and for a common generalization of the k-median and facility location problems. We also prove a lower bound of 1+2/e on the approximability of the k-median problem. At the end, we present a discussion about the techniques we have used in the analysis of our algorithm, including a computer-aided method for proving bounds on the approximation factor.},
+booktitle = {Proceedings of the Thirty-Fourth Annual ACM Symposium on Theory of Computing},
+pages = {731–740},
+numpages = {10},
+location = {Montreal, Quebec, Canada},
+series = {STOC '02}
+}
+
+
+
+
+
+@article{Approximating_k-Median_via_Pseudo-Approximation,
+author = {Li, Shi and Svensson, Ola},
+title = {Approximating $k$-Median via Pseudo-Approximation},
+journal = {SIAM Journal on Computing},
+volume = {45},
+number = {2},
+pages = {530-547},
+year = {2016},
+doi = {10.1137/130938645},
+
+URL = { 
+    
+        https://doi.org/10.1137/130938645
+    
+    
+
+},
+eprint = { 
+    
+        https://doi.org/10.1137/130938645
+    
+    
+
+}
+,
+    abstract = { We present a novel approximation algorithm for $k$-median that achieves an approximation guarantee of $1+\sqrt{3}+\epsilon$, improving upon the decade-old ratio of $3+\epsilon$. Our improved approximation ratio is achieved by exploiting the power of pseudo-approximation. More specifically, our approach is based on two components, each of which, we believe, is of independent interest. First, we show that in order to give an $\alpha$-approximation algorithm for $k$-median, it is sufficient to give a pseudo-approximation algorithm that finds an $\alpha$-approximate solution by opening $k+O(1)$ facilities. This is a rather surprising result as there exist instances for which opening $k+1$ facilities may lead to a significantly smaller cost than that of opening only $k$ facilities. Second, we give such a pseudo-approximation algorithm with $\alpha=1+\sqrt{3}+\epsilon$. Prior to our work, it was not even known whether opening $k+o(k)$ facilities would help improve the approximation ratio. }
+}
+
+
+@article{AnImprovedApproximationForKMedianAndPositiveCorrelationInBudgetedOptimization,
+author = {Byrka, Jaros\l{}aw and Pensyl, Thomas and Rybicki, Bartosz and Srinivasan, Aravind and Trinh, Khoa},
+title = {An Improved Approximation for k-Median and Positive Correlation in Budgeted Optimization},
+year = {2017},
+issue_date = {April 2017},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {13},
+number = {2},
+issn = {1549-6325},
+url = {https://doi.org/10.1145/2981561},
+doi = {10.1145/2981561},
+abstract = {Dependent rounding is a useful technique for optimization problems with hard budget constraints. This framework naturally leads to negative correlation properties. However, what if an application naturally calls for dependent rounding on the one hand and desires positive correlation on the other? More generally, we develop algorithms that guarantee the known properties of dependent rounding but also have nearly bestpossible behavior—near-independence, which generalizes positive correlation—on “small” subsets of the variables. The recent breakthrough of Li and Svensson for the classical k-median problem has to handle positive correlation in certain dependent rounding settings, and does so implicitly. We improve upon Li-Svensson’s approximation ratio for k-median from 2.732 + ϵ to 2.675 + ϵ by developing an algorithm that improves upon various aspects of their work. Our dependent rounding approach helps us improve the dependence of the runtime on the parameter ϵ from Li-Svensson’s NO(1/ϵ2) to NO((1/ϵ)log(1/ϵ)).},
+journal = {ACM Trans. Algorithms},
+month = mar,
+articleno = {23},
+numpages = {31},
+keywords = {k-median, Combinatorial optimization, approximation algorithms, dependent rounding, facility location problems}
+}
+
+
+
+
+
+@inbook{BreachingThe2LMPApproximationBarrierForFacilityLocationWithApplicationsToKMedian,
+author = {Vincent Cohen-Addad Viallat and Fabrizio Grandoni and Euiwoong Lee and Chris Schwiegelshohn},
+title = {Breaching the 2 LMP Approximation Barrier for Facility Location with Applications to $k$-Median},
+booktitle = {Proceedings of the 2023 Annual ACM-SIAM Symposium on Discrete Algorithms (SODA)},
+chapter = {},
+pages = {940-986},
+doi = {10.1137/1.9781611977554.ch37},
+URL = {https://epubs.siam.org/doi/abs/10.1137/1.9781611977554.ch37},
+eprint = {https://epubs.siam.org/doi/pdf/10.1137/1.9781611977554.ch37},
+    abstract = { The Uncapacitated Facility Location (UFL) problem is one of the most fundamental clustering problems: Given a set of clients C and a set of facilities F in a metric space (C ∪ F, dist) with facility costs open : F→ ℝ+, the goal is to find a set of facilities S ⊆ F to minimize the sum of the opening cost open(S) and the connection cost d(S) := Σp∈C minc∈S dist(p,c). An algorithm for UFL is called a Lagrangian Multiplier Preserving (LMP) α approximation if it outputs a solution S ⊆ F satisfying open(S) + d(S) ≤ open(S*) + αd(S*) for any S* ⊆ F. The best-known LMP approximation ratio for UFL is at most 2 by the JMS algorithm of Jain, Mahdian, and Saberi [STOC'02, J.ACM'03] based on the Dual-Fitting technique. The lack of progress on improving the upper bound on αLMP in the last two decades raised the natural question whether αLMP = 2. We answer this question negatively by presenting a (slightly) improved LMP approximation algorithm for UFL. This is achieved by combining the Dual-Fitting technique with Local Search, another popular technique to address clustering problems. In more detail, we use the LMP solution S produced by JMS to seed a local search algorithm. We show that local search substantially improves S unless a big fraction of the connection cost of S is associated with facilities of relatively small opening costs. In the latter case however the analysis of Jain, Mahdian, and Saberi can be improved (i.e., S is cheaper than expected). To summarize: Either S is close enough to the optimum, or it must belong to the local neighborhood of a good enough local optimum. From a conceptual viewpoint, our result gives a theoretical evidence that local search can be enhanced so as to avoid bad local optima by choosing the initial feasible solution with LP-based techniques. Our result directly implies a (slightly) improved approximation for the related $k$-Median problem, another fundamental clustering problem: Given (C ∪ F, dist) as in a UFL instance and an integer k ∈ ℕ, find S ⊆ F with |S| = k that minimizes d(S). The current best approximation algorithms for $k$-Median are based on the following framework: use an LMP α approximation algorithm for UFL to build an α approximate bipoint solution for $k$-Median, and then round it with a ρBR approximate bipoint rounding algorithm. This implies an α · ρBR approximation. The current-best value of ρBR is 1.338 by Byrka, Pensyl, Rybicki, Srinivasan, and Trinh [SODA'15, TALG'17], which yields 2.6742-approximation. Combining their algorithm with our refined LMP algorithm for UFL (replacing JMS) gives a 2.67059-approximation. * The full version of the paper can be accessed at https://arxiv.org/abs/2207.05150 }
+}
+
+
+
+
+
+
+@inbook{ImprovedBi-pointRoundingAlgorithmsAndAGoldenBarrierFork-Median,
+author = {Kishen N Gowda and Thomas Pensyl and Aravind Srinivasan and Khoa Trinh},
+title = {Improved Bi-point Rounding Algorithms and a Golden Barrier for $k$-Median},
+booktitle = {Proceedings of the 2023 Annual ACM-SIAM Symposium on Discrete Algorithms (SODA)},
+chapter = {},
+pages = {987-1011},
+doi = {10.1137/1.9781611977554.ch38},
+URL = {https://epubs.siam.org/doi/abs/10.1137/1.9781611977554.ch38},
+eprint = {https://epubs.siam.org/doi/pdf/10.1137/1.9781611977554.ch38},
+    abstract = { The current best approximation algorithms for $k$-median rely on first obtaining a structured fractional solution known as a bi-point solution, and then rounding it to an integer solution. We improve this second step by unifying and refining previous approaches. We describe a hierarchy of increasingly-complex partitioning schemes for the facilities, along with corresponding sets of algorithms and factor-revealing non-linear programs. We prove that the third layer of this hierarchy is a 2.613-approximation, improving upon the current best ratio of 2.675, while no layer can be proved better than 2.588 under the proposed analysis. On the negative side, we give a family of bi-point solutions which cannot be approximated better than the square root of the golden ratio, even if allowed to open $k + o(k)$ facilities. This gives a barrier to current approaches for obtaining an approximation better than . Altogether we reduce the approximation gap of bi-point solutions by two thirds. }
+}
+@inproceedings{ConstantFactorApproximationForSubsetFeedbackSetProblemsViaANewLPRelaxation,
+author = {Chekuri, Chandra and Madan, Vivek},
+title = {Constant factor approximation for subset feedback set problems via a new LP relaxation},
+year = {2016},
+isbn = {9781611974331},
+publisher = {Society for Industrial and Applied Mathematics},
+address = {USA},
+abstract = {We consider subset feedback edge and vertex set problems in undirected graphs. The input to these problems is an undirected graph G = (V, E) and a set S = {s1, S2, . . ., sk} ⊂ V of k terminals. A cycle in G is interesting if it contains a terminal. In the Subset Feedback Edge Set problem (Subset-FES) the input graph is edge-weighted and the goal is to remove a minimum weight set of edges such that no interesting cycle remains. In the Subset Feedback Vertex Set problem (Subset-FVS) the input graph is node-weighted and the goal is to remove a minimum weight set of nodes such that no interesting cycle remains.A 2-approximation is known for Subset-FES [12] and a 8-approximation is known for Subset-FVS [13]. The algorithm and analysis for Subset-FVS is complicated. One reason for the difficulty in addressing feedback set problems in undirected graphs has been the lack of LP relaxations with constant factor integrality gaps; the natural LP has an integrality gap of Θ(log n).In this paper, we introduce new LP relaxations for Subset-FES and Subset-FVS and show that their integrality gap is at most 13. Our LP formulation and rounding are simple although the analysis is non-obvious.},
+booktitle = {Proceedings of the Twenty-Seventh Annual ACM-SIAM Symposium on Discrete Algorithms},
+pages = {808–820},
+numpages = {13},
+location = {Arlington, Virginia},
+series = {SODA '16}
+}
+
+
+
+
+
+
+
+@article{ApproximatingMinimumSubsetFeedbackSetsInUndirectedGraphsWithApplications,
+author = {Even, Guy and Naor, Joseph (Seffi) and Schieber, Baruch and Zosin, Leonid},
+title = {Approximating Minimum Subset Feedback Sets in Undirected Graphs with Applications},
+journal = {SIAM Journal on Discrete Mathematics},
+volume = {13},
+number = {2},
+pages = {255-267},
+year = {2000},
+doi = {10.1137/S0895480195291874},
+
+URL = { 
+    
+        https://doi.org/10.1137/S0895480195291874
+    
+    
+
+},
+eprint = { 
+    
+        https://doi.org/10.1137/S0895480195291874
+    
+    
+
+}
+,
+    abstract = { Let G=(V,E) be a weighted undirected graph where all weights are at least one. We consider the following generalization of feedback set problems. Let \$S \subset V\$ be a subset of the vertices. A cycle is called interesting if it intersects the set S. A subset feedback edge (vertex) set is a subset of the edges (vertices) that intersects all interesting cycles. In minimum subset feedback problems the goal is to find such sets of minimum weight. This problem has a variety of applications, among them genetic linkage analysis and circuit testing. The case in which S consists of a single vertex is equivalent to the multiway cut problem, in which the goal is to separate a given set of terminals. Hence, the subset feedback problem is NP-complete and also generalizes the multiway cut problem. We provide a polynomial time algorithm for approximating the subset feedback edge set problem that achieves an approximation factor of two. This implies a \$\Delta\$-approximation algorithm for the subset feedback vertex set problem, where \$\Delta\$ is the maximum degree in G. We also consider the multicut problem and show how to achieve an \$O(\log \tau^*)\$ approximation factor for this problem, where \$\tau^*\$ is the value of the optimal fractional solution. To achieve the \$O(\log \tau^*)\$ factor we employ a bootstrapping technique. }
+}
+
+
+
+
+
+
+
+
+@article{A2-ApproximationAlgorithmForTheUndirectedFeedbackVertexSetProblem,
+author = {Bafna, Vineet and Berman, Piotr and Fujito, Toshihiro},
+title = {A 2-Approximation Algorithm for the Undirected Feedback Vertex Set Problem},
+journal = {SIAM Journal on Discrete Mathematics},
+volume = {12},
+number = {3},
+pages = {289-297},
+year = {1999},
+doi = {10.1137/S0895480196305124},
+
+URL = { 
+    
+        https://doi.org/10.1137/S0895480196305124
+    
+    
+
+},
+eprint = { 
+    
+        https://doi.org/10.1137/S0895480196305124
+    
+    
+
+}
+,
+    abstract = { A feedback vertex set of a graph is a subset of vertices that contains at least one vertex from every cycle in the graph. The problem considered is that of finding a minimum feedback vertex set given a weighted and undirected graph. We present a simple and efficient approximation algorithm with performance ratio of at most 2, improving previous best bounds for either weighted or unweighted cases of the problem. Any further improvement on this bound, matching the best constant factor known for the vertex cover problem, is deemed challenging.The approximation principle, underlying the algorithm, is based on a generalized form of the classical local ratio theorem, originally developed for approximation of the vertex cover problem, and a more flexible style of its application. }
+}
+
+
+@article{OptimizationOfPearlsMethod,
+author = {Becker, Ann and Geiger, Dan},
+title = {Optimization of Pearl's method of conditioning and greedy-like approximation algorithms for the vertex feedback set problem},
+year = {1996},
+issue_date = {May 1996},
+publisher = {Elsevier Science Publishers Ltd.},
+address = {GBR},
+volume = {83},
+number = {1},
+issn = {0004-3702},
+url = {https://doi.org/10.1016/0004-3702(95)00004-6},
+doi = {10.1016/0004-3702(95)00004-6},
+journal = {Artif. Intell.},
+month = may,
+pages = {167–188},
+numpages = {22}
+}
+@article{An8ApproximationAlgorithmForTheSubsetFeedbackVertexSetProblem,
+author = {Even, Guy and Naor, Joseph and Zosin, Leonid},
+year = {2006},
+month = {07},
+pages = {1231-1252},
+title = {An 8-Approximation Algorithm for the Subset Feedback Vertex Set Problem},
+volume = {30},
+journal = {SIAM Journal on Computing},
+doi = {10.1137/S0097539798340047}
+}
