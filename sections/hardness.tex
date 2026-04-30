@@ -24,6 +24,10 @@ Note that since the objective of the
 \begin{proof}
     If $d=0$ then the problem is equivalent to \textsc{HC} and the result follows from Theorem~\ref{thm:hc-inapproximability}. Assume that $d\geq 1$. We create a \textsc{HC-$\cD_d$} instance $H$ by modyfying $G$ as follows: For any vertex $v\in V\br{G}$ and $i\in [n\br{G}]$ and $j\in [d]$ we create a vertex $u_{i,j}^v$. Then, we connect $v_{i,j}^v$ to $v_{i',j'}^v$ if $\spr{j-j'}=1$. We also connect each $v_{i, 1}^v$ to $v$ for every $i\in [n\br{G}]$. We call this subgraph $H^v$ and note that it has diameter $d$, its minimum cut is of size $n\br{G}$ and $\spr{V\br{H_v}}=n\br{G}\cdot d +1$. 
 
+    Figure~\ref{fig:hardness-diameter-reduction} illustrates the reduction on a small example and shows both a single gadget $H^v$ and the full graph obtained after attaching the gadgets to all vertices of $G$.
+
+    \input{figures/fig_hardness_diameter_reduction.tex}
+
     Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HC-$\cD_d$ tree $T'$ for $H$ as follows. We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add all the vertices of $H^v$ to $A$ as well. This transformation increases the cost of $T'$ by a multiplicative factor of $\br{n\br{G}}\cdot d+1$, ensures that $T'$ is a hierarchical clustering tree and all of the leaf clusters in $T'$ have diameter at most $d$. We have that $\COST_H\br{T'} \leq \br{n\br{G}\cdot d+1}\COST_G\br{T}\leq \epsilon \cdot \br{n\br{G}\cdot d+1}\cdot n\br{G}\cdot m\br{G}$.
 
     Assume that we have a \textbf{NO} instance $G$. Observe, that we can assume that the optimal clustering tree never cuts edges of $H^v$. If contrary, there are two cases:
@@ -49,6 +53,10 @@ Note that since the objective of the
 \end{theorem}
 \begin{proof}
     Let $G=\br{V,E}$ be an instance of \textsc{HC}. We set $\delta = 2\epsilon$ and $c'= \frac{c}{9\sqrt{2}}$. We create a \textsc{HC-$\cT$} instance $H$ as follows: For any vertex $v\in V\br{G}$ we add two new vertices $v_1$ and $v_2$ and we build a triangle on $\brc{v,v_1,v_2}$. 
+
+    Figure~\ref{fig:hardness-tree-reduction} shows the construction on a small example.
+
+    \input{figures/fig_hardness_tree_reduction.tex}
     
     Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HC-$\cT$ tree $T'$ for $H$ as follows: We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add $v_1$ and $v_2$ to $A$ as well. This transformation increases the cost of $T'$ be a multiplicative factor of $3$, ensures that all of the clusters in $T'$ satisfy hierarchical clustering properties except that every leaf cluster in $T'$ is a triangle. To fix this, we add a new level of the tree, in which we cut each such triangle using one edge. It is easy to see that $\COST_H\br{T'} = 3\COST_G\br{T}+ 3n\br{G} \leq 3\epsilon \cdot n\br{G} \cdot m\br{G} + 3n\br{G} \leq \epsilon \cdot n \cdot m+n\leq \delta \cdot n \cdot m$, where we used the fact that $\epsilon \geq 1/m$ for large enough $m$. 
     
@@ -57,6 +65,10 @@ Note that since the objective of the
     \item $u$ and $v$ belong to different leaf clusters in $T$. Then, we know that the edge $uv$ had to be cut in $T$ and the stretch of $u$ and $v$ in $\pi$, i.~e., $\spr{\pi\br{u}-\pi\br{v}}$, is at least the size of the cluster in which $uv$ was cut.
     \item $u$ and $v$ belong to the same leaf cluster in $T$. Consider the cluster $C$ in which $u$ and $v$ belongs. Let $C'$ be this cluster restricted to the vertices of $G$. Since $C'$ is a tree, we know that the contribution of vertices in $C'$ to the cost of $\pi$ is at most $\spr{C'}^2$. On the other hand, we know that for each vertex $v\in C'$, at least one of the edges $vv_1, vv_2$ has to be cut in $T$ and every such edge contributes to the cost of every vertex in $C'$ so the contribution of these edges to the cost of $T$ is at least $\spr{C'}^2$.
     \end{enumerate}   
+
+    Figure~\ref{fig:hardness-tree-no-case2} illustrates the second case above.
+
+    \input{figures/fig_hardness_tree_no_case2.tex}
     
     By summing up the contributions of all edges, we obtain that $\COST_H\br{T}\geq \COST_G\br{\pi}\geq c\sqrt{\epsilon} \cdot n\br{G} \cdot m\br{G} \geq \frac{c\sqrt{\epsilon}}{9}\cdot n \cdot m = c'\sqrt{\delta} \cdot n \cdot m$, where we used the fact that $n=3n\br{G}$ and $m= m\br{G}+2\cdot n\br{G}\leq 3\cdot m\br{G}$ since we can assume that $G$ is not a tree (for which \textsc{HC} is constant factor approximable), so $n\br{G}\leq m\br{G}$.
 \end{proof}

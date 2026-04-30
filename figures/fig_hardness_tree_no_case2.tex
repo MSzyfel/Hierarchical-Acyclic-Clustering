@@ -1,0 +1,134 @@
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        scale=1.12,
+        transform shape,
+        every node/.style={circle,draw,inner sep=1.2pt,font=\scriptsize},
+        cvert/.style={circle,draw=cutC!70!black,fill=cutC!22,inner sep=1.2pt,font=\scriptsize},
+        cpvert/.style={circle,draw=cutB!80!black,fill=cutB!18,inner sep=1.2pt,font=\scriptsize},
+        outvert/.style={circle,draw=black,fill=white,inner sep=1.2pt,font=\scriptsize},
+        aux/.style={circle,draw=cutC!75!black,fill=cutC!18,inner sep=1.1pt,font=\scriptsize,transform shape=false},
+        auxblack/.style={circle,draw=black,fill=white,inner sep=1.1pt,font=\scriptsize,transform shape=false},
+        cedge/.style={draw=cutC!75!black,thick},
+        cpedge/.style={draw=cutB!85!black,very thick},
+        outedge/.style={draw=black,thick},
+        cutedge/.style={draw=cutA,very thick,dashed}
+    ]
+        % Original vertices (larger graph)
+        \coordinate (a) at (-4.0,0.0);
+        \coordinate (b) at (-2.2,1.6);
+        \coordinate (c) at (-0.4,1.2);
+        \coordinate (d) at (1.5,1.7);
+        \coordinate (e) at (3.2,0.9);
+        \coordinate (f) at (0.3,-0.7);
+        \coordinate (g) at (-2.1,-1.0);
+        \coordinate (h) at (4.9,1.9);
+        \coordinate (i) at (5.3,-0.1);
+
+        % Edges in C' (blue tree, not a path)
+        \draw[cpedge] (a) -- (b);
+        \draw[cpedge] (b) -- (c);
+        \draw[cpedge] (b) -- (d);
+        \draw[cpedge] (d) -- (e);
+
+        % Additional edges (outside C')
+        \draw[outedge] (c) -- (f);
+        \draw[outedge] (f) -- (g);
+        \draw[outedge] (g) -- (a);
+        \draw[outedge] (c) -- (g);
+
+        % Outside-C part of graph
+        \draw[outedge] (e) -- (h);
+        \draw[outedge] (h) -- (i);
+        \draw[outedge] (e) -- (i);
+
+        % Equilateral triangles attached to vertices in C'
+        % Template in local coordinates: (0,0), (1.039,0.6), (1.039,-0.6)
+        \begin{scope}[shift={(a)}, rotate=180]
+            \node[aux] (a1) at (1.039,0.6) {$a_1$};
+            \node[aux] (a2) at (1.039,-0.6) {$a_2$};
+            \draw[cutedge] (0,0) -- (a1);    % type vv1
+            \draw[cedge] (0,0) -- (a2);
+            \draw[cedge] (a1) -- (a2);
+        \end{scope}
+
+        \begin{scope}[shift={(b)}, rotate=130]
+            \node[aux] (b1) at (1.039,0.6) {$b_1$};
+            \node[aux] (b2) at (1.039,-0.6) {$b_2$};
+            \draw[cedge] (0,0) -- (b1);
+            \draw[cutedge] (0,0) -- (b2);    % type vv2
+            \draw[cedge] (b1) -- (b2);
+        \end{scope}
+
+        \begin{scope}[shift={(c)}, rotate=340]
+            \node[aux] (c1) at (1.039,0.6) {$c_1$};
+            \node[aux] (c2) at (1.039,-0.6) {$c_2$};
+            \draw[cedge] (0,0) -- (c1);
+            \draw[cedge] (0,0) -- (c2);
+            \draw[cutedge] (c1) -- (c2);     % type v1v2
+        \end{scope}
+
+        \begin{scope}[shift={(d)}, rotate=70]
+            \node[aux] (d1) at (1.039,0.6) {$d_1$};
+            \node[aux] (d2) at (1.039,-0.6) {$d_2$};
+            \draw[cutedge] (0,0) -- (d1);    % one triangle with 2 cuts
+            \draw[cedge] (0,0) -- (d2);
+            \draw[cutedge] (d1) -- (d2);
+        \end{scope}
+
+        \begin{scope}[shift={(e)}, rotate=230]
+            \node[aux] (e1) at (1.039,0.6) {$e_1$};
+            \node[aux] (e2) at (1.039,-0.6) {$e_2$};
+            \draw[cedge] (0,0) -- (e1);
+            \draw[cutedge] (0,0) -- (e2);
+            \draw[cedge] (e1) -- (e2);
+        \end{scope}
+
+        % Equilateral triangles for f, g, h, i
+        \begin{scope}[shift={(f)}, rotate=-90]
+            \node[auxblack] (f1) at (1.039,0.6) {$f_1$};
+            \node[auxblack] (f2) at (1.039,-0.6) {$f_2$};
+            \draw[outedge] (0,0) -- (f1);
+            \draw[outedge] (0,0) -- (f2);
+            \draw[outedge] (f1) -- (f2);
+        \end{scope}
+
+        \begin{scope}[shift={(g)}, rotate=-150]
+            \node[auxblack] (g1) at (1.039,0.6) {$g_1$};
+            \node[auxblack] (g2) at (1.039,-0.6) {$g_2$};
+            \draw[outedge] (0,0) -- (g1);
+            \draw[outedge] (0,0) -- (g2);
+            \draw[outedge] (g1) -- (g2);
+        \end{scope}
+
+        \begin{scope}[shift={(h)}, rotate=35]
+            \node[auxblack] (h1) at (1.039,0.6) {$h_1$};
+            \node[auxblack] (h2) at (1.039,-0.6) {$h_2$};
+            \draw[outedge] (0,0) -- (h1);
+            \draw[outedge] (0,0) -- (h2);
+            \draw[outedge] (h1) -- (h2);
+        \end{scope}
+
+        \begin{scope}[shift={(i)}, rotate=-20]
+            \node[auxblack] (i1) at (1.039,0.6) {$i_1$};
+            \node[auxblack] (i2) at (1.039,-0.6) {$i_2$};
+            \draw[outedge] (0,0) -- (i1);
+            \draw[outedge] (0,0) -- (i2);
+            \draw[outedge] (i1) -- (i2);
+        \end{scope}
+
+        % Draw original vertices last
+        \node[cpvert] at (a) {$a$};
+        \node[cpvert] at (b) {$b$};
+        \node[cpvert] at (c) {$c$};
+        \node[cpvert] at (d) {$d$};
+        \node[cpvert] at (e) {$e$};
+        \node[outvert] at (f) {$f$};
+        \node[outvert] at (g) {$g$};
+        \node[outvert] at (h) {$h$};
+        \node[outvert] at (i) {$i$};
+
+    \end{tikzpicture}
+    \caption{Illustration of Case 2 in the \textbf{NO} analysis for \textsc{HC-$\cT$}. Blue denotes $C'$ (original vertices), green denotes vertices and edges of $C\setminus C'$, and red dashed edges are the ones cut in triangles.}
+    \label{fig:hardness-tree-no-case2}
+\end{figure}
