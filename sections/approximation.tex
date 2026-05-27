@@ -4,14 +4,14 @@
 Any $\cF$ that satisfies the following is called \emph{tractable}:}
 \begin{enumerate}
     \item There exists an ILP formulation of the \textsc{P-$\cF$} problem such that: the set of variables consists only of variables of edge-cut type. An \emph{edge-cut type} variable is a variable that indicates whether an edge is cut or not. Moreover, the property of each vertex $v\in X$ belonging to an $\cF$-cluster can be encoded using cover-type constraints (except the domain of each variable) and these are the only constraints. A \emph{cover-type} constraint is a constraint of the form $\sum_{e\in R} x_e \geq 1$ for some subset of edges $R\subseteq E$. For any $v\in X$, let $\cR_v$ denote the set of all such $R$, for which a cover-type constraint exists and is necessary for $v$ in order for it to be in an $\cF$-cluster.
-     \DD{do dyskusji: gdyby sie wczytac, to mowmimy, ze ILP ``zawiera'' zmienne okreslonego typu, ale w sumie moze zawierac tez inne (?) Nalezaloby wiec podkreslic, ze tylko okreslone zmienne sa dozwolone. W przeciwnym razie mozna wzbogacac program o dowolne tricki.}
+     \DD{do dyskusji: na razie kontynuje, gdyz wiadomo o co chodzi, ale to chyba warto przeformulowac. Mowimy bowiem na poczatku, ze sa jedynie edge-cut'y, a po chwili, ze jeszcze jednak cos, a potem, ze jest wyjatek na domene.}
     \item There exists a separation oracle for the LP-relaxation of the above ILP.
-    \item There exists an algorithm for \textsc{P-$\cF$} which given an instance of the problem and a solution to the LP relaxation of the above ILP, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution to \textsc{P-$\cF$} and $\sum_{e\in S} c(e) \leq \alpha(n)\cdot \sum_{e\in E} c(e) \cdot x_e$, where $\alpha\br{n}$ is the approximation ratio of the algorithm.
+    \item There exists an algorithm which given an instance of the problem \textsc{P-$\cF$} and a solution to the LP relaxation of the above ILP, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution to \textsc{P-$\cF$} and $\sum_{e\in S} c(e) \leq \alpha(n)\cdot \sum_{e\in E} c(e) \cdot x_e$, where $\alpha\br{n}$ is the approximation ratio of the algorithm.
      \DD{tutaj kilka rzeczy: odwolujemy sie do $x_e$ wiec tym bardziej nalezy podkreslic, ze to sa jedyne zmienne. Tu warto doprezycowac, czy $x_e$ jest integer value czy zrelaksowana. W sumie pojawia sie pytanie czy wspolczynnik aproksymacji pojawia sie w klasie wsyzstkich algorytmow, ktore na input dostaja dodatkowo LP relaxation czy dotyczy aprokaymacji tylko P-$\cF$, a dodatkowy input to tylko taki boost, ktory pozwala latwiej dostac appox.}
 \end{enumerate}
 
-\DDfix{Moreover, we refer to the above ILP and its LP-relaxation as \emph{well-behaved}.}
-We note, that for both $\cT$ and $\cD$ there exist such ILPs (see Section \ref{subsection:FES_MMC_kBP}) as well as the corresponding approximation algorithms. We encourage the reader to check that those LPs are indeed well behaved. \DD{o, i tutaj wlasnie uzylismy well-behaved odnosnie ILP (zdanie mowi o LPs, ale tak na prawde chodzi nam o ILP, gdyz relaksacje jest jednoznaczna.}
+\DDfix{We refer to the above ILP and its LP-relaxation as \emph{well-behaved}.}
+We note, that for both $\cT$ and $\cD$ there exist such ILPs (see Section \ref{subsection:FES_MMC_kBP}) as well as the corresponding approximation algorithms. We encourage the reader to check that those LPs are indeed well behaved.
 \DDfix{From now on, for any class $\cF$ that is tractable, by \textsc{P-$\cF$-ILP} we denote any ILP that is well-behaved and by \textsc{P-$\cF$-LP} we denote the corresponding LP-relaxation.}
 \DD{warto miec na uwadze, ze \textsc{P-$\cF$-ILP} odwoluje sie do przykladowego ILP, ktory jest well-behaved, ale powyzsze nie wyklucza, ze jest ich wiecej.}
 
@@ -27,20 +27,34 @@ During the recursive step, we use both of the aforementioned decomposed relaxati
 Since we decompose the \textsc{LP} into separate levels, by summing up over all of them we will be able to show that our algorithm achieves an approximation ratio of $O\br{\alpha\br{n}+\beta\br{n}}$, where $\beta\br{n}$ is the approximation ratio of the rounding algorithm for \textsc{FES}.
 
 \subsection{\textsc{ILP} formulation of \textsc{HC-$\cF$} and its two relaxations}
-    \DD{czyli tutaj mamy input $T$? I na tej podstawie budujemy ILP?}
-    We decompose the clustering tree $T$ into $n$ separate edge cut levels. For each level $t$, we require one of the two properties to hold. Each cluster is either of size at most $t$ or it is a tree. The partition at level $t-1$ is a superset of partition at level $t$.
-    \DD{Tutaj sie pogubilem czy mowimy o tym samym level decomposition zdefiniowanym wczesniej? Co znaczy ``superset'' jesli to jest to wczesniejsze level decomposition?}
-    For each pair of vertices $i,j\in V$ and level $1\in [n]$ we define a variable $x_{ij}^t$ to be $1$ if $i$ and $j$ are in different clusters at level $t$ and $0$ otherwise. We also define a variable $y_i^t$ to be $1$ if all cycles in $G$ containing $i$ are cut at level $t$ and $0$ otherwise. We have the following constraints:
+    We first describe the constraints of the \textsc{ILP} along with an explanation of the role they play.
+    To that end we refer to a clustering tree $T$ to be computed, and we consider its $n$ separate edge cut levels.
+    For each level $t$, we require (see the definition) one of the two properties to hold. Each cluster is either of size at most $t$ or it is a tree. The partition at level $t-1$ needs to be a superset of partition at level $t$.
+    For each pair of vertices $i,j\in V$ and a level $t\in [n]$ we define a variable $x_{ij}^t$ to be $1$ if $i$ and $j$ are in different clusters at level $t$ and $0$ otherwise. We also define a variable $y_i^t$ to be $1$ if all cycles in $G$ containing $i$ are cut at level $t$ and $0$ otherwise.
+    We first explain all constraints, in particular the role they play and then we give the ILP.
+    The constraints are the following:
     \begin{enumerate}
-        \item \textbf{refinement:} $x_{ij}^t \leq x_{ij}^{t-1}$ for all $i,j\in V$ and $t\in [n]$. This is because if vertices $i$ and $j$ are in different clusters at level $t$, they must also be in different clusters at level $t-1$. Moreover, $y_i^t \leq y_i^{t-1}$ for all $i\in V$ and $t\in [n]$. This is because if all cycles containing vertex $i$ are cut at level $t$, they must also be cut at level $t-1$.
+        \item \textbf{refinement:} $x_{ij}^t \leq x_{ij}^{t-1}$ for all $i,j\in V$ and $t\in [n]$. This ensures that if vertices $i$ and $j$ are in different clusters at level $t$, they must also be in different clusters at level $t-1$. Moreover, $y_i^t \leq y_i^{t-1}$ for all $i\in V$ and $t\in [n]$. This is because if all cycles containing a vertex $i$ are cut at level $t$, they must also be cut at level $t-1$.
+
         \item \textbf{triangle inequality:} $x_{ik}^t \leq x_{ij}^t + x_{jk}^t$ for all $i,j,k\in V$ and $t\in [n]$. This is because if vertices $i$ and $k$ are in the same cluster at level $t$, then vertices $i$ and $j$ must be in the same cluster or vertices $j$ and $k$ must be in the same cluster at level $t$.
         \DD{to tlumacznie mi nie pasuje, gdyz jest sa w tym samym klastrze, to $x_{ik}^t=0$ i nierownosc jest trywialnie spelniona. Moze zatem chodzi o:}
-        \DDfix{This is because if vertices $i$ and $k$ are in different clusters at level $t$, then for any choice of another vertex $j$, either $i$ and $j$, or $j$ and $k$ have to be in different clusters.}
-        \item \textbf{$\ell_2^2$-metric:} $x_{ij}^t = \frac{1}{2}\|v_i^t - v_j^t\|_2^2$ for all $i,j\in V$ and $t\in [n]$. The triangle inequality is implied by the $\ell_2^2$-metric constraint. With each vertex $i$ we associate a unit vector $v_i^t$ in a high-dimensional space. All vertices in one cluster at level $t$ are mapped to the same vector, while vertices in different clusters are mapped to orthogonal vectors. For completeness we also include $y_{i}^t = \frac{1}{2}\|u_{i,1}^t - u_{i,2}^t\|_2^2$. Note that this constraint is merely a vehicle to simulate $y_i^t\in[0,1]$ as a semidefinite constraint.
-        \DD{do dyskusji...}
+        \DDfix{This is because if vertices $i$ and $k$ are in different clusters at level $t$, then for any choice of another vertex $j$, $i$ and $j$, or $j$ and $k$ have to be in different clusters.}
+
+        \item \textbf{$\ell_2^2$-metric:} $x_{ij}^t = \frac{1}{2}\|v_i^t - v_j^t\|_2^2$ for all $i,j\in V$ and $t\in [n]$.
+        With each vertex $i$ we associate a unit vector $v_i^t$ in a high-dimensional space.
+        \DD{trzebaby zdefiniowac ta przestrzen (ile wymiarow, czy dowolne wektory itp.)}
+        All vertices in one cluster at level $t$ are mapped to the same vector, while vertices in different clusters are mapped to orthogonal vectors. For completeness we also include $y_{i}^t = \frac{1}{2}\|u_{i,1}^t - u_{i,2}^t\|_2^2$. Note that this constraint is merely a vehicle to simulate $y_i^t\in[0,1]$ as a semidefinite constraint.
+        The triangle inequality is implied by the $\ell_2^2$-metric constraint.
+
         \item \textbf{P-$\cF$ constraints:} For every vertex $i\in V$ and every level $t\in [n]$ and every $R\in \cR_i$ we have $\sum_{e\in R} x_e^t \geq y_{i}^t$. Additionally, we have $y_i^1=1$, since every vertex needs to belong to an $\cF$-cluster eventually.
-        \DD{$\cR_i$ niezdefiniowane}
-        \item \textbf{spreading:} For every vertex $i\in V$ and every level $t\in [n]$ we have $\sum_{j\in V} x_{ij}^t \geq \br{1-y_i^t}\cdot (n-t)$. This is because if the cluster containing vertex $i$ at level $t$ has size at most $t$, then either all cycles containing vertex $i$ are cut at level $t$ or at least $n-t$ vertices are in different clusters than vertex $i$ at level $t$.
+        \DD{pierwsza sprawa tutaj: jak sa zdefiniowane $\cR_i$? Rozumiem, ze dla danego poziomu, kodujemy rozwiazanie dla P-F, ale w tym celu trzeba zdefiniowac $X$ aby mowic o $\cR_i$. Tak jak to mamy teraz, to sie wydaje byc zapetlona definicja: definiujemy ILP constraints na podstawie $\cR_i$'s a $\cR_i$ zaleza od tego jakie sa constraints.}
+        \DD{Czy zmienne $x$ indeksowane krawedziami to pomylka, czy sa tez w ILP obok zmiennych indksowanych wierzcholkami?}
+        \DD{druga sprawa: ustawienie $y_i^1=1$ mowi, ze wszystkie cykle sa zlikwidowane, a to by sugeowalo, ze ILP jest dedykowany przypadkowi $\cF=\cT$.}
+
+        \item \textbf{spreading:} For every vertex $i\in V$ and every level $t\in [n]$ we have $\sum_{j\in V} x_{ij}^t \geq \br{1-y_i^t}\cdot (n-t)$.
+        This is because if the left-hand side sum exceeds $t$, then all cycles in the cluster containing $i$ need to be cut, i.e., $y_i^t=1$.
+        Otherwise, the cluster containing vertex $i$ at level $t$ has size at most $t$, i.e., at least $n-t$ vertices are in different clusters than the vertex $i$ at level $t$.
+        The latter is correctly expressed by the right-hand side expression when $y_i^t=0$.
     \end{enumerate}
 
     Our relaxation is two-fold. Firstly, we introduce the following \textsc{ILP} formulation \textsc{ILP-HC-$\cF$} for the \textsc{HC-$\cF$} problem:
@@ -50,19 +64,21 @@ Since we decompose the \textsc{LP} into separate levels, by summing up over all 
         &y_i^t \leq y_i^{t-1} \quad \forall i\in V, t\in [n],\\
         &y_i^1 = 1 \quad \forall i\in V,\\
         &x_{ik}^t \leq x_{ij}^t + x_{jk}^t \quad \forall i,j,k\in V, t\in [n],\\
-        &\sum_{e\in R} x_{e}^t \geq y_{i}^t \quad \forall i\in V, R\in \cR_i, t\in [n],\\ \label{cover_constraint_ILP}
-        &\sum_{j\in V} x_{ij}^t \geq \br{1-y_i^t}\cdot (n-t) \quad \forall i\in V, t\in [n],\\ \label{spreading_constraint_ILP}
+        &\sum_{e\in R} x_{e}^t \geq y_{i}^t \quad \forall i\in V, R\in \cR_i, t\in [n], \label{cover_constraint_ILP}\\
+        &\sum_{j\in V} x_{ij}^t \geq \br{1-y_i^t}\cdot (n-t) \quad \forall i\in V, t\in [n], \label{spreading_constraint_ILP}\\
         &x_{ij}^t \in \{0,1\} \quad \forall i,j\in V, t\in [n],\\
         &y_i^t \in \{0,1\} \quad \forall i\in V, t\in [n].
     \end{align}
 
-    Observe, that the \textsc{LP} relaxation \textsc{LP-HC-$\cF$} of the above \textsc{ILP} has an exponential number of constraints, since there can be exponentially many constraints of type \ref{cover_constraint_ILP}, however we are guaranteed that a separation oracle exists for these constraints. Therefore, we can solve this \textsc{LP} in polynomial time using the ellipsoid method. Let $LP$ be the solution to \textsc{LP-HC-$\cF$} and let $c\br{LP}$ be the value of its objective function. We now show how to round the solution of \textsc{LP-HC-$\cF$} to get a partially integral solution without excessive increase in cost.
+    Observe, that the \textsc{LP} relaxation \textsc{LP-HC-$\cF$} of the above \textsc{ILP} has an exponential number of constraints, since there can be exponentially many constraints of type \eqref{cover_constraint_ILP}, however we are guaranteed that a separation oracle exists for these constraints. Therefore, we can solve this \textsc{LP} in polynomial time using the ellipsoid method. Let $LP$ be the solution to \textsc{LP-HC-$\cF$} and let $c\br{LP}$ be the value of its objective function. We now show how to round the solution of \textsc{LP-HC-$\cF$} to get a partially integral solution without excessive increase in cost.
 
     \begin{lemma}\label{lem:lp-rounding}
-        Round the values of $y_i^t$ to get $\hat{y}_i^t = 1$ if $y_i^t \geq 1/2$ and $\hat{y}_i^t = 0$ otherwise and $\hat{x}_{ij}^t=\min \brc{1,2y_i^t}$. Then, $\hat{x}, \hat{y}$ is a feasible solution for \textsc{LP-HC-$\cF$} with cost at most $2\cdot c\br{LP}$.
+        %Round the values of $y_i^t$ to get $\hat{y}_i^t = 1$ if $y_i^t \geq 1/2$ and $\hat{y}_i^t = 0$ otherwise
+        \DDfix{Let $\hat{y}_i^t = \lfloor 2y_i^t \rfloor$}
+        and $\hat{x}_{ij}^t=\min \brc{1,2y_i^t}$. Then, $\hat{x}, \hat{y}$ is a feasible solution for \textsc{LP-HC-$\cF$} with cost at most $2\cdot c\br{LP}$.
     \end{lemma}
     \begin{proof}
-        Consider any constraint of type (\ref{cover_constraint_ILP}). If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and the constraint is satisfied. If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$. If for any $e\in R$, $x_{e}^t=1$ then the constraint is satisfied. Otherwise $\sum_{e\in R} \hat{x}_{e}^t = \sum_{e\in R} 2y_i^t \geq 1$. Consider any constraint of type (\ref{spreading_constraint_ILP}). If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$ and the constraint is satisfied. If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and $\sum_{j\in V} \hat{x}_{ij}^t = \sum_{j\in V} 2y_i^t \geq n-t$. The cost of the solution is at most $2\cdot c\br{LP}$ since $\hat{x}_{ij}^t \leq 2x_{ij}^t$ for all $i,j\in V$ and $t\in [n]$.
+        Consider any constraint of type \eqref{cover_constraint_ILP}. If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and the constraint is satisfied. If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$. If for any $e\in R$, $x_{e}^t=1$ \DD{tutaj nie widac skad to sie bierze: w def. $\hat{x}^t_{i,j}$ nie korzystamy z $x^t_{i,j}$; domyslam sie, ze jest typo i powinno byc $\hat{x}^t_{i,j}$.} then the constraint is satisfied. Otherwise $\sum_{e\in R} \hat{x}_{e}^t = \sum_{e\in R} 2y_i^t \geq 1$. \DD{$\leftarrow$ skad sie wzielo $\geq 1$?} Consider any constraint of type \eqref{spreading_constraint_ILP}. If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$ and the constraint is satisfied. If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and $\sum_{j\in V} \hat{x}_{ij}^t = \sum_{j\in V} 2y_i^t \geq n-t$. \DD{$\leftarrow$ tutaj tez nie widac skad ostatnia nierownosc.} The cost of the solution is at most $2\cdot c\br{LP}$ since $\hat{x}_{ij}^t \leq 2x_{ij}^t$ for all $i,j\in V$ and $t\in [n]$.
     \end{proof}
 
     Fix some choice of $\hat{y}_i^t$ in the above \textsc{LP} so that we have a \textsc{MILP} relaxation \textsc{MILP-HC-$\cF$} of \textsc{ILP-HC-$\cF$}. Denote by $MILP$ the solution to \textsc{MILP-HC-$\cF$} and let $c\br{MILP}$ be the value of its objective function. In what follows, we will need to split this \textsc{MILP} into several instances of \textsc{FES}. We will call such a devided solutions \emph{guides} since they will be used to guide the algorithm about the choice of edges to cut. By $MILP_t^H$ denote the solution of \textsc{MILP-HC-$\cF$} restricted to the set of vertices $H$ at level $t$ and define $\COST\br{MILP_t^H} = \sum_{ij\in E\br{H}} c\br{i,j} \cdot x_{ij}^t$.

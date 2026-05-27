@@ -1,7 +1,7 @@
 \section{Preliminaries}
 
 Throughout the paper, we consider an undirected weighted graph $G=\br{V,E,c}$, where $c\colon E\to \mathbb{N}$, and write $n=|V|$. For a set of edges $F\subseteq E$, we use $c\br{F}=\sum_{e\in F} c(e)$. For a vertex set $U\subseteq V$, by $G[U]$ we denote the subgraph of $G$ induced by $U$. Let $[n]=\brc{1,\dots, n}$.
-\DDfix{Define $E\br{X,Y}=\brc{\brc{x,y}\in E\colon x\in X\textup{ and }y\in Y}$, where $X,Y\subseteq V$.}
+Define $E\br{X,Y}=\brc{\brc{x,y}\in E\colon x\in X\textup{ and }y\in Y}$, where $X,Y\subseteq V$.
 By a permutation $\pi$ of $V$ we mean a bijection $\pi\colon V\to [n]$.
 A \emph{clustering tree} for $G$ we mean a rooted tree $T$ in which each node $u$ corresponds to a cluster $G_u$ (an induced subgraph of $G$), the root corresponds to $G$, and the children of a node $u$ form a partition of $G_u$ into connected components after removing some set of edges.
 \DD{do rozwazenia: clustering tree było juz ladnie zdefiniowane, wiec tutaj bym pominal.}
@@ -13,7 +13,7 @@ Given a weighted graph $\br{G, E, c}$, where $c\colon E\to \mathbb{N}$, we defin
     \item \textsc{Hierarchical Clustering} (\textsc{HC}): find a clustering tree $T$ for $G$ which minimizes $\COST_G\br{T} = \sum_{u\in V\br{T}} c(S_u) \cdot |V(G_u)|$, where $S_u$ is the subset of edges cut at node $u$ and $G_u$ is the \DDfix{cluster represented by $u$.}
     \item \textsc{Hierarchical Clustering into $\cF$-clusters} (\textsc{HC-$\cF$}): \DDfix{find a clustering tree $T$ that imposes that each leaf cluster belongs to $\cF$ and minimizes $\COST_G\br{T} = \sum_{u\in V\br{T}} c(S_u) \cdot |V(G_u)|$, where $S_u$ is the subset of edges cut at node $u$ and $G_u$ is the cluster represented by $u$.}
     \item \textsc{Partitioning into $\cF$-clusters} (\textsc{P-$\cF$}): given an additional set $X$ of interesting vertices, partition the graph into clusters $C_1, \dots, C_k$ such that for every $v\in X$, the cluster $C_i$ containing $v$ belongs to $\cF$ and the cost $\COST_G\br{C_1, \dots, C_k} = \sum_{i=1}^k c\br{E\br{C_i, V\setminus C_i}}$ is minimized.
-    \DD{w sumie czemu nie definiujemy tego podobnie jak innych? czyli: given an additional set $X$ of interesting vertices, find a subset of edges $S\subseteq E$ such that for each $v\in X$, the cluster in $G\setminus S$ containing $v$ belongs to $\cF$ the cost $c\br{S}$ is minimized. Koszt jest inny, bo w Twojej wersji kazda krawedz liczymy podwojnie, ale to jednak to samo.}
+    \DD{w sumie czemu nie definiujemy tego podobnie jak innych? czyli: given an additional set $X$ of interesting vertices, find a subset of edges $S\subseteq E$ such that for each $v\in X$, the cluster in $G\setminus S$ containing $v$ belongs to $\cF$ the cost $c\br{S}$ is minimized. Czy nie byloby lepiej dać $1/2$ do kosztu by zliczac kazda krawedz jednokrotnie?}
     The following two problems are special cases of \textsc{P-$\cF$}:     \begin{enumerate}
         \item \textsc{Feedback Edge Set} (\textsc{FES}): given an additional set $X$ of interesting vertices, find a subset of edges $S\subseteq E$ such that $G\setminus S$ contains no cycles going through vertices in $X$ and $\COST_G\br{S} = \sum_{e\in S} c(e)$ is minimized.
         \DD{W sumie to jak to jest z tym special case: nie wystarczy by $\cF$ był acykliczny, gdyz moze byc tak, ze klaster w $G\setminus S$ zawiera wierzcholek z $X$ ale takze zawiera cykle.}
