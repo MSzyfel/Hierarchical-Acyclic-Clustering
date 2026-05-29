@@ -1,12 +1,13 @@
 \section{Preliminaries}
 
-Throughout the paper, we consider an undirected weighted graph $G=\br{V,E,c}$, where $c\colon E\to \mathbb{N}$, and write $n\br{G}=|V\br{G}|$, $m\br{G}=|E\br{G}|$ ($n=n\br{G}$, $m=m\br{G}$ when $G$ is clear from context). For a set of edges $F\subseteq E$, we use $c\br{F}=\sum_{e\in F} c(e)$. Denote by $[n]=\brc{1,\dots, n}$. Define $E\br{X,Y}=\brc{\brc{x,y}\in E\colon x\in X\textup{ and }y\in Y}$, where $X,Y\subseteq V$.
-By a permutation $\pi$ of $V$ we mean a bijection $\pi\colon V\to [n]$. By a clustering tree for $G$ we mean a rooted tree $T$ in which each node corresponds to a cluster (a subset of $V$), the root corresponds to $V$, and children of a node form a partition of the corresponding cluster into connected components after removing some set of edges.
-%\DD{clustering tree było juz ladnie zdefiniowane, wiec tutaj bym pominal.}
+Throughout the paper, we consider an undirected weighted graph $G=\br{V,E,c}$, where $c\colon E\to \mathbb{N}$, and write $n\br{G}=|V\br{G}|$, $m\br{G}=|E\br{G}|$ ($n=n\br{G}$, $m=m\br{G}$ when $G$ is clear from context). For a set of edges $F\subseteq E$, we use $c\br{F}=\sum_{e\in F} c(e)$. Let $[n]=\brc{1,\dots, n}$. Define $E\br{X,Y}=\brc{\brc{x,y}\in E\colon x\in X\textup{ and }y\in Y}$, where $X,Y\subseteq V$.
+By a permutation $\pi$ of $V$ we mean a bijection $\pi\colon V\to [n]$.
+A \emph{clustering tree} for $G$ we mean a rooted tree $T$ in which each node $u$ corresponds to a cluster $G_u$ (an induced subgraph of $G$), the root corresponds to $G$, and the children of a node $u$ form a partition of $G_u$ into connected components after removing some set of edges.
+%\DD{do rozwazenia: clustering tree było juz ladnie zdefiniowane, wiec tutaj bym pominal.}
 
 \subsection{Problems definitions}
 
-Given a weighted graph $\br{G, E, c}$, where $c\colon E\to \mathbb{N}$, we define the following problems:
+Given a weighted graph $\br{G, E, c}$, where $c\colon E\to \mathbb{N}$, we define the following combinatorial problems:
 \begin{itemize}
     \item \textsc{Hierarchical Clustering} (\textsc{HC}): find a clustering tree $T$ for $G$ which minimizes $\COST_G\br{T} = \sum_{u\in V\br{T}} c(S_u) \cdot |V(G_u)|$, where $S_u$ is the subset of edges cut at node $u$ and $G_u$ is the cluster represented by $u$.
     \item \textsc{Hierarchical Clustering into $\cF$-clusters} (\textsc{HC-$\cF$}): find a clustering tree $T$, such that each leaf cluster belong to $\cF$ minimizing $\COST_G\br{T} = \sum_{u\in V\br{T}} c(S_u) \cdot |V(G_u)|$, where $S_u$ is the subset of edges cut at node $u$ and $G_u$ is the cluster represented by $u$.
