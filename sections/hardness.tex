@@ -28,16 +28,26 @@ Note that since the objective of the
 
     \input{figures/fig_hardness_diameter_reduction.tex}
 
-    Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HC-$\cD_d$ tree $T'$ for $H$ as follows. We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add all the vertices of $H^v$ to $A$ as well. This transformation increases the cost of $T'$ by a multiplicative factor of $\br{n\br{G}}\cdot d+1$, ensures that $T'$ is a hierarchical clustering tree and all of the leaf clusters in $T'$ have diameter at most $d$. We have that $\COST_H\br{T'} \leq \br{n\br{G}\cdot d+1}\COST_G\br{T}\leq \epsilon \cdot \br{n\br{G}\cdot d+1}\cdot n\br{G}\cdot m\br{G}$.
+    Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HC-$\cD_d$ tree $T'$ for $H$ as follows. We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add all the vertices of $H^v$ to $A$ as well. This transformation increases the cost of $T'$ by a multiplicative factor of $\br{n\br{G}}\cdot d+1$, ensures that $T'$ is a hierarchical clustering tree and all of the leaf clusters in $T'$ have diameter at most $d$. We have that \[
+    \COST_H\br{T'} \leq \br{n\br{G}\cdot d+1}\COST_G\br{T}\leq \epsilon \cdot \br{n\br{G}\cdot d+1}\cdot n\br{G}\cdot m\br{G}.
+    \]
 
     Assume that we have a \textbf{NO} instance $G$. Observe, that we can assume that the optimal clustering tree never cuts edges of $H^v$. If contrary, there are two cases:
     \begin{enumerate}
         \item The set of edges cut in $H^v$ is not a cut of $H^v$. Then, we can remove cutting of these edges from $T$ without affecting the structure of clusters. Since the cluster containing $V\br{H_v}$ had diameter at most $d$ before, then it must have only consisted of vertices of $H^v$ and thus, after transformation it still has diameter at most $d$.
         \item The set of edges cut in $H^v$ is a cut of $H_v$. 
         Let $S\subseteq E\br{H^v}$ be the set of such edges such that $S$ are all the edges occuring in a top-down exploration of $T$ towards the vertices of $H^v$ before it was first cut (all of such edges belong to cuts at clusters of $T$ forming a path). Let $C$ be the first cluster in this top-down exploration such that edges of $E\br{H^v}$ cut in $C$ are a cut of $H^v$. Order these edges in an arbitrary manner, and append to $S$ the largest number of edges of $H_v$ (in order induced by the ordering), such that $S$ is still not a cut of $H^v$. 
-        Observe that $\spr{S}> n\br{G} - 1 \geq \deg_G\br{v}$, since the minimum cut of $H^v$ is of size $n\br{G}$.. Since $S$ is not a cut of $H^v$, we can remove cutting of these edges from clusters of $T$ without affecting the structure of clusters. We replace this with cutting all of the remaining edges of $N_G\br{v}$ in $C$, of which there are at most $\deg_G\br{v}<\spr{S}$, and thus, the cost of $T$ is strictly less then before. Observe that upon doing so, all clusters containing $V\br{H_v}$ have diameter at most $d$ and therefore, we can remove their child clusters. Moreover, each other child cluster of $C$ is a subgraph of some cluster of $C$ in the original tree, so the resulting clustering tree is still valid.
+        Observe that 
+        \[
+        \spr{S}> n\br{G} - 1 \geq \deg_G\br{v}
+        \]
+        since the minimum cut of $H^v$ is of size $n\br{G}$.
+         Since $S$ is not a cut of $H^v$, we can remove cutting of these edges from clusters of $T$ without affecting the structure of clusters. We replace this with cutting all of the remaining edges of $N_G\br{v}$ in $C$, of which there are at most $\deg_G\br{v}<\spr{S}$, and thus, the cost of $T$ is strictly less then before. Observe that upon doing so, all clusters containing $V\br{H_v}$ have diameter at most $d$ and therefore, we can remove their child clusters. Moreover, each other child cluster of $C$ is a subgraph of some cluster of $C$ in the original tree, so the resulting clustering tree is still valid.
         \end{enumerate}
-    Therefore, the only edges which can be cut in any sensible clustering tree are the edges of $G$. However, in such case the cost of any such clustering tree $T'$ obtained by repeating the cuts of some clustering tree $T$ for $G$ is $\COST_H\br{T'} = \br{n\br{G}\cdot d+1}\cdot\COST_G\br{T} \geq c\sqrt{\epsilon} \cdot \br{n\br{G}\cdot d+1}\cdot n\br{G}\cdot m\br{G}$.
+    Therefore, the only edges which can be cut in any sensible clustering tree are the edges of $G$. However, in such case the cost of any such clustering tree $T'$ obtained by repeating the cuts of some clustering tree $T$ for $G$ is 
+    \[
+    \COST_H\br{T'} = \br{n\br{G}\cdot d+1}\cdot\COST_G\br{T} \geq c\sqrt{\epsilon} \cdot \br{n\br{G}\cdot d+1}\cdot n\br{G}\cdot m\br{G}.
+    \]
 
     By choosing $f\br{n, m, d} = \br{n\br{G}\cdot d+1}\cdot n\br{G}\cdot m\br{G}$, $\delta = \epsilon$ and $c'=c$, we obtain the result.
 \end{proof}
@@ -58,7 +68,11 @@ Note that since the objective of the
 
     \input{figures/fig_hardness_tree_reduction.tex}
     
-    Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HC-$\cT$ tree $T'$ for $H$ as follows: We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add $v_1$ and $v_2$ to $A$ as well. This transformation increases the cost of $T'$ be a multiplicative factor of $3$, ensures that all of the clusters in $T'$ satisfy hierarchical clustering properties except that every leaf cluster in $T'$ is a triangle. To fix this, we add a new level of the tree, in which we cut each such triangle using one edge. It is easy to see that $\COST_H\br{T'} = 3\COST_G\br{T}+ 3n\br{G} \leq 3\epsilon \cdot n\br{G} \cdot m\br{G} + 3n\br{G} \leq \epsilon \cdot n \cdot m+n\leq \delta \cdot n \cdot m$, where we used the fact that $\epsilon \geq 1/m$ for large enough $m$. 
+    Assume that we have a \textbf{YES} instance $G$ and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HC-$\cT$ tree $T'$ for $H$ as follows: We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add $v_1$ and $v_2$ to $A$ as well. This transformation increases the cost of $T'$ be a multiplicative factor of $3$, ensures that all of the clusters in $T'$ satisfy hierarchical clustering properties except that every leaf cluster in $T'$ is a triangle. To fix this, we add a new level of the tree, in which we cut each such triangle using one edge. It is easy to see that 
+    \[
+    \COST_H\br{T'} = 3\COST_G\br{T}+ 3n\br{G} \leq 3\epsilon \cdot n\br{G} \cdot m\br{G} + 3n\br{G} \leq \epsilon \cdot n \cdot m+n\leq \delta \cdot n \cdot m
+    \]
+    where we used the fact that $\epsilon \geq 1/m$ for large enough $m$. 
     
     Assume that we have a \textbf{NO} instance $G$. We want to show that the cost of any clustering tree $T$ for $H$ has cost at least the cost of any linear arrangement of $G$. Firstly, pick all original vertices of $G$ and project them onto a line according to the order they occur in the leaf clusters of $T$, thus obtaining a linear arrangement of $G$, $\pi$. Consider an edge $uv \in E\br{G}$. There are two cases:
     \begin{enumerate}
@@ -70,5 +84,13 @@ Note that since the objective of the
 
     \input{figures/fig_hardness_tree_no_case2.tex}
     
-    By summing up the contributions of all edges, we obtain that $\COST_H\br{T}\geq \COST_G\br{\pi}\geq c\sqrt{\epsilon} \cdot n\br{G} \cdot m\br{G} \geq \frac{c\sqrt{\epsilon}}{9}\cdot n \cdot m = c'\sqrt{\delta} \cdot n \cdot m$, where we used the fact that $n=3n\br{G}$ and $m= m\br{G}+2\cdot n\br{G}\leq 3\cdot m\br{G}$ since we can assume that $G$ is not a tree (for which \textsc{HC} is constant factor approximable), so $n\br{G}\leq m\br{G}$.
+    By summing up the contributions of all edges, we obtain that 
+    \[
+    \COST_H\br{T}\geq \COST_G\br{\pi}\geq c\sqrt{\epsilon} \cdot n\br{G} \cdot m\br{G} \geq \frac{c\sqrt{\epsilon}}{9}\cdot n \cdot m = c'\sqrt{\delta} \cdot n \cdot m
+    \]
+    where we used the fact that $n=3n\br{G}$ and 
+    \[
+    m= m\br{G}+2\cdot n\br{G}\leq 3\cdot m\br{G}
+    \]
+    since we can assume that $G$ is not a tree (for which \textsc{HC} is constant factor approximable), so $n\br{G}\leq m\br{G}$.
 \end{proof}

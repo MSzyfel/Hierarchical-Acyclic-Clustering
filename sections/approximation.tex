@@ -1,177 +1,4 @@
-\section{General algorithmic framework for approximating \textsc{HC-$\cF$}}
-
-\DDfix{We start by introducing three properties regarding a class of graphs $\cF$.
-Any $\cF$ that satisfies the following is called \emph{tractable}:}
-\begin{enumerate}
-    \item There exists an ILP formulation of the \textsc{P-$\cF$} problem such that: the set of variables consists only of variables of edge-cut type. An \emph{edge-cut type} variable is a variable that indicates whether an edge is cut or not. Moreover, the property of each vertex $v\in X$ belonging to an $\cF$-cluster can be encoded using cover-type constraints (except the domain of each variable) and these are the only constraints. A \emph{cover-type} constraint is a constraint of the form $\sum_{e\in R} x_e \geq 1$ for some subset of edges $R\subseteq E$. For any $v\in X$, let $\cR_v$ denote the set of all such $R$, for which a cover-type constraint exists and is necessary for $v$ in order for it to be in an $\cF$-cluster.
-     \DD{do dyskusji: na razie kontynuje, gdyz wiadomo o co chodzi, ale to chyba warto przeformulowac. Mowimy bowiem na poczatku, ze sa jedynie edge-cut'y, a po chwili, ze jeszcze jednak cos, a potem, ze jest wyjatek na domene.}
-    \item There exists a separation oracle for the LP-relaxation of the above ILP.
-    \item There exists an algorithm which given an instance of the problem \textsc{P-$\cF$} and a solution to the LP relaxation of the above ILP, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution to \textsc{P-$\cF$} and $\sum_{e\in S} c(e) \leq \alpha(n)\cdot \sum_{e\in E} c(e) \cdot x_e$, where $\alpha\br{n}$ is the approximation ratio of the algorithm.
-     \DD{tutaj kilka rzeczy: odwolujemy sie do $x_e$ wiec tym bardziej nalezy podkreslic, ze to sa jedyne zmienne. Tu warto doprezycowac, czy $x_e$ jest integer value czy zrelaksowana. W sumie pojawia sie pytanie czy wspolczynnik aproksymacji pojawia sie w klasie wsyzstkich algorytmow, ktore na input dostaja dodatkowo LP relaxation czy dotyczy aprokaymacji tylko P-$\cF$, a dodatkowy input to tylko taki boost, ktory pozwala latwiej dostac appox.}
-\end{enumerate}
-
-We call such a class of graphs, its ILP and its LP-relaxation \emph{$\alpha\br{n}$-well-behaved}. Although the above constraints may seem restrictive, they are satisfied by many natural classes of graphs including trees and bounded diameter graphs (See Section \ref{subsection:FES_MMC_kBP}). We encourage the reader to check that those LPs are indeed $\alpha\br{n}$-well-behaved. From now on by \textsc{P-$\cF$-ILP} and\textsc{P-$\cF$-LP} we denote any such ILP and its LP-relaxation for \textsc{P-$\cF$}.
-\DDfix{From now on, for any class $\cF$ that is tractable, by \textsc{P-$\cF$-ILP} we denote any ILP that is well-behaved and by \textsc{P-$\cF$-LP} we denote the corresponding LP-relaxation.}
-\DD{warto miec na uwadze, ze \textsc{P-$\cF$-ILP} odwoluje sie do przykladowego ILP, ktory jest well-behaved, ale powyzsze nie wyklucza, ze jest ich wiecej.}
-
-In the preprocessing step we use mathemathical programming in order to build a guide for our next algorithmic step. To do so, we start by encoding the problem using an \textsc{ILP}. We merge the properties of any $\alpha\br{n}$-well-behaved ILP with the \textsc{ILP} for \textsc{HC} used by Charikar et. al in \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}.
-\DD{ten paragraf i nastepny wprowadzaja nieco zagubienia co sie bedzie dzialo. Mowimy ``the preprocessing'', ale to chyba jest nowy koncept, a ``the'' sugeruje ze kontynuujemy cos. Z opisu wydaje sie zatem, ze mowimy o innych ILP niz powyzej, czy jednak nie?}
-
-Our relaxation of this \textsc{ILP} is twofold and each step serves one of two purposes, either choosing the subset of vertices, which need to belong to an $\cF$-cluster at each level and finding a cut ensuring that property or choosing the set of edges which need to be cut in order to decrease the size of the instance efficiently. To achieve the former goal, we relax the integrality of the variables to get an \textsc{LP} relaxation which can be solved in polynomial time using the ellipsoid method. Then, we use a rounding routine to get a partially integral solution which at each level corresponds to the subset of vertices $X$ for the \textsc{P-$\cF$} problem. This solution can be then decomposed into several instances of the \textsc{P-$\cF$-LP} which will come useful during the recursive processing. In the second step of the preprocessing, we remove the variables reponsible for the above choice and we relax the remaining variables using the $\ell_2^2$-metric constraints to get an \textsc{SDP} relaxation. This \textsc{SDP} relaxation can be solved in polynomial time using interior point methods. Similarly, as beforethis \textsc{SDP} can be decomposed into several instances of the \textsc{SDP} relaxation for \textsc{$k$-BP} of \cite{PartitioningGraphsIntoBalancedComponents} which will also be useful during the next phase of the algorithm.
-
-During the recursive step, we use both of the aforementioned decomposed relaxations to guide our recursive algorithm. We process the clusters in a top-down manner starting from $H=G$. We pick the level $t=n\br{H}/4$ and we use the solution of the \textsc{LP} at $t$-th level as a valid solution for the \textsc{P-$\cF$-LP}. Therefore, we can use the rounding algorithm to find a subset of edges $F_H$ to be cut, such that the cost of cutting them is comparable to the cost of the \textsc{LP} solution at level $t$ (with $\alpha\br{n}$ loss). Then, we use the solution for the \textsc{SDP} at the $t$-th level as a valid solution for the SDP for \textsc{$k$-BP} with $k=4$. Therefore, we can use the rounding algorithm by \cite{PartitioningGraphsIntoBalancedComponents} to find a subset of edges $B_H$, such that the size of all connected components after cutting $B_H$ is at most $n\br{H}/2$ and the cost of cutting these edges is comparable to the cost of the \textsc{SDP} solution at level $t$. After cutting edges in $F_H\cup B_H$, we get several connected components which we process recursively.
-
-Since we decompose the \textsc{LP} into separate levels, by summing up over all of them we will be able to show that our algorithm achieves an approximation ratio of $O\br{\alpha\br{n}+\beta\br{n}}$, where $\beta\br{n}$ is the approximation ratio of the rounding algorithm for \textsc{FES}.
-
-\subsection{\textsc{ILP} formulation of \textsc{HC-$\cF$} and its two relaxations}
-    We first describe the constraints of the \textsc{ILP} along with an explanation of the role they play.
-    To that end we refer to a clustering tree $T$ to be computed, and we consider its $n$ separate edge cut levels.
-    For each level $t$, we require (see the definition) one of the two properties to hold. Each cluster is either of size at most $t$ or it is a tree. The partition at level $t-1$ needs to be a superset of partition at level $t$.
-    For each pair of vertices $i,j\in V$ and a level $t\in [n]$ we define a variable $x_{ij}^t$ to be $1$ if $i$ and $j$ are in different clusters at level $t$ and $0$ otherwise. We also define a variable $y_i^t$ to be $1$ if all cycles in $G$ containing $i$ are cut at level $t$ and $0$ otherwise.
-    We first explain all constraints, in particular the role they play and then we give the ILP.
-    The constraints are the following:
-    \begin{enumerate}
-        \item \textbf{refinement:} $x_{ij}^t \leq x_{ij}^{t-1}$ for all $i,j\in V$ and $t\in [n]$. This ensures that if vertices $i$ and $j$ are in different clusters at level $t$, they must also be in different clusters at level $t-1$. Moreover, $y_i^t \leq y_i^{t-1}$ for all $i\in V$ and $t\in [n]$. This is because if all cycles containing a vertex $i$ are cut at level $t$, they must also be cut at level $t-1$.
-
-        \item \textbf{triangle inequality:} $x_{ik}^t \leq x_{ij}^t + x_{jk}^t$ for all $i,j,k\in V$ and $t\in [n]$. This is because if vertices $i$ and $k$ are in the same cluster at level $t$, then vertices $i$ and $j$ must be in the same cluster or vertices $j$ and $k$ must be in the same cluster at level $t$.
-        \DD{to tlumacznie mi nie pasuje, gdyz jest sa w tym samym klastrze, to $x_{ik}^t=0$ i nierownosc jest trywialnie spelniona. Moze zatem chodzi o:}
-        \DDfix{This is because if vertices $i$ and $k$ are in different clusters at level $t$, then for any choice of another vertex $j$, $i$ and $j$, or $j$ and $k$ have to be in different clusters.}
-
-        \item \textbf{$\ell_2^2$-metric:} $x_{ij}^t = \frac{1}{2}\|v_i^t - v_j^t\|_2^2$ for all $i,j\in V$ and $t\in [n]$.
-        With each vertex $i$ we associate a unit vector $v_i^t$ in a high-dimensional space.
-        \DD{trzebaby zdefiniowac ta przestrzen (ile wymiarow, czy dowolne wektory itp.)}
-        All vertices in one cluster at level $t$ are mapped to the same vector, while vertices in different clusters are mapped to orthogonal vectors. For completeness we also include $y_{i}^t = \frac{1}{2}\|u_{i,1}^t - u_{i,2}^t\|_2^2$. Note that this constraint is merely a vehicle to simulate $y_i^t\in[0,1]$ as a semidefinite constraint.
-        The triangle inequality is implied by the $\ell_2^2$-metric constraint.
-
-        \item \textbf{P-$\cF$ constraints:} For every vertex $i\in V$ and every level $t\in [n]$ and every $R\in \cR_i$ we have $\sum_{e\in R} x_e^t \geq y_{i}^t$. Additionally, we have $y_i^1=1$, since every vertex needs to belong to an $\cF$-cluster eventually.
-        \DD{pierwsza sprawa tutaj: jak sa zdefiniowane $\cR_i$? Rozumiem, ze dla danego poziomu, kodujemy rozwiazanie dla P-F, ale w tym celu trzeba zdefiniowac $X$ aby mowic o $\cR_i$. Tak jak to mamy teraz, to sie wydaje byc zapetlona definicja: definiujemy ILP constraints na podstawie $\cR_i$'s a $\cR_i$ zaleza od tego jakie sa constraints.}
-        \DD{Czy zmienne $x$ indeksowane krawedziami to pomylka, czy sa tez w ILP obok zmiennych indksowanych wierzcholkami?}
-        \DD{druga sprawa: ustawienie $y_i^1=1$ mowi, ze wszystkie cykle sa zlikwidowane, a to by sugeowalo, ze ILP jest dedykowany przypadkowi $\cF=\cT$.}
-
-        \item \textbf{spreading:} For every vertex $i\in V$ and every level $t\in [n]$ we have $\sum_{j\in V} x_{ij}^t \geq \br{1-y_i^t}\cdot (n-t)$.
-        This is because if the left-hand side sum exceeds $t$, then all cycles in the cluster containing $i$ need to be cut, i.e., $y_i^t=1$.
-        Otherwise, the cluster containing vertex $i$ at level $t$ has size at most $t$, i.e., at least $n-t$ vertices are in different clusters than the vertex $i$ at level $t$.
-        The latter is correctly expressed by the right-hand side expression when $y_i^t=0$.
-    \end{enumerate}
-
-    Our relaxation is two-fold. Firstly, we introduce the following \textsc{ILP} formulation \textsc{ILP-HC-$\cF$} for the \textsc{HC-$\cF$} problem:
-    \begin{align}
-        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c\br{i,j} \cdot x_{ij}^t\\
-        \text{subject to} \quad &x_{ij}^t \leq x_{ij}^{t-1} \quad \forall i,j\in V, t\in [n],\\
-        &y_i^t \leq y_i^{t-1} \quad \forall i\in V, t\in [n],\\
-        &y_i^1 = 1 \quad \forall i\in V,\\
-        &x_{ik}^t \leq x_{ij}^t + x_{jk}^t \quad \forall i,j,k\in V, t\in [n],\\
-        &\sum_{e\in R} x_{e}^t \geq y_{i}^t \quad \forall i\in V, R\in \cR_i, t\in [n], \label{cover_constraint_ILP}\\
-        &\sum_{j\in V} x_{ij}^t \geq \br{1-y_i^t}\cdot (n-t) \quad \forall i\in V, t\in [n], \label{spreading_constraint_ILP}\\
-        &x_{ij}^t \in \{0,1\} \quad \forall i,j\in V, t\in [n],\\
-        &y_i^t \in \{0,1\} \quad \forall i\in V, t\in [n].
-    \end{align}
-
-    Observe, that the \textsc{LP} relaxation \textsc{LP-HC-$\cF$} of the above \textsc{ILP} has an exponential number of constraints, since there can be exponentially many constraints of type \eqref{cover_constraint_ILP}, however we are guaranteed that a separation oracle exists for these constraints. Therefore, we can solve this \textsc{LP} in polynomial time using the ellipsoid method. Let $LP$ be the solution to \textsc{LP-HC-$\cF$} and let $c\br{LP}$ be the value of its objective function. We now show how to round the solution of \textsc{LP-HC-$\cF$} to get a partially integral solution without excessive increase in cost.
-
-    \begin{lemma}\label{lem:lp-rounding}
-        %Round the values of $y_i^t$ to get $\hat{y}_i^t = 1$ if $y_i^t \geq 1/2$ and $\hat{y}_i^t = 0$ otherwise
-        \DDfix{Let $\hat{y}_i^t = \lfloor 2y_i^t \rfloor$}
-        and $\hat{x}_{ij}^t=\min \brc{1,2y_i^t}$. \DD{$\leftarrow$ czy tutaj na pewno $y$ a nie $x$?} Then, $\hat{x}, \hat{y}$ is a feasible solution for \textsc{LP-HC-$\cF$} with cost at most $2\cdot c\br{LP}$.
-    \end{lemma}
-    \begin{proof}
-        Consider any constraint of type \eqref{cover_constraint_ILP}. If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and the constraint is satisfied. If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$. If for any $e\in R$, $x_{e}^t=1$ \DD{tutaj nie widac skad to sie bierze: w def. $\hat{x}^t_{i,j}$ nie korzystamy z $x^t_{i,j}$; domyslam sie, ze jest typo i powinno byc $\hat{x}^t_{i,j}$.} then the constraint is satisfied. Otherwise $\sum_{e\in R} \hat{x}_{e}^t = \sum_{e\in R} 2y_i^t \geq 1$. \DD{$\leftarrow$ skad sie wzielo $\geq 1$?} Consider any constraint of type \eqref{spreading_constraint_ILP}. If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$ and the constraint is satisfied. If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and $\sum_{j\in V} \hat{x}_{ij}^t = \sum_{j\in V} 2y_i^t \geq n-t$. \DD{$\leftarrow$ tutaj tez nie widac skad ostatnia nierownosc.} The cost of the solution is at most $2\cdot c\br{LP}$ since $\hat{x}_{ij}^t \leq 2x_{ij}^t$ for all $i,j\in V$ and $t\in [n]$.
-        \DD{pozostale constraints faktycznie sa prostsze, ale lepiej je zaadresowac. (najwyzej sie uprosci conf-version) Na przyklad $\hat{y}^1_i=1$ wydaje sie niespelnione, gdyz przyjelo wartosc $=2$ wedle definicji z lematu.}
-    \end{proof}
-
-    \DD{troche sie tutaj juz pogubilem, gdyz nie wiadomo czym MILP jest. Domyslam sie, ze pierwsze zdanie tutaj to ma definiowac, ale ``fix some choice of ...'' trudno mi zinterpretowac --- above LP jest niejasne, gdyz jest to take mixed LP/ILP, gdyz $\hat{x}$'y pozostaja rational. Pewnie chodzi to to, ze bierzemy rozwiazanie zdefiniowane w pozyzszym lemacie i dajemu mu nazwe. Jesli tak, to porponuje to nazwac przed lematem i juz w tresci lematu zaczac uzywac.}
-    Fix some choice of $\hat{y}_i^t$ in the above \textsc{LP} so that we have a \textsc{MILP} relaxation \textsc{MILP-HC-$\cF$} of \textsc{ILP-HC-$\cF$}. Denote by $MILP$ the solution to \textsc{MILP-HC-$\cF$} and let $c\br{MILP}$ be the value of its objective function. In what follows, we will need to split this \textsc{MILP} into several instances of \textsc{FES}. We will call such a devided solutions \emph{guides} since they will be used to guide the algorithm about the choice of edges to cut. By $MILP_t^H$ denote the solution of \textsc{MILP-HC-$\cF$} restricted to the set of vertices $H$ at level $t$ and define $\COST\br{MILP_t^H} = \sum_{ij\in E\br{H}} c\br{i,j} \cdot x_{ij}^t$.
-
-    Now we relax the integrality of $x_{ij}^t$ variables by introducing the $\ell_2^2$-metric constraints. We get the following \textsc{SDP} relaxation \textsc{SDP-MILP-HC-$\cF$} for the \textsc{MILP-HC-$\cF$} defined above:
-    \begin{align}
-        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c\br{i,j} \cdot x_{ij}^t=\sum_{t=1}^n \sum_{ij\in E} c\br{i,j} \cdot\frac{1}{2}\|v_i^t - v_j^t\|_2^2\\
-        \text{subject to} \quad &x_{ij}^t \leq x_{ij}^{t-1} \quad \forall i,j\in V, t\in [n],\\
-        &x_{ik}^t \leq x_{ij}^t + x_{jk}^t \quad \forall i,j,k\in V, t\in [n],\\
-        &x_{ij}^t = \frac{1}{2}\|v_i^t - v_j^t\|_2^2 \quad \forall i,j\in V, t\in [n],\\
-        &\|v_i^t\|_2^2 = 1 \quad \forall i\in V, t\in [n],\\
-        &\sum_{e\in R} x_{e}^t \geq 1 \quad \forall i\in V, R\in \cR_i, \hat{y}_{i}^t=1, t\in [n],\\
-        &\sum_{j\in V} x_{ij}^t \geq n-t \quad \forall i\in V, \hat{y}_{i}^t=0, t\in [n]\\
-        &x_{ij}^t \in [0,1] \quad \forall i,j\in V, t\in [n].
-    \end{align}
-
-    Denote by $SDP$ the solution to \textsc{SDP-MILP-HC-$\cF$} and let $c\br{SDP}$ be the value of its objective function. In what follows, we will need to split this \textsc{SDP} into several instances of $k$-\textsc{BP}. By $SDP_t^H$ denote the solution of \textsc{SDP-MILP-HC-$\cF$} restricted to the set of vertices $H$ at level $t$ and define $\COST\br{SDP_t^H} = \sum_{ij\in E\br{H}} c\br{i,j} \cdot \frac{1}{2}\|v_i^t - v_j^t\|_2^2$. We have the following lemma:
-
-    \begin{lemma}\label{lem:relaxation-decomposition}
-        Let $T$ be any hierarchical clustering tree. For any cluster $H \in \cC^T$, let $r\br{H}$ be the size of the largest child cluster of $H$ if it exists or $0$ otherwise. Fix some $b\in \mathbb{N}^+$. Then:
-        \begin{align*}
-            \sum_{H\in \cC^T}\sum_{t=r\br{H}/b+1}^{|H|/b} \COST\br{MILP_t^H}\leq c\br{MILP}
-            \quad\text{and}\quad
-            \sum_{H\in \cC^T}\sum_{t=r\br{H}/b+1}^{|H|/b} \COST\br{SDP_t^H}\leq c\br{SDP}.
-        \end{align*}
-    \end{lemma}
-    \begin{proof}
-        It suffices to show that for any fixed edge $ij\in E$ and level $t\in [n]$, the terms $c\br{i,j}\cdot x_{ij}^t$ and $c\br{i,j}\cdot\frac{1}{2}\|v_i^t-v_j^t\|_2^2$, respectively, are each counted at most once in the respective sum. Assume for contradiction that there are two clusters $H$ and $B$ both contributing the term at level $t$. By definition of hierarchical clustering one of $H$, $B$ must be an ancestor of the other; without loss of generality assume $H$ is an ancestor of $B$. Then $t\in \left(r\br{H}/b, |H|/b\right]$ and $t\in \left(r\br{B}/b, |B|/b\right]$, so $bt\in \left(r\br{H}, |H|\right]$ and $bt\in \left(r\br{B}, |B|\right]$. Since $H$ is an ancestor of $B$ we have $r\br{H}\geq |B|$, hence $bt\in \left(r\br{H}, |H|\right]\cap\left(r\br{B}, |B|\right]=\emptyset$, a contradiction. The two bounds then follow by summing over all edges and levels.
-    \end{proof}
-
-    \begin{lemma}\label{lem:milp-sdp-bound}
-        Let $T$ be any hierarchical clustering tree. Fix some cluster $H \in \cC^T$, some level $t\in [n]$ and $d\in\mathbb{N}^+$, such that $d$ is even. Then, $MILP_t^H/d\leq \sum_{t=\spr{H}/d+1}^{2\spr{H}/d} MILP_t^H$ and $SDP_t^H/d\leq \sum_{t=\spr{H}/d+1}^{2\spr{H}/d} SDP_t^H$.
-    \end{lemma}
-    \begin{proof}
-    Both inequalities are due to the fact that as $t$ increases more edges belong to the cut.
-    \end{proof}
-
-\subsection{LPs for \textsc{FES}, {MMC} and SDPs for \textsc{$k$-BP}}\label{subsection:FES_MMC_kBP}
-
-    By \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} we have the following \textsc{LP} relaxation \textsc{LP-FES} for the \textsc{FES} problem:
-    \begin{align}
-        \min \quad &\sum_{ij\in E} c\br{i,j} \cdot x_{ij}\\
-        \text{subject to} \quad &\sum_{ij\in C} x_{ij} \geq 1, \quad \forall \text{ cycles } C \text{ going through vertex } i\in X,\\
-        &0\leq x_{ij} \leq 1, \quad \forall ij\in E.
-    \end{align}
-    We have the following theorem \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}:
-    \begin{theorem}[Even et al. \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}]\label{thm:fes-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n \cdot \log\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
-    \end{theorem}
-
-    Moreover, by \cite{ApproximateMaxFlowMinMultiCut1993} we have the following \textsc{LP} relaxation \textsc{LP-MMC} for the \textsc{MMC} problem:
-    \begin{align}
-        \min \quad &\sum_{ij\in E} c\br{i,j} \cdot x_{ij}\\
-        \text{subject to} \quad &\sum_{ij\in P} x_{ij} \geq 1, \quad \forall \text{ paths } P \text{ from } s_i \text{ to } t_i, i\in [k],\\
-        &0\leq x_{ij} \leq 1, \quad \forall ij\in E.
-    \end{align}
-    We have the following theorem \cite{ApproximateMaxFlowMinMultiCut1993}:
-    \begin{theorem}[Garg et al. \cite{ApproximateMaxFlowMinMultiCut1993}]\label{thm:mmc-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{MMC} problem and a solution to the above \textsc{LP-MMC}, finds a subset of edges $S$ such that $G\setminus S$ contains no path from $s_i$ to $t_i$ for any $i\in [k]$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log k}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
-    \end{theorem}
-
-    Note that originally, this theorem is stated for the more general case when the input graph is directed. For undirected graphs, constant factor approximation ratios is known \cite{ConstantFactorApproximationForSubsetFeedbackSetProblemsViaANewLPRelaxation}, however the ILP formulation used above is not $\alpha\br{n}$-well-behaved, and thus it cannot be used in our framework\footnote{Specifically, the issue is that this ILP formulation relies on the fact that the size of $\spr{X}$ is known a-priori, which is not the case in our setting since the number of interesting vertices at each level is not known in advance.}.
-
-    As a corollary of this theorem we obtain that:
-    \begin{corollary}
-        There exists a polynomial time algorithm which given an instance of the \textsc{P-$\cD_d$} problem and a solution to the above \textsc{LP-P-$\cD_d$}, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution for \textsc{P-$\cD_d$} and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
-    \end{corollary}
-    The next lemma allows us to decompose the solution to \textsc{MILP-HC-$\cF$} into several instances of the \textsc{LP-P-$\cF$}:
-    \begin{lemma}\label{lem:milp-fes}
-        Let $H$ be a non $\cF$-cluster of size $r$ and let $r\leq t$ be some fixed level. Then $MILP_r^H$ is a valid solution for the \textsc{P-$\cF$} with the set of vertices $X=\brc{i\in V\br{H}\colon \hat{y}_i^t=1}$.
-    \end{lemma}
-    \begin{proof}
-        In $MILP_r^H$ there are some additional constraints of type $x_{ik}^t\leq x_{ij}^t + x_{jk}^t$ and $\sum_{j\in V} x_{ij}^t \geq n-t$ for every vertex $i$ such that $\hat{y}_i^t=0$. However, this is acceptable since additional constraints yield a stricter relaxation. Now consider any $i\in V$. If $\hat{y}_i^t=0$, then the cover constraint is always satisfied, which corresponds to the fact that $i$ does not need to belong to a $\cF$-cluster. If $\hat{y}_i^t=1$, then the cover constraint is satisfied since it is explicitly included in the \textsc{MILP-HC-$\cF$} formulation, which corresponds to the fact that every vertex $i$ belong to an $\cF$-cluster. Moreover, since $i\in X$, we have that all cover constraints in the \textsc{LP-P-$\cF$} formulation are included in the \textsc{MILP-HC-$\cF$} formulation. Therefore, the claim follows.
-    \end{proof}
-    By \cite{PartitioningGraphsIntoBalancedComponents} we have the following \textsc{SDP} relaxation \textsc{SDP-$k$-BP} for the \textsc{$k$-BP}:
-    \begin{align}
-        \min \quad &\sum_{ij\in E} c\br{i,j}\cdot \frac{1}{2}\|v_i - v_j\|_2^2\\
-        \text{subject to} \quad &\|v_i-v_j\|_2^2+ \|v_j-v_k\|_2^2 \geq \|v_i-v_k\|_2^2, \quad \forall i,j,k\in V,\\
-        &\sum_{j\in S} \|v_i-v_j\|_2^2 \geq \spr{S}-\frac{n}{k},\quad \forall S\subseteq V, i\in S.
-    \end{align}
-
-    We have the following theorem \cite{PartitioningGraphsIntoBalancedComponents}
-    \begin{theorem}[Krauthgamer et al.\cite{PartitioningGraphsIntoBalancedComponents}]\label{thm:kbp-rounding}
-        There exists a bicriteria polynomial time algorithm which given an instance of the \textsc{$k$-BP} and a solution to the above \textsc{SDP-$k$-BP}, finds a subset of edges $S$ such that every connected component of $G\setminus S$ has size at most $2n/k$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\sqrt{\log n} \cdot \log k}\cdot \sum_{ij\in E} c\br{i,j}\cdot \frac{1}{2}\|v_i - v_j\|_2^2$.
-    \end{theorem}
-    The next lemma is a modification of the argument of \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics} which shows how to decompose the \textsc{SDP-MILP-HC-$\cF$} into several instances of the above \textsc{SDP-$k$-BP}:
-    \begin{lemma}\label{lem:sdp-kbp}
-        Let $H$ be a non $\cF$-cluster of size $r$. Then $SDP_t^H$, where $t=r/4$ is a valid solution for \textsc{$k$-BP} with $k=4$.
-    \end{lemma}
-    \begin{proof}
-        In \textsc{SDP-MILP-HC-$\cF$} at level $t$, there are some additional constraints of type $x_{ij}^t \in [0,1]$, $\|v_i^t\|_2^2=1$ and $\sum_{e\in R} x_{e}^t \geq 1$ for every vertex $i\in V$ such that $\hat{y}_i^t=1$ and every $R\in \cR_i$. However, this is acceptable since additional constraints yield a stricter relaxation. Now consider the spreading constraints. In \textsc{SDP-MILP-HC-$\cF$} we have $\sum_{j\in V} x_{ij}^t \geq n-t$ for every vertex $i$ such that $\hat{y}_i^t=0$. Observe that, for no vertex $i\in V\br{H}$ we have $\hat{y}_i^t=1$, therefore, for every $S\subseteq V\br{H}$ we have $\sum_{j\in S} x_{ij}^t\geq \spr{S}-t$ which is the \textsc{SDP-$k$-BP} spreading constraint. Since the triagnle inequality is equivalent in both \textsc{SDP}s the claim follows.
-    \end{proof}
-
-    \subsection{The Algorithm}
+﻿    \section{The Algorithm}
 
     We now summarize the algorithm in two parts. The main procedure first performs the preprocessing phase, in which it computes the partially rounded \textsc{LP} solution $(\hat{x},\hat{y})$ and the vector solution $\hat{v}$ obtained from the \textsc{SDP}, and then it invokes the recursive routine. The recursive routine only builds the clustering tree, using the guides prepared by the main procedure.
 
@@ -181,19 +8,22 @@ Since we decompose the \textsc{LP} into separate levels, by summing up over all 
     \begin{proof}
 
     
-    Denote by $\beta\br{n}$ the approximation ratios of the rounding algorithms for \textsc{$k$-BP}. 
+    Denote by $\beta\br{n}$ the approximation ratio of the rounding algorithm for \textsc{$k$-BP}. 
 
     \input{pseudocodes/main_procedure.tex}
     \input{pseudocodes/recursive_procedure.tex}
     \begin{lemma}\label{lem:recursive-cost}
-        Fix some cluster $H$ for which the recursive procedure was called. Then, $\COST_G\br{T, u_H}\leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{MILP_t^H}+8\beta\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{SDP_t^H}$.
+        Fix some cluster $H$ for which the recursive procedure was called. Then, 
+        \[
+        \COST_G\br{T, u_H}\leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{LP_t^H}+8\beta\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{SDP_t^H}.
+        \]
     \end{lemma}
     \begin{proof}
-        Firstly, consider the contribution of edges in $F_H$ to the cost. Since it it being cut in a cluster of size $\spr{H}$, we have that it is bounded by $\spr{H}\cdot c\br{F_H}$. By applying Lemma \ref{lem:milp-sdp-bound} with $d=8$ we get that:
+        Firstly, consider the contribution of edges in $F_H$ to the cost. Since it it being cut in a cluster of size $\spr{H}$, we have that it is bounded by $\spr{H}\cdot c\br{F_H}$. By applying Lemma \ref{lem:lp-sdp-bound} with $d=8$ we get that:
         \begin{align*}
-            \spr{H}\cdot c\br{F_H} \leq \spr{H}\cdot \COST\br{MILP_{\spr{H}/4}^H} \leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \COST\br{MILP_t^H}.
+            \spr{H}\cdot c\br{F_H} \leq \spr{H}\cdot \COST\br{LP_{\spr{H}/4}^H} \leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \COST\br{LP_t^H}.
         \end{align*}
-        Secondly consider the contribution of all $B_H$ to the cost. Since it it being cut in a cluster of size $\spr{H}$, we have that it is bounded by $\spr{H}\cdot c\br{B_H}$. Applying Lemma \ref{lem:milp-sdp-bound} again with $d=8$ we get:
+        Secondly consider the contribution of all $B_H$ to the cost. Since it it being cut in a cluster of size $\spr{H}$, we have that it is bounded by $\spr{H}\cdot c\br{B_H}$. Applying Lemma \ref{lem:lp-sdp-bound} again with $d=8$ we get:
         \begin{align*}
              \spr{H}\cdot c\br{B_H} \leq \spr{H}\cdot \COST\br{SDP_{\spr{H}/4}^H} 
              \leq 8\beta\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \COST\br{SDP_t^H}
@@ -203,9 +33,8 @@ Since we decompose the \textsc{LP} into separate levels, by summing up over all 
     Armed with the above lemma we are ready to sum the contribution of all clusters to the cost of the solution. Let $T$ be the clustering tree returned by the algorithm and let $\cC_T$ be the set of all non-tree clusters for which the recursive procedure was called. We have:
     \begin{align*}
         \COST_G\br{T} &= \sum_{H \in \cC_T}\COST_G\br{T, u_H}
-        \\&\leq 8\cdot\sum_{H \in \cH} \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \br{\alpha\br{n}\cdot \COST\br{MILP_t^H} + \beta\br{n}\cdot \COST\br{SDP_t^H}}\\
-        &\leq 8\cdot\br{\alpha\br{n}\cdot\COST\br{MILP} + \beta\br{n}\cdot\COST\br{SDP}}\\
-        &\leq 16\cdot\br{\alpha\br{n}\cdot\COST\br{LP} + \beta\br{n}\cdot\COST\br{LP}}\\
+        \\&\leq 8\cdot\sum_{H \in \cH} \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \br{\alpha\br{n}\cdot \COST\br{LP_t^H} + \beta\br{n}\cdot \COST\br{SDP_t^H}}\\
+        &\leq 8\cdot\br{\alpha\br{n}\cdot\COST\br{LP} + \beta\br{n}\cdot\COST\br{SDP}}\\
         &\leq 16\cdot\br{\alpha\br{n}+\beta\br{n}}\cdot \OPT
     \end{align*}
      where the first inequality is due to Lemma \ref{lem:recursive-cost}, the second inequality is due to Lemma \ref{lem:relaxation-decomposition} and the third inequality is due to Lemma \ref{lem:lp-rounding}. 
