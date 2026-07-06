@@ -1,173 +1,188 @@
 \section{General algorithmic framework for approximating \textsc{HC-$\cF$}}
 
-Having characterized the kinds of graph classes that will fit our framework we can now move on towards desciribing how to use the properties of $\alpha\br{n}$-well-behaved classes to construct a general approximation algorithm for \textsc{HC-$\cF$}. The main idea is that we will use the properties of $\alpha\br{n}$-well-behaved classes to construct a two-step relaxation of the problem which will be used to guide our recursive algorithm. Our algorithm then proceeds in two steps.
-In the first, preprocessing step we use mathemathical programming in order to build a guide for our next algorithmic step. To do so, we start by encoding the problem using an \textsc{ILP}. We achieve this goal by merging the properties of any $\alpha\br{n}$-well-behaved ILP with the \textsc{ILP} for \textsc{HC} used by Charikar et. al in \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}.
+Having characterized the kinds of graph classes that will fit into our framework we can now move on towards desciribing how to use the properties of $\alpha\br{n}$-well-behavedness to construct a general approximation algorithm for \textsc{HC-$\cF$}. The main idea is that we use a level-based \textsc{LP} relaxation to guide the recursive algorithm.
+In the preprocessing step we encode the problem using an \textsc{ILP}. We obtain this formulation by combining any $\alpha\br{n}$-well-behaved \textsc{ILP} with the level decomposition approach of Charikar et. al in \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}. Our \textsc{ILP} consists of multiple variable levels which intuitively encode levels of the clustering tree.
 
-Our relaxation of this \textsc{ILP} is twofold and each step serves one of two purposes, either choosing the subset of vertices, which need to belong to an $\cF$-cluster at each level and finding a cut ensuring that property or choosing the set of edges which need to be cut in order to decrease the size of the instance efficiently. To achieve the former goal, we relax the integrality of the variables to get an \textsc{LP} relaxation which can be solved in polynomial time using the ellipsoid method. Then, we use a rounding routine to get a partially integral solution which at each level corresponds to the subset of vertices $X$ for the \textsc{P-$\cF$} problem. This solution can be then decomposed into several instances of the \textsc{P-$\cF$-LP} which will come useful during the recursive processing. In the second step of the preprocessing, we remove the variables reponsible for the above choice and we relax the remaining variables using the $\ell_2^2$-metric constraints to get an \textsc{SDP} relaxation. This \textsc{SDP} relaxation can be solved in polynomial time using interior point methods. Similarly, as beforethis \textsc{SDP} can be decomposed into several instances of the \textsc{SDP} relaxation for \textsc{$k$-BP} of \cite{PartitioningGraphsIntoBalancedComponents} which will also be useful during the next phase of the algorithm.
+After solving \textsc{LP-HC-$\cF$}, we use a rounding routine to get a partially integral solution which at each level corresponds to choosing which vertices should satisfy the $\cF$-predicate.
 
-During the second step, we use both of the aforementioned decomposed relaxations to guide our recursive algorithm. We process the clusters in a top-down manner starting from $H=G$. We pick the level $t=n\br{H}/4$ and we use the solution of the \textsc{LP} at $t$-th level as a valid solution for the \textsc{P-$\cF$-LP}. Therefore, we can use the rounding algorithm to find a subset of edges $F_H$ to be cut, such that the cost of cutting them is comparable to the cost of the \textsc{LP} solution at level $t$ (with $\alpha\br{n}$ loss). Then, we use the solution for the \textsc{SDP} at the $t$-th level as a valid solution for the SDP for \textsc{$k$-BP} with $k=4$. Therefore, we can use the rounding algorithm by \cite{PartitioningGraphsIntoBalancedComponents} to find a subset of edges $B_H$, such that the size of all connected components after cutting $B_H$ is at most $n\br{H}/2$ and the cost of cutting these edges is comparable to the cost of the \textsc{SDP} solution at level $t$. After cutting edges in $F_H\cup B_H$, we get several connected components which we process recursively.
+During the recursive step, we process clusters in a top-down manner starting from $H=G$. For a cluster $H$, we set $t=w\br{V\br{H}}/2$. Then, we look which vertices satisfy the $\cF$-predicate at level $t$ and which do not. According to this, we partition them into two sets $X_1$(satisfying the predicate) and $X_0$ (not satisfying the predicate). The solution of \textsc{LP-HC-$\cF$} at level $t$ is then used as a valid solution for \textsc{$p_{\cF}$-P-LP} with $X=X_1$, yielding a cut $F_H$ with $\alpha\br{n}$ loss. The same level-$t$ fragment is also used as a valid guide for \textsc{$\rho$-SEP} with $\rho=1/2$, $\rho_0=2/3$ and $X=X_0$, yielding a cut $B_H$ such that each connected component of $H\setminus B_H$ that contains a terminal has total weight at most $2w\br{V\br{H}}/3$ and the cut cost is within a factor $\beta\br{n}=O\br{\log n}$ of the guide. After cutting edges in $F_H\cup B_H$, we recursively process all connected components.
 
-Since we decompose the \textsc{LP} into separate levels, by summing up over all of them we will be able to show that our algorithm achieves an approximation ratio of $O\br{\alpha\br{n}+\beta\br{n}}$, where $\beta\br{n}$ is the approximation ratio of the rounding algorithm for \textsc{FES}.
+Since we decompose the \textsc{LP} into separate levels, by summing up over all of them we will be able to show that our algorithm achieves an approximation ratio of $O\br{\alpha\br{n}+\beta\br{n}}$, where $\beta\br{n}$ is the approximation ratio of the \textsc{$\rho$-SEP} rounding algorithm.
 
 \subsection{Level decomposition of \textsc{HC-$\cF$}}
 
 In order to analyze the structure of \textsc{HC-$\cF$} trees, we introduce the notion of level decomposition. For a given \textsc{HC-$\cF$} tree $T$, we define the level decomposition as follows.
 Let $\cC^T$ denote the family of all clusters in $T$, $\cC^T=\brc{G_u\colon u\in V(T)}$.
-For $t\in [n]$, by $\cL_t^T$ the set of all maximal clusters in $\cC^T$ of size at most $t$. We call $\cL_t^T$ the $t$-th \emph{level} of the decomposition.
-Observe that for each $t$, $\cL_t^T$ is a partition of $V\br{G}$. By $S_t^T$ we denote the set of edges cut at level $t+1$, that is the set of edges with endpoints in different clusters of $\cL_t^T$. The shift of indices is for the sake of convenience. We call $S_t^T$ the $t$-th \emph{level cut}. It is easy to see that the cost of \textsc{HC-$\cF$} tree $T$ can be expressed as follows:
+Let $w\br{G}=w\br{V\br{G}}$. We assume vertex weights are integral, hence $w\br{G}\in \mathbb{N}^+$. For $t\in [w\br{G}]$, by $\cL_t^T$ the set of all maximal clusters in $\cC^T$ of total weight at most $t$. We call $\cL_t^T$ the $t$-th \emph{level} of the decomposition.
+Observe that for each $t$, $\cL_t^T$ is a partition of $V\br{G}$. By $S_t^T$ we denote the set of edges cut at level $t+1$, that is the set of edges with endpoints in different clusters of $\cL_t^T$. The shift of indices is for the sake of convenience. We call $S_t^T$ the $t$-th \emph{level cut}.
+It is easy to see that the cost of \textsc{HC-$\cF$} tree $T$ can be expressed as follows:
 \begin{observation}\label{obs:cost-decomposition}
-    $\COST_G\br{T} = \sum_{t=1}^n c\br{S_t^T}$.
+    $\COST_G\br{T} = \sum_{t=1}^{w\br{G}} c\br{S_t^T}$.
 \end{observation}
 
+Since we use the above levels to decompose the clustering tree and its cost we would also like to do the same for the $\cF$-predicate. This is because eventually, all vertices satisfy the $\cF$-predicate, but whether a vertex $v\in V$ satisfies the $\cF$-predicate, when it belongs to a cluster of weight $t$ depends on the structure of the clustering tree. 
+For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the level-indexed $\cF$-predicate indicator by setting $p_{\cF}^t\br{v}$ to be true iff $p_{\cF}\br{v}$ is true in $\cL_t^T$. 
 \subsection{\textsc{ILP} formulation of \textsc{HC-$\cF$} and its relaxation}
-    We first describe the constraints of the \textsc{ILP} along with an explanation of the role they play.
-    For each level $t$, we require (see the definition) one of the two properties to hold. Each cluster is either of size at most $t$ or it is an $\cF$-cluster. The partition at level $t-1$ needs to be a superset of partition at level $t$.
-    For each pair of vertices $i,j\in V$ and a level $t\in [n]$ we define a variable $x_{ij}^t$ to be $1$ if $i$ and $j$ are in different clusters at level $t$ and $0$ otherwise. We also define a variable $y_i^t$ to be $1$ if the cluster containing $i$ in $G$ is an $\cF$-cluster at level $t$ and $0$ otherwise.
-    We first explain all constraints, in particular the role they play and then we give the ILP.
-    The constraints are the following:
+    We first describe the constraints of the \textsc{ILP} along with an explanation of the role they play. We use the well-known \emph{spreading-metrics} framework which in recent years have come particularly useful for approximating many problems regarding graph cutting [citation here?]. The idea is that we encode \textsc{HC-$\cF$} as a level-indexed formulation with edge-length variables and shortest-path distances.
+    For each level $t$, each cluster is either of total weight at most $t$ or it is an $\cF$-cluster. The partition at level $t-1$ refines the partition at level $t$.
+    For each edge $e\in E$ and level $t\in [w\br{G}]$ we use a variable $x_e^t\in[0,1]$. Let $\dist_{x}^{t}(\cdot,\cdot)$ denote shortest-path distances in $G$ induced by lengths $\{x_e^t\}_{e\in E}$. We also define a variable $y_v^t=1$ iff $p_{\cF}^t\br{v}$ is true and $0$ otherwise.
+    We first explain all constraints and then we give the full ILP. 
+    These are as follows:
     \begin{enumerate}
-        \item \textbf{refinement:} $x_{ij}^t \leq x_{ij}^{t-1}$ for all $i,j\in V$ and $t\in [n]$. This ensures that if vertices $i$ and $j$ are in different clusters at level $t$, they must also be in different clusters at level $t-1$. Moreover, $y_i^t \leq y_i^{t-1}$ for all $i\in V$ and $t\in [n]$. This is because if the cluster in $G$ containing $i$ is an $\cF$-cluster at level $t$, it must also be an $\cF$-cluster at level $t-1$.
-        \item \textbf{triangle inequality:} $x_{ik}^t \leq x_{ij}^t + x_{jk}^t$ for all $i,j,k\in V$ and $t\in [n]$. This is because if vertices $i$ and $k$ are in the same cluster at level $t$, then vertices $i$ and $j$ must be in the same cluster or vertices $j$ and $k$ must be in the same cluster at level $t$.
-        \DD{to tlumacznie mi nie pasuje, gdyz jest sa w tym samym klastrze, to $x_{ik}^t=0$ i nierownosc jest trywialnie spelniona. Moze zatem chodzi o:}
-        \DDfix{This is because if vertices $i$ and $k$ are in different clusters at level $t$, then for any choice of another vertex $j$, $i$ and $j$, or $j$ and $k$ have to be in different clusters.}
+        \item \textbf{refinement:} $x_{e}^t \leq x_{e}^{t-1}$ for all $e\in E$ and $t\in [w\br{G}]$, because the partition at level $t-1$ refines the partition at level $t$. Moreover, $y_v^t \leq y_v^{t-1}$ for all $v\in V$ and $t\in [w\br{G}]$, since $p_{\cF}^t\br{v}$ implies $p_{\cF}^{t-1}\br{v}$.
 
-        \item \textbf{P-$\cF$ constraints:} Recall, that for every every vertex $i\in V$, the set $\cR_i$ contains all subsets of edges $R\subseteq E$ such that if each $R$ consits of at least one edge cut, then the cluster containing $i$ is an $\cF$ cluster. Therefore, for each vertex $i\in V$, every level $t\in [n]$ and every $R\in \cR_i$ we have $\sum_{e\in R} x_e^t \geq y_{i}^t$. Additionally, we have $y_i^1=1$, since every vertex needs to belong to an $\cF$-cluster eventually.
+        \item \textbf{$p_{\cF}$-P constraints:} Recall, that for every vertex $v\in V$, the set $\cR_v$ contains all subsets of edges $R\subseteq E$ such that if each $R$ consists of at least one edge cut, then $p_{\cF}\br{v}$ is true. Therefore, for each $v\in V$, every level $t\in [w\br{G}]$ and every $R\in \cR_v$ we have $\sum_{e\in R} x_e^t \geq y_{v}^t$. Additionally, we have $y_v^1=1$, since $p_{\cF}^1\br{v}$ is true for all $v\in V$.
 
-        \item \textbf{spreading:} For every vertex $i\in V$ and every level $t\in [n]$ we have $\sum_{j\in V} x_{ij}^t \geq \br{1-y_i^t}\cdot (n-t)$.
-        This is because if the left-hand side sum exceeds $t$, then all cycles in the cluster containing $i$ need to be cut, i.e., $y_i^t=1$.
-        Otherwise, the cluster containing vertex $i$ at level $t$ has size at most $t$, i.e., at least $n-t$ vertices are in different clusters than the vertex $i$ at level $t$.
-        The latter is correctly expressed by the right-hand side expression when $y_i^t=0$.
+        \item \textbf{spreading-metrics:} For every vertex $v\in V$, every level $t\in [w\br{G}]$, and every subset $S\subseteq V$ containing $v$, we have
+        \[
+            \sum_{u\in S} w(u)\cdot \dist_{x}^{t}(v,u) \geq \br{1-y_v^t}\cdot \br{w\br{S}-t}.
+        \]
+        When $y_v^t=0$, this condition enforces that inside any set $S$ containing $v$, enough weighted mass is separated from $v$ unless the cluster weight around $v$ is already at most $t$. When $y_v^t=1$, the right-hand side vanishes, corresponding to the fact that the cluster containing $v$ is an $\cF$-cluster and hence its weight can be larger than $t$.
     \end{enumerate}
 
     The following \textsc{ILP} which we call \textsc{ILP-HC-$\cF$} is an exact formulation of the \textsc{HC-$\cF$} problem:
     \begin{align}
-        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c\br{i,j} \cdot x_{ij}^t\\
-        \text{subject to} \quad &x_{ij}^t \leq x_{ij}^{t-1} \quad \forall i,j\in V, t\in [n],\\
-        &y_i^t \leq y_i^{t-1} \quad \forall i\in V, t\in [n],\\
-        &y_i^1 = 1 \quad \forall i\in V,\\
-        &x_{ik}^t \leq x_{ij}^t + x_{jk}^t \quad \forall i,j,k\in V, t\in [n],\\
-        &\sum_{e\in R} x_{e}^t \geq y_{i}^t \quad \forall i\in V, R\in \cR_i, t\in [n], \label{cover_constraint_ILP}\\
-        &\sum_{j\in V} x_{ij}^t \geq \br{1-y_i^t}\cdot (n-t) \quad \forall i\in V, t\in [n], \label{spreading_constraint_ILP}\\
-        &x_{ij}^t \in \{0,1\} \quad \forall i,j\in V, t\in [n],\\
-        &y_i^t \in \{0,1\} \quad \forall i\in V, t\in [n].
+        \min \quad &\sum_{t=1}^{w\br{G}} \sum_{e\in E} c(e) \cdot x_{e}^t\\
+        \text{subject to} \quad &x_{e}^t \leq x_{e}^{t-1} \quad \forall e\in E,\; t\in [w\br{G}],\\
+        &y_v^t \leq y_v^{t-1} \quad \forall v\in V, t\in [w\br{G}],\\
+        &y_v^1 = 1 \quad \forall v\in V,\\
+        &\sum_{e\in R} x_{e}^t \geq y_{v}^t \quad \forall v\in V, R\in \cR_v, t\in [w\br{G}], \label{cover_constraint_ILP}\\
+        &\sum_{u\in S} w(u)\cdot \dist_{x}^{t}(v,u) \geq \br{1-y_v^t}\cdot \br{w\br{S}-t} \quad \forall v\in V,\; S\subseteq V,\; v\in S,\; t\in [w\br{G}], \label{spreading_constraint_ILP}\\
+        &x_{e}^t \in \{0,1\} \quad \forall e\in E, t\in [w\br{G}],\\
+        &y_v^t \in \{0,1\} \quad \forall v\in V, t\in [w\br{G}].
     \end{align}
 
-    Observe, that the \textsc{LP} relaxation \textsc{LP-HC-$\cF$} of the above \textsc{ILP} may have an exponential number of constraints, due to the constraints of type \eqref{cover_constraint_ILP}, however we are guaranteed that a separation oracle exists for these constraints. Therefore, we can solve this \textsc{LP} in polynomial time using the ellipsoid method. Let $LP$ be the solution to \textsc{LP-HC-$\cF$} and let $c\br{LP}$ be the value of its objective function. We now show how to round the solution of \textsc{LP-HC-$\cF$} to get a partially integral solution without excessive increase in cost.
-
-    \begin{lemma}\label{lem:lp-rounding}
-        Round the values of $y_i^t$ to get $\hat{y}_i^t = 1$ if $y_i^t \geq 1/2$ and $\hat{y}_i^t = 0$ otherwise
-        and $\hat{x}_{ij}^t=\min \brc{1,2\cdot x_{ij}^t}$. Then, $\hat{x}, \hat{y}$ is a feasible solution for \textsc{LP-HC-$\cF$} with cost at most $2\cdot c\br{LP}$.
+    \begin{lemma}\label{lem:ilp-exact}
+        \textsc{ILP-HC-$\cF$} is an exact formulation of \textsc{HC-$\cF$}. In particular, the optimum ILP value equals the optimum hierarchical-clustering value.
     \end{lemma}
     \begin{proof}
-        Consider any constraint of type \eqref{cover_constraint_ILP}. If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and the constraint is satisfied. If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$. If for any $e\in R$, $x_{e}^t=1$ then the constraint is satisfied. Otherwise $\sum_{e\in R} \hat{x}_{e}^t = \sum_{e\in R} 2y_i^t \geq 1$. Consider any constraint of type \eqref{spreading_constraint_ILP}. If $y_i^t \geq 1/2$, then $\hat{y}_i^t=1$ and the constraint is satisfied. If $y_i^t < 1/2$, then $\hat{y}_i^t=0$ and $\sum_{j\in V} \hat{x}_{ij}^t = \sum_{j\in V} 2y_i^t \geq n-t$. The cost of the solution is at most $2\cdot c\br{LP}$ since $\hat{x}_{ij}^t \leq 2x_{ij}^t$ for all $i,j\in V$ and $t\in [n]$.
-        % \DD{pozostale constraints faktycznie sa prostsze, ale lepiej je zaadresowac. (najwyzej sie uprosci conf-version) Na przyklad $\hat{y}^1_i=1$ wydaje sie niespelnione, gdyz przyjelo wartosc $=2$ wedle definicji z lematu.}
+        We prove both directions.
+
+        $(\Rightarrow)$ Let $T$ be any feasible \textsc{HC-$\cF$} tree. For each level $t\in [w\br{G}]$, let $S_t^T$ be the level cut from the level decomposition and set
+        \[
+            x_e^t:=\mathbf{1}[e\in S_t^T].
+        \]
+        Also set $y_v^t:=1$ iff the level-$t$ cluster of $v$ satisfies $p_{\cF}$.
+
+        The refinement constraints hold because level cuts are nested. The constraints on $y$ hold by monotonicity of the predicate along the refinement. The cover constraints hold by definition of the family $\cR_v$: whenever $y_v^t=1$, each required cover-type constraint for $v$ at level $t$ is satisfied by the cut pattern encoded by $x^t$.
+
+        For spreading constraints, fix $v\in V$, $t\in [w\br{G}]$, and $S\subseteq V$ with $v\in S$. If $y_v^t=1$, the right-hand side is $0$. Assume $y_v^t=0$ and let $C$ be the level-$t$ cluster containing $v$. Then $C$ is not an $\cF$-cluster, so by level definition $w(C)\le t$. Every $u\in S\setminus C$ is separated from $v$ by level-$t$ cuts, hence $\dist_x^{t}(v,u)\ge 1$. Therefore,
+        \[
+            \sum_{u\in S} w(u)\cdot \dist_x^{t}(v,u)
+            \ge \sum_{u\in S\setminus C} w(u)
+            = w(S)-w(S\cap C)
+            \ge w(S)-w(C)
+            \ge w(S)-t,
+        \]
+        which is exactly \eqref{spreading_constraint_ILP} for $y_v^t=0$. Thus $(x,y)$ is ILP-feasible and
+        \[
+            \sum_{t=1}^{w\br{G}}\sum_{e\in E} c(e)x_e^t
+            = \sum_{t=1}^{w\br{G}} c(S_t^T)
+            = \COST_G(T)
+        \]
+        by Observation~\ref{obs:cost-decomposition}. Hence $\OPT_{ILP}\le \OPT_{HC}$.
+
+        $(\Leftarrow)$ Let $(x,y)$ be any integral feasible ILP solution. For each level $t$, define
+        \[
+            E_t^0:=\brc{e\in E\colon x_e^t=0},
+        \]
+        and let $\Pi_t$ be the partition of $V$ into connected components of $(V,E_t^0)$. Because $x_e^t\le x_e^{t-1}$, we have $E_{t-1}^0\subseteq E_t^0$, so $\Pi_{t-1}$ refines $\Pi_t$ and the family $(\Pi_t)_{t=1}^{w\br{G}}$ is laminar; therefore it defines a hierarchical tree $T$.
+
+        Consider any level $t$ and any component $C\in \Pi_t$. For every $v\in C$, all vertices of $C$ are at zero $\dist_x^t$-distance from $v$, so plugging $S=C$ into \eqref{spreading_constraint_ILP} gives
+        \[
+            0\ge (1-y_v^t)\cdot (w(C)-t).
+        \]
+        Hence either $w(C)\le t$, or $y_v^t=1$ for all $v\in C$. In the second case, by cover constraints and the definition of $\cR_v$, each vertex in $C$ satisfies the $\cF$-predicate; therefore $C\in \cF$. So every cluster in level $t$ is either of weight at most $t$ or belongs to $\cF$, exactly as required by the level interpretation.
+
+        Finally, the level cut induced by $\Pi_t$ is precisely $\brc{e\in E\colon x_e^t=1}$, so
+        \[
+            \COST_G(T)=\sum_{t=1}^{w\br{G}} c\br{\brc{e\in E\colon x_e^t=1}}
+            =\sum_{t=1}^{w\br{G}}\sum_{e\in E} c(e)x_e^t.
+        \]
+        Therefore every integral ILP solution maps to a feasible \textsc{HC-$\cF$} tree of the same cost, implying $\OPT_{HC}\le \OPT_{ILP}$.
+
+        Combining both inequalities yields $\OPT_{ILP}=\OPT_{HC}$.
     \end{proof}
 
-    Overall, we obtain a partially integral point where all of the $y$ values are integral, which translates to the fact that we have decided which vertices are required to belong to $\cF$ clusters at each level. This is required to find edges that need to be cut in order to ensure that the chosen vertices belong to $\cF$-clusters at the chosen levels. Since we will not further use the original values, by a slight abuse of notation from now on we will refer to this solution simply by $LP$.
+    Observe, that the \textsc{LP} relaxation \textsc{LP-HC-$\cF$} of the above \textsc{ILP} may have an exponential number of constraints, due to the constraints of type \eqref{cover_constraint_ILP}, however we are guaranteed that a separation oracle exists for these constraints. Therefore, we can solve this \textsc{LP} in polynomial time using the ellipsoid method. Note that in our relaxation we allow each $x_e^t\geq 0$ and each $y_v^t$ to take any value in $[0,1]$. Let $LP$ be the solution to \textsc{LP-HC-$\cF$} and let $c\br{LP}$ be the value of its objective function. We now show how to round the solution of \textsc{LP-HC-$\cF$} to get a partially integral solution without excessive increase in cost.
 
-    \subsection{Embedding the $x$ values into $\ell_2^2$}
+    \begin{lemma}\label{lem:lp-rounding}
+        Round the values of $y_v^t$ to get $\hat{y}_v^t = 1$ if $y_v^t \geq 1/2$ and $\hat{y}_v^t = 0$ otherwise
+        and $\hat{x}_{e}^t=2\cdot x_{e}^t$. Then, $\hat{x}, \hat{y}$ is a feasible solution for \textsc{LP-HC-$\cF$} with cost at most $2\cdot c\br{LP}$.
+    \end{lemma}
+    \begin{proof}
+        Firstly, observe that the refinement constraints are satisfied since $\hat{x}_{e}^t \leq \hat{x}_{e}^{t-1}$ and $\hat{y}_v^t \leq \hat{y}_v^{t-1}$ for all $e\in E$, $v\in V$ and $t\in [w\br{G}]$. The cover constraints are satisfied since if $\hat{y}_v^t=1$, then $y_v^t\geq 1/2$ and hence $\sum_{e\in R} x_{e}^t \geq y_v^t \geq 1/2$ for all $R\in \cR_v$. Therefore, $\sum_{e\in R} \hat{x}_{e}^t = 2\cdot \sum_{e\in R} x_{e}^t \geq 1$. If $\hat{y}_v^t=0$, then the cover constraint is trivially satisfied. The spreading-metrics constraints are satisfied since if $\hat{y}_v^t=0$, then $y_v^t<1/2$ and hence
+        \[
+            \sum_{u\in S} w(u)\cdot \dist_{x}^{t}(v,u) \geq \br{1-y_v^t}\cdot \br{w\br{S}-t} > 1/2\cdot \br{w\br{S}-t}.
+        \]
+        Therefore, we get that for all $S\subseteq V$ containing $v$, such that $\bar{y}_v^t=0$, we have
+        \[
+            \sum_{u\in S} w(u)\cdot \dist_{\hat{x}}^{t}(v,u) = 2\cdot \sum_{u\in S} w(u)\cdot \dist_{x}^{t}(v,u) > w\br{S}-t
+        \]
+        as required.
+        If $\hat{y}_v^t=1$, then the spreading-metrics constraint is trivially satisfied.
+        Finally, the cost of the new solution is at most $2\cdot c\br{LP}$ since $\sum_{t=1}^{w\br{G}} \sum_{e\in E} c(e) \cdot \hat{x}_{e}^t = 2\cdot \sum_{t=1}^{w\br{G}} \sum_{e\in E} c(e) \cdot x_{e}^t = 2\cdot c\br{LP}$.
+    \end{proof}
 
-    Now, assume that we are given a solution produced using the lemma from the previous section. Having that, we can remove all of the $y$ variables from the above \textsc{LP}.
-    Since we know that that the vector $x$ obeys the triangle inequality we know that it forms a metric on our input graph $G$. As it turns out we will need to embed this metric into $\ell_2^2$ in order to extract valuable information about the edges that need to be cut in order to decrease the size of the instance efficiently during the recursive rounding step. This is done as follows: With each vertex $i$ we associate a unit vector $v_i^t$ in a unbounded (but polynomial) space. We want to get that $x_{ij}^t = \frac{1}{2}\|v_i^t - v_j^t\|_2^2$ for all $i,j\in V$ and $t\in [n]$ (Remember that here the $x$ values are some fixed constants).  We also want to get that $\|v_i^t\|_2^2 = 1$ for all $i\in V$ and $t\in [n]$. This way, the distance between two vertices in the metric defined by $x$ is equal to the squared $\ell_2$ distance between the corresponding vectors. Such an embedding can be found in polynomial time by employing Semidefinite Programming. 
-    % All vertices in one cluster at level $t$ are mapped to the same vector, while vertices in different clusters are mapped to orthogonal vectors.
-        In fact, the set of vectors we obtain is a valid solution to the following Semidefinite Programming relaxation \textsc{SDP-HC-$\cF$} for the \textsc{ILP-HC-$\cF$} defined above (with the $y$ values being already chosen):
-    \begin{align}
-        \min \quad &\sum_{t=1}^n \sum_{ij\in E} c\br{i,j} \cdot x_{ij}^t=\sum_{t=1}^n \sum_{ij\in E} c\br{i,j} \cdot\frac{1}{2}\|v_i^t - v_j^t\|_2^2\\
-        \text{subject to} \quad &x_{ij}^t \leq x_{ij}^{t-1} \quad \forall i,j\in V, t\in [n],\\
-        &x_{ik}^t \leq x_{ij}^t + x_{jk}^t \quad \forall i,j,k\in V, t\in [n],\\
-        &x_{ij}^t = \frac{1}{2}\|v_i^t - v_j^t\|_2^2 \quad \forall i,j\in V, t\in [n],\\
-        &\|v_i^t\|_2^2 = 1 \quad \forall i\in V, t\in [n],\\
-        &\sum_{e\in R} x_{e}^t \geq 1 \quad \forall i\in V, R\in \cR_i, \hat{y}_{i}^t=1, t\in [n],\\
-        &\sum_{j\in V} x_{ij}^t \geq n-t \quad \forall i\in V, \hat{y}_{i}^t=0, t\in [n]\\
-        &x_{ij}^t \in [0,1] \quad \forall i,j\in V, t\in [n].\\
-        &\|v_i^t\|_2^2 \in \mathbb{R}^{d} \quad \forall i\in V, t\in [n].
-    \end{align}
-    where $d$ is the number of dimensions which can be as large as the number of variables in this program. Denote by $SDP$ the solution to \textsc{SDP-HC-$\cF$} we have produced and let $c\br{SDP}$ be the value of its objective function. Observe that $c\br{SDP}=c\br{LP}$.
-
+    Overall, we obtain a partially integral point where all of the $y$ values are integral, which translates to the fact that we have decided which vertices need to satisfy the $\cF$-predicate at each level of the clustering tree. From now on we will thus assume that for every $v\in V$ and $t\in[w\br{G}]$, the value of $p_{\cF}^t\br{v}$ is fixed and we can remove all of the $y$ variables from the \textsc{LP}. Since we will not further use the original values, by a slight abuse of notation from now on we will refer to this solution simply by $LP$.
 \subsection{Restricting the solutions}
     
-In our charging scheme, we will need to split both the $LP$ and $SDP$ into several solutions restricted to the clusters of the hierarchical clustering tree $T$ we are building. Fix some cluster $H$ of $G$ and a level $t$. By $LP_t^H$ ($SDP_t^H$) denote the solution of \textsc{LP-HC-$\cF$} (\textsc{SDP-HC-$\cF$}) restricted to the set of vertices $H$ at level $t$ which is done by discarding all of the variables $x_{ij}^t$ and $v_i^t$ concerning vertices outside of $H$ or levels other than $t$. This restriction is also performed on the cost function and this is reflected in the accordingly defined quantities $\COST\br{LP_t^H} = \sum_{ij\in E\br{H}} c\br{i,j} \cdot x_{ij}^t$ and $\COST\br{SDP_t^H} = \sum_{ij\in E\br{H}} c\br{i,j} \cdot \frac{1}{2}\|v_i^t - v_j^t\|_2^2$. We have the following lemma:
+In our charging scheme, we will need to split the $LP$ into several solutions restricted to the clusters of the hierarchical clustering tree $T$ we are building. Fix some cluster $H$ of $G$ and a level $t$. By $LP_t^H$ denote the solution of \textsc{LP-HC-$\cF$} restricted to the set of vertices $H$ at level $t$ which is done by discarding all of the variables $x_{uv}^t$ concerning vertices outside of $H$ or levels other than $t$. We call each such restricted part $LP_t^H$ a \emph{guide}. For any target problem $\Pi$ with LP relaxation \textsc{LP-$\Pi$} (on the same graph fragment and terminal set), we say that $LP_t^H$ is a \emph{valid guide} for $\Pi$ if the restricted values from $LP_t^H$ satisfy all constraints of \textsc{LP-$\Pi$}. In other words, a valid guide is simply a feasible LP point for the target problem, inherited from \textsc{LP-HC-$\cF$}. This restriction is also performed on the cost function and this is reflected in the accordingly defined quantities $\COST\br{LP_t^H} = \sum_{uv\in E\br{H}} c\br{u,v} \cdot x_{uv}^t$. We have the following lemma:
 
     \begin{lemma}\label{lem:relaxation-decomposition}
-        Let $T$ be any hierarchical clustering tree. For any cluster $H \in \cC^T$, let $r\br{H}$ be the size of the largest child cluster of $H$ if it exists or $0$ otherwise. Fix some $b\in \mathbb{N}^+$. Then:
+        Let $T$ be any hierarchical clustering tree. For any cluster $H \in \cC^T$, let $r\br{H}$ be the weight of the heaviest child cluster of $H$ if it exists or $0$ otherwise. Then:
         \begin{align*}
-            \sum_{H\in \cC^T}\sum_{t=r\br{H}/b+1}^{|H|/b} \COST\br{LP_t^H}\leq c\br{LP}
-            \quad\text{and}\quad
-            \sum_{H\in \cC^T}\sum_{t=r\br{H}/b+1}^{|H|/b} \COST\br{SDP_t^H}\leq c\br{SDP}.
+            \sum_{H\in \cC^T}\sum_{t=r\br{H}+1}^{w\br{V\br{H}}} c\br{LP_t^H}\leq c\br{LP}
         \end{align*}
     \end{lemma}
     \begin{proof}
-        It suffices to show that for any fixed edge $ij\in E$ and level $t\in [n]$, the terms $c\br{i,j}\cdot x_{ij}^t$ and $c\br{i,j}\cdot\frac{1}{2}\|v_i^t-v_j^t\|_2^2$, respectively, are each counted at most once in the respective sum. Assume for contradiction that there are two clusters $H$ and $B$ both contributing the term at level $t$. By definition of hierarchical clustering one of $H$, $B$ must be an ancestor of the other; without loss of generality assume $H$ is an ancestor of $B$. Then $t\in \left(r\br{H}/b, |H|/b\right]$ and $t\in \left(r\br{B}/b, |B|/b\right]$, so $bt\in \left(r\br{H}, |H|\right]$ and $bt\in \left(r\br{B}, |B|\right]$. Since $H$ is an ancestor of $B$ we have $r\br{H}\geq |B|$, hence $bt\in \left(r\br{H}, |H|\right]\cap\left(r\br{B}, |B|\right]=\emptyset$, a contradiction. The two bounds then follow by summing over all edges and levels.
+        It suffices to show that for any fixed edge $uv\in E$ and level $t\in [w\br{G}]$, the term $c\br{u,v}\cdot x_{uv}^t$ is counted at most once in the above sum. Assume for contradiction that there are two clusters $H$ and $B$ both contributing this term at level $t$. By definition of hierarchical clustering, one of $H$, $B$ must be an ancestor of the other; without loss of generality assume $H$ is an ancestor of $B$. Then
+        \begin{align*}
+            t &\in \left(r\br{H}, w\br{V\br{H}}\right],\\
+            t &\in \left(r\br{B}, w\br{V\br{B}}\right].
+        \end{align*}
+        Since $H$ is an ancestor of $B$, we have
+        \begin{align*}
+            r\br{H} &\geq w\br{V\br{B}}.
+        \end{align*}
+        Hence the above intervals are disjoint, a contradiction. The bound follows by summing over all edges and levels.
     \end{proof}
 
-    \begin{lemma}\label{lem:lp-sdp-bound}
-        Let $T$ be any hierarchical clustering tree. Fix some cluster $H \in \cC^T$, some level $t\in [n]$ and $d\in\mathbb{N}^+$, such that $d$ is even. Then \[
-        LP_t^H/d\leq \sum_{t=\spr{H}/d+1}^{2\spr{H}/d} LP_t^H \quad\text{and}\quad SDP_t^H/d\leq \sum_{t=\spr{H}/d+1}^{2\spr{H}/d} SDP_t^H. 
+    \begin{lemma}\label{lem:lp-level-bound}
+        Let $H$ be any cluster and let $d\in\mathbb{N}^+$. Then
+        \[
+        w\br{V\br{H}}\cdot c\br{LP_{\br{1-1/d}w\br{V\br{H}}}^H}\leq d\cdot \sum_{t=\br{1-1/d}w\br{V\br{H}}+1}^{w\br{V\br{H}}} c\br{LP_t^H}.
         \]
     \end{lemma}
     \begin{proof}
-    Both inequalities are due to the fact that as $t$ increases more edges belong to the cut.
+    The inequality follows from monotonicity of level cuts: as $t$ increases, more edges belong to the cut, so averaging over the last $w\br{V\br{H}}/d$ levels gives the claim.
     \end{proof}
 
-\subsection{LPs for \textsc{FES}, {MMC} and SDP for \textsc{$k$-BP}}\label{subsection:FES_MMC_kBP}
+    Fix a subgraph $H$ of $H$ with weight $r=w\br{V\br{H}}$ and a level $t\in [r,w\br{V\br{H}}]$. Define
+    \[
+        X_1:=\brc{v\in V\br{H}\colon \hat{y}_v^t=1}, \qquad X_0:=\brc{v\in V\br{H}\colon \hat{y}_v^t=0}.
+    \]
 
-Now, we showcase that the two graph classes of interest, trees and bounded diameter instances are indeed $\alpha\br{n}$-well-behaved for some $\alpha\br{n}$. To do so, we invoke some well-known LP-based approximation algorithms for the \textsc{FES} and \textsc{MMC} problems and we show that they indeed certify the $\alpha\br{n}$-well-behavedness of these classes. These properties allow us to show, that by restricting $LP$ to a given level and clusters, provides a feasible solution to a \textsc{P-$\cF$} problem, which means that it can be rounded to a feasible point using one of the aforementioned procedures.
-We also show that a similar thing can be done for the $SDP$ solution and the \textsc{$k$-BP} problem. 
-
-We start by invoking a well-known \textsc{LP} relaxation \textsc{LP-FES} of the \textsc{FES} problem:
-    \begin{align}
-        \min \quad &\sum_{ij\in E} c\br{i,j} \cdot x_{ij}\\
-        \text{subject to} \quad &\sum_{ij\in C} x_{ij} \geq 1, \quad \forall \text{ cycles } C \text{ going through vertex } i\in X,\\
-        &0\leq x_{ij} \leq 1, \quad \forall ij\in E.
-    \end{align}
-    The authors of \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} show that there exists a rounding procedure for this \textsc{LP} with an $O\br{\log n\cdot\log\log n}$ loss of quality:
-    \begin{theorem}[Even et al. \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}]\label{thm:fes-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n \cdot \log\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
-    \end{theorem}
-    
-
-    Note that originally, this theorem is stated for the more general problem of finding an feedback arc set of a directed graph. For undirected graphs, constant factor approximation algorithm, also based on mathematical programming is known \cite{ConstantFactorApproximationForSubsetFeedbackSetProblemsViaANewLPRelaxation}. However, the ILP formulation used is not $\alpha\br{n}$-well-behaved, and thus it cannot be incorporated in our framework\footnote{Specifically, the issue is that this ILP formulation relies on the fact that the size of $\spr{X}$ is known a-priori, which is not the case in our setting since the number of interesting vertices at each level is not known in advance.}.
-
-
-    Similarly, the following \textsc{LP} relaxation \textsc{LP-MMC} for the \textsc{MMC} is well-studied:
-    \begin{align}
-        \min \quad &\sum_{ij\in E} c\br{i,j} \cdot x_{ij}\\
-        \text{subject to} \quad &\sum_{ij\in P} x_{ij} \geq 1, \quad \forall \text{ paths } P \text{ from } s_i \text{ to } t_i, i\in [k],\\
-        &0\leq x_{ij} \leq 1, \quad \forall ij\in E.
-    \end{align}
-    In \cite{ApproximateMaxFlowMinMultiCut1993} an algorithm with $O\br{\log n}$-approximation loss using this LP is given:
-    \begin{theorem}[Garg et al. \cite{ApproximateMaxFlowMinMultiCut1993}]\label{thm:mmc-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{MMC} problem and a solution to the above \textsc{LP-MMC}, finds a subset of edges $S$ such that $G\setminus S$ contains no path from $s_i$ to $t_i$ for any $i\in [k]$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log k}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
-    \end{theorem}
-    As a corollary of this theorem we obtain that:
-    \begin{corollary}
-        There exists a polynomial time algorithm which given an instance of the \textsc{P-$\cD_d$} problem and a solution to the above \textsc{LP-P-$\cD_d$}, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution for \textsc{P-$\cD_d$} and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
-    \end{corollary}
-
-    We encourage the reader to check for themselves that these LPs indeed certify the $\alpha\br{n}$-well-behavedness of the respective classes.
-
-    The next lemma allows us to decompose the solution to \textsc{LP-HC-$\cF$} into several instances of the \textsc{LP-P-$\cF$}:
+    The next lemma allows us to decompose the solution to \textsc{LP-HC-$\cF$} into several instances of the \textsc{LP-$p_{\cF}$-P}:
     \begin{lemma}\label{lem:lp-fes}
-        Let $H$ be a non $\cF$-cluster of size $r$ and let $r\leq t$ be some fixed level. Then $LP_r^H$ is a valid solution for the \textsc{P-$\cF$} with the set of vertices $X=\brc{i\in V\br{H}\colon \hat{y}_i^t=1}$.
+        Let $H$ be a non $\cF$-cluster of weight $r=w\br{V\br{H}}$ and let $r\leq t$ be some fixed level. Then $LP_r^H$ is a valid solution for the \textsc{$p_{\cF}$-P} for $X_1$.
     \end{lemma}
     \begin{proof}
-        In $LP_r^H$ there are some additional constraints of type $x_{ik}^t\leq x_{ij}^t + x_{jk}^t$ and $\sum_{j\in V} x_{ij}^t \geq n-t$ for every vertex $i$ such that $\hat{y}_i^t=0$. However, this is acceptable since additional constraints yield a stricter relaxation. Now consider any $i\in V$. If $\hat{y}_i^t=0$, then the cover constraint is always satisfied, which corresponds to the fact that $i$ does not need to belong to a $\cF$-cluster. If $\hat{y}_i^t=1$, then the cover constraint is satisfied since it is explicitly included in the \textsc{LP-HC-$\cF$} formulation, which corresponds to the fact that every vertex $i$ belong to an $\cF$-cluster. Moreover, since $i\in X$, we have that all cover constraints in the \textsc{LP-P-$\cF$} formulation are included in the \textsc{LP-HC-$\cF$} formulation. Therefore, the claim follows.
+        In $LP_r^H$ there are additional metric/spreading constraints for vertices $v$ such that $p_{\cF}^t(v)=0$. This is acceptable since additional constraints yield a stricter relaxation. Now consider any $v\in V$. If $p_{\cF}^t(v)=0$, then the cover constraint is always satisfied, which corresponds to the fact that $v$ does not need to belong to a $\cF$-cluster. If $p_{\cF}^t(v)=1$, then the cover constraint is satisfied since it is explicitly included in the \textsc{LP-HC-$\cF$} formulation. Moreover, since $v\in X_1$, we have that all cover constraints in the \textsc{LP-$p_{\cF}$-P} formulation are included in the \textsc{LP-HC-$\cF$} formulation. Therefore, the claim follows.
     \end{proof}
-    Krauthgamer et.~al. \cite{PartitioningGraphsIntoBalancedComponents} introduced the following \textsc{SDP} relaxation \textsc{SDP-$k$-BP} for the \textsc{$k$-BP}:
-    \begin{align}
-        \min \quad &\sum_{ij\in E} c\br{i,j}\cdot \frac{1}{2}\|v_i - v_j\|_2^2\\
-        \text{subject to} \quad &\|v_i-v_j\|_2^2+ \|v_j-v_k\|_2^2 \geq \|v_i-v_k\|_2^2, \quad \forall i,j,k\in V,\\
-        &\sum_{j\in S} \|v_i-v_j\|_2^2 \geq \spr{S}-\frac{n}{k},\quad \forall S\subseteq V, i\in S.
-    \end{align}
 
-    We have the following theorem \cite{PartitioningGraphsIntoBalancedComponents}
-    \begin{theorem}[Krauthgamer et al.\cite{PartitioningGraphsIntoBalancedComponents}]\label{thm:kbp-rounding}
-        There exists a bicriteria polynomial time algorithm which given an instance of the \textsc{$k$-BP} and a solution to the above \textsc{SDP-$k$-BP}, finds a subset of edges $S$ such that every connected component of $G\setminus S$ has size at most $2n/k$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\sqrt{\log n} \cdot \log k}\cdot \sum_{ij\in E} c\br{i,j}\cdot \frac{1}{2}\|v_i - v_j\|_2^2$.
-    \end{theorem}
-    The next lemma is a modification of the argument of \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics} which shows how to decompose the \textsc{SDP-HC-$\cF$} into several instances of the above \textsc{SDP-$k$-BP}:
-    \begin{lemma}\label{lem:sdp-kbp}
-        Let $H$ be a non $\cF$-cluster of size $r$. Then $SDP_t^H$, where $t=r/4$ is a valid solution for \textsc{$k$-BP} with $k=4$.
+    
+    We also need a decomposition statement for the size-reduction primitive. The next lemma states that the same level-restricted \textsc{LP-HC-$\cF$} solution can be viewed as a feasible guide for \textsc{$\rho$-SEP}.
+    \begin{lemma}\label{lem:lp-ksep}
+        Let $H$ be a non $\cF$-cluster of weight $r=w\br{V\br{H}}$ and let $t=r/2$. Then $LP_t^H$ is a valid guide for the weighted spreading-metrics \textsc{LP-$\rho$-SEP} with $\rho=1/2$ for $X_0$.
     \end{lemma}
     \begin{proof}
-        In \textsc{SDP-HC-$\cF$} at level $t$, there are some additional constraints of type $x_{ij}^t \in [0,1]$, $\|v_i^t\|_2^2=1$ and $\sum_{e\in R} x_{e}^t \geq 1$ for every vertex $i\in V$ such that $\hat{y}_i^t=1$ and every $R\in \cR_i$. However, this is acceptable since additional constraints yield a stricter relaxation. Now consider the spreading constraints. In \textsc{SDP-HC-$\cF$} we have $\sum_{j\in V} x_{ij}^t \geq n-t$ for every vertex $i$ such that $\hat{y}_i^t=0$. Observe that, for no vertex $i\in V\br{H}$ we have $\hat{y}_i^t=1$, therefore, for every $S\subseteq V\br{H}$ we have $\sum_{j\in S} x_{ij}^t\geq \spr{S}-t$ which is the \textsc{SDP-$k$-BP} spreading constraint. Since the triagnle inequality is equivalent in both \textsc{SDP}s the claim follows.
+        The statement is analogous to Lemma~\ref{lem:lp-fes}, but with complement terminal set.
+        First, the cover-type constraints are irrelevant for \textsc{$\rho$-SEP} feasibility and can only make the relaxation stronger.
+
+        Second, for vertices in $X_0$ (i.e., with $p_{\cF}^t(v)=0$), the formulation contains exactly the subset-based spreading constraints needed for \textsc{LP-$\rho$-SEP}: for every $S\subseteq V(H)$ and every $v\in S\cap X_0$,
+        \[
+            \sum_{u\in S} w(u)\cdot \dist_{x}^{t}(v,u) \geq w\br{S}-t.
+        \]
+        With $t=r/2$, this is exactly the weighted spreading requirement corresponding to $\rho=1/2$. Hence $LP_t^H$ is a feasible \textsc{LP-$\rho$-SEP} guide for $X_0$.
     \end{proof}

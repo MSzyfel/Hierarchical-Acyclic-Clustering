@@ -1,18 +1,18 @@
 \begin{algorithm}[H]
 \caption{Main \textsc{HC-$\cF$} Procedure}
+\label{alg:main-procedure}
 \label{alg:main-hac}
 \DontPrintSemicolon
-\KwIn{A weighted graph $G=(V,E,c)$}
+\KwIn{A weighted graph $G=(V,E,c,w)$}
 \KwOut{A clustering tree for $G$}
 \tcp{Preprocessing}
 Solve \textsc{LP-HC-$\cF$} on $G$ and obtain a fractional solution $(\mathbf{x},\mathbf{y})$\;
-\ForEach{$t\in [n]$ and $i\in V$}{
+\ForEach{$t\in [w\br{G}]$ and $i\in V$}{
     Set $\hat{y}_i^t \gets 1$ if $y_i^t \geq 1/2$, and set $\hat{y}_i^t \gets 0$ otherwise\;
 }
-\ForEach{$t\in [n]$ and $ij\in E$}{
-    $\hat{x}_{ij}^t\gets \min\brc{1, 2\cdot x_{ij}^t}$\;
+\ForEach{$t\in [w\br{G}]$ and $uv\in E$}{
+    $\hat{x}_{uv}^t\gets \min\brc{1, 2\cdot x_{uv}^t}$\;
 }
-Use Semidefinite Programming to find the $SDP$ solution to the \textsc{SDP-HC-$\cF$} instance induced by $\hat{\mathbf{y}}$ to obtain $\ell_2^2$ metric $\hat{\mathbf{v}}$\;
 \tcp{Clustering phase}
-\Return{\textsc{Recursive-HC-$\cF$}($G,\hat{\mathbf{x}},\hat{\mathbf{y}},\hat{\mathbf{v}})$}\;
+\Return{\textsc{Recursive-HC-$\cF$}($G,\hat{\mathbf{x}},\hat{\mathbf{y}})$}\;
 \end{algorithm}

@@ -1,8 +1,8 @@
 \begin{figure}[H]
     \centering
-    \begin{minipage}[t]{0.48\textwidth}
+    \begin{minipage}[t]{0.46\textwidth}
         \centering
-        \begin{tikzpicture}[scale=0.95, every node/.style={circle,draw,inner sep=1.5pt,font=\scriptsize}]
+        \begin{tikzpicture}[scale=0.95, every node/.style={circle,draw,fill=white,inner sep=1.5pt,font=\scriptsize,preaction={fill=black,opacity=0.18,transform canvas={xshift=0.8pt,yshift=-0.8pt}}}]
             \node (a1) at (-2.6,1.8) {$a$};
             \node (a2) at (-3.6,0.8) {$b$};
             \node (a3) at (-3.0,-0.6) {$c$};
@@ -45,27 +45,33 @@
             \draw[cutC,very thick] (b4)--(c4);
         \end{tikzpicture}
         \\\smallskip
-        {\small Input graph $G$ (14 vertices).}
+        {\small Input graph $G$ with 14 vertices.
+        For all edges $e$, we have $c(e)=1$.}
     \end{minipage}
-    \begin{minipage}[t]{0.5\textwidth}
+    \begin{minipage}[t]{0.52\textwidth}
         \centering
-        \begin{tikzpicture}[x=1.15cm,y=0.85cm, every node/.style={draw,rounded corners,inner sep=2pt,font=\scriptsize,align=center}]
-            \node (r) at (0,0) {$V(G)$\\cut: $\{\textcolor{cutA}{em},\textcolor{cutA}{dh}\}$};
-            \node (u1) at (-1.4,-1.2) {$\{a,b,c,d,m\}$\\cut: $\{\textcolor{cutB}{ab},\textcolor{cutB}{ad},\textcolor{cutB}{am}\}$};
-            \node (u2) at (1.4,-1.2) {$\{e,f,g,h,i,j,k,l,n\}$\\cut: $\{\textcolor{cutC}{fn},\textcolor{cutC}{gn},\textcolor{cutC}{lh}\}$};
-            \node (v1) at (-2.0,-2.35) {$\{a,b,c,d\}$};
-            \node (v2) at (-0.8,-2.35) {$\{m\}$};
-            \node (w1) at (0.6,-2.35) {$\{e,f,g,h\}$\\cut: $\{\textcolor{cutD}{ef}\}$};
-            \node (w2) at (2.2,-2.35) {$\{i,j,k,l,n\}$\\cut: $\{\textcolor{cutE}{nl},\textcolor{cutE}{li},\textcolor{cutE}{ij}\}$};
-            \node (z1) at (0.1,-3.35) {$\{e,f,g,h\}$};
-            \node (z2) at (1.6,-3.35) {$\{i,n\}$};
-            \node (z3) at (3.3,-3.35) {$\{j,k,l\}$\\cut: $\{\textcolor{cutF}{kj}\}$};
-            \node (t1) at (3.3,-4.35) {$\{j,k,l\}$};
+        \begin{tikzpicture}[x=0.85cm,y=0.72cm, hcnode/.style={draw,rounded corners,fill=white,inner sep=2pt,font=\scriptsize,align=center,preaction={fill=black,opacity=0.18,transform canvas={xshift=0.8pt,yshift=-0.8pt}}}]
+            \node[hcnode] (r) at (0,0) {$V(G)$\\cut: $\{\textcolor{cutA}{em},\textcolor{cutA}{dh}\}$};
+            \node[hcnode,anchor=north] (u1) at ([xshift=-1.60cm,yshift=-0.09cm]r.south) {$\{a,b,c,d,m\}$\\cut: $\{\textcolor{cutB}{ab},\textcolor{cutB}{ad},\textcolor{cutB}{am}\}$};
+            \node[hcnode,anchor=north] (u2) at ([xshift=1.60cm,yshift=-0.09cm]r.south) {$\{e,f,g,h,i,j,k,l,n\}$\\cut: $\{\textcolor{cutC}{fn},\textcolor{cutC}{gn},\textcolor{cutC}{lh}\}$};
+            \node[hcnode,anchor=north] (v1) at ([xshift=-0.80cm,yshift=-0.11cm]u1.south) {$\{a,b,c,d,m\}$};
+            \node[hcnode,anchor=north] (w1) at ([xshift=-1.10cm,yshift=-0.11cm]u2.south) {$\{e,f,g,h\}$\\cut: $\{\textcolor{cutD}{ef}\}$};
+            \node[hcnode,anchor=north] (w2) at ([xshift=1.10cm,yshift=-0.11cm]u2.south) {$\{i,j,k,l,n\}$\\cut: $\{\textcolor{cutE}{nl},\textcolor{cutE}{li},\textcolor{cutE}{ij}\}$};
+            \node[hcnode,anchor=north] (z1) at ([xshift=-0.40cm,yshift=-0.11cm]w1.south) {$\{e,f,g,h\}$};
+            \node[hcnode,anchor=north] (z2) at ([xshift=-1.10cm,yshift=-0.11cm]w2.south) {$\{i,n\}$};
+            \node[hcnode,anchor=north] (z3) at ([xshift=1.10cm,yshift=-0.11cm]w2.south) {$\{j,k,l\}$\\cut: $\{\textcolor{cutF}{kj}\}$};
+            \node[hcnode,anchor=north] (t1) at ([xshift=0.00cm,yshift=-0.11cm]z3.south) {$\{j,k,l\}$};
+
+            \node[draw=none,fill=none,preaction={},anchor=west,xshift=0.09cm,font=\tiny,align=center] at (r.east) {cost:\\$2\cdot 14$};
+            \node[draw=none,fill=none,preaction={},anchor=east,xshift=-0.09cm,font=\tiny,align=center] at (u1.west) {cost:\\$3\cdot 5$};
+            \node[draw=none,fill=none,preaction={},anchor=west,xshift=0.09cm,font=\tiny,align=center] at (u2.east) {cost:\\$3\cdot 9$};
+            \node[draw=none,fill=none,preaction={},anchor=east,xshift=-0.09cm,font=\tiny,align=center] at (w1.west) {cost:\\$1\cdot 4$};
+            \node[draw=none,fill=none,preaction={},anchor=west,xshift=0.09cm,font=\tiny,align=center] at (w2.east) {cost:\\$3\cdot 5$};
+            \node[draw=none,fill=none,preaction={},anchor=west,xshift=0.09cm,font=\tiny,align=center] at (z3.east) {cost:\\$1\cdot 3$};
 
             \draw (r)--(u1);
             \draw (r)--(u2);
             \draw (u1)--(v1);
-            \draw (u1)--(v2);
             \draw (u2)--(w1);
             \draw (u2)--(w2);
             \draw (w1)--(z1);
@@ -74,7 +80,7 @@
             \draw (z3)--(t1);
         \end{tikzpicture}
         \\\smallskip
-        {\small A hierarchical clustering tree $T$.}
+        {\small A hierarchical clustering tree $T$ of cost $2\cdot14+3\cdot5+3\cdot9+1\cdot4+3\cdot5+1\cdot3=92$.}
     \end{minipage}
     \caption{Example of an instance of \textsc{HC-$\cT$} and a feasible hierarchical clustering: Colors denote edges cut at different levels of the tree.}
     \label{fig:hac-intro-example}

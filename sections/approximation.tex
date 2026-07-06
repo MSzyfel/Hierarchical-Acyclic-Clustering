@@ -1,49 +1,72 @@
 ﻿    \section{The Algorithm}
 
-    We now summarize the algorithm in two parts. The main procedure first performs the preprocessing phase, in which it computes the partially rounded \textsc{LP} solution $(\hat{x},\hat{y})$ and the vector solution $\hat{v}$ obtained from the \textsc{SDP}, and then it invokes the recursive routine. The recursive routine only builds the clustering tree, using the guides prepared by the main procedure.
-
-    \begin{theorem}\label{thm:main-approximation}
-        If $\cF$ is a $\alpha\br{n}$-well-behaved class of graphs, then there exists an $O\br{\alpha\br{n}+\beta\br{n}}$-approximation algorithm for the \textsc{HC-$\cF$} problem.
-    \end{theorem}
-    \begin{proof}
-
-    
-    Denote by $\beta\br{n}$ the approximation ratio of the rounding algorithm for \textsc{$k$-BP}. 
+    In this section, we use the \textsc{$\rho$-SEP} parameters $\rho=1/2$ and $\rho_0=2/3$, and we assume that the class of graphs of total weight at most $\rho\cdot w\br{G}$ is $\beta\br{n}$-well-behaved. To see the proof of this fact see Section \ref{sec:applying-framework}. The main procedure is given in Algorithm \ref{alg:main-procedure} and the recursive procedure is given in Algorithm \ref{alg:recursive-procedure}. The main procedure computes the partially rounded \textsc{LP} solution $(\hat{x},\hat{y})$ and then invokes the recursive routine on the entire graph $G$. The recursive routine only builds the clustering tree, using the guides prepared by the main procedure. In particular, it uses the partially rounded \textsc{LP} solution $(\hat{x},\hat{y})$ to find a set of edges $F_H$ to cut for satisfying the $\cF$-predicate, and it uses the same level-restricted \textsc{LP} solution as a \textsc{$\rho$-SEP} guide to find a set of edges $B_H$ reducing component weights. The union of these two sets of edges is then used to partition the cluster $H$ into smaller clusters, which are recursively processed.
 
     \input{pseudocodes/main_procedure.tex}
     \input{pseudocodes/recursive_procedure.tex}
+
+    \begin{theorem}\label{thm:main-approximation}
+        Assume that the class of graphs of total weight at most $\rho\cdot w\br{G}$ is $\beta\br{n}$-well-behaved. If $\cF$ is a $\alpha\br{n}$-well-behaved class of graphs, then there exists an $O\br{\alpha\br{n}+\beta\br{n}}$-approximation algorithm for the \textsc{HC-$\cF$} problem.
+    \end{theorem}
+    \begin{proof}
+        It is straightforward to see that the algorithm runs in polynomial time and returns a valid clustering tree. It remains to bound the cost of the solution. We start with the following lemma, which shows that each cluster produced by the recursive procedure is either in $\cF$ or has weight at most $2/3$ of its parent cluster. This allows us to charge the cost of each cluster to levels of the \textsc{LP} solution that are not used by any of its children, and hence bound the total cost of the solution by a constant factor times the cost of the \textsc{LP} solution.
+    \begin{lemma}\label{lem:child-cluster-valid-or-small}
+        Fix a recursive call on a non-$\cF$ cluster $H$, let $t=w\br{V\br{H}}/2$, and let $F_H,B_H$ be the cuts returned by the two rounding steps in Algorithm~\ref{alg:recursive-procedure}. Then every connected component $A$ of $H\setminus \br{F_H\cup B_H}$ satisfies at least one of the following:
+        \begin{enumerate}
+            \item $A\in \cF$,
+            \item $w\br{V\br{A}}\leq 2w\br{V\br{H}}/3$.
+        \end{enumerate}
+    \end{lemma}
+    \begin{proof}
+        Let $X_1=\brc{i\in V\br{H}\colon \hat y_i^t=1}$ and $X_0=\brc{i\in V\br{H}\colon \hat y_i^t=0}$.
+
+        By Lemma~\ref{lem:lp-fes}, the guide $LP_t^H$ is feasible for \textsc{$p_{\cF}$-P} on terminal set $X_1$. Hence, by the $\alpha\br{n}$-well-behaved rounding guarantee, after removing $F_H$ every vertex of $X_1$ satisfies the $\cF$-predicate.
+
+        Now consider the additional deletion of $B_H$. Since in a well-behaved formulation the predicate is encoded only via cover constraints, deleting extra edges cannot destroy already-satisfied constraints. Therefore every vertex in $X_1$ still satisfies the $\cF$-predicate in $H\setminus\br{F_H\cup B_H}$.
+
+        Fix a connected component $A$ of $H\setminus\br{F_H\cup B_H}$. If $A\cap X_0=\emptyset$, then $A\subseteq X_1$, so every vertex of $A$ satisfies the $\cF$-predicate in $A$. By definition of a $\cF$-predicate, this implies $A\in\cF$.
+
+        Otherwise, $A\cap X_0\neq\emptyset$. Let $C$ be the connected component of $H\setminus B_H$ containing $A$. Then $C\cap X_0\neq\emptyset$. By Lemma~\ref{lem:lp-ksep}, $LP_t^H$ is a feasible \textsc{LP-$\rho$-SEP} guide for $X_0$ with $\rho=1/2$, and by the bicriteria guarantee with $\rho_0=2/3$, every connected component of $H\setminus B_H$ containing a vertex of $X_0$ has weight at most $2w\br{V\br{H}}/3$. Hence
+        \[
+            w\br{V\br{A}}\leq w\br{V\br{C}}\leq 2w\br{V\br{H}}/3.
+        \]
+        This proves the claim.
+    \end{proof}
+
     \begin{lemma}\label{lem:recursive-cost}
         Fix some cluster $H$ for which the recursive procedure was called. Then, 
         \[
-        \COST_G\br{T, u_H}\leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{LP_t^H}+8\beta\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}} \COST\br{SDP_t^H}.
+        \COST_G\br{T, u_H}\leq 3\alpha\br{n}\cdot \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_t^H}+3\beta\br{n}\cdot \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_t^H}.
         \]
     \end{lemma}
     \begin{proof}
-        Firstly, consider the contribution of edges in $F_H$ to the cost. Since it it being cut in a cluster of size $\spr{H}$, we have that it is bounded by $\spr{H}\cdot c\br{F_H}$. By applying Lemma \ref{lem:lp-sdp-bound} with $d=8$ we get that:
+        By Lemma~\ref{lem:child-cluster-valid-or-small}, every child component $A$ created from $H$ is either already in $\cF$ or has weight at most $2w\br{V\br{H}}/3$. Since recursive calls continue only on non-$\cF$ children, the largest relevant child weight satisfies $r\br{H}\leq 2w\br{V\br{H}}/3$, so levels from $2w\br{V\br{H}}/3+1$ up to $w\br{V\br{H}}$ are available in the charging scheme.
+
+        Firstly, consider the contribution of edges in $F_H$ to the cost. Since it is being cut in a cluster of weight $w\br{V\br{H}}$, we have that it is bounded by $w\br{V\br{H}}\cdot c\br{F_H}$. By applying Lemma \ref{lem:lp-level-bound} with $d=3$ we get that:
         \begin{align*}
-            \spr{H}\cdot c\br{F_H} \leq \spr{H}\cdot \COST\br{LP_{\spr{H}/4}^H} \leq 8\alpha\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \COST\br{LP_t^H}.
+              w\br{V\br{H}}\cdot c\br{F_H}
+              &\leq w\br{V\br{H}}\cdot \alpha\br{n}\cdot c\br{LP_{w\br{V\br{H}}/2}^H}\\
+              &\leq w\br{V\br{H}}\cdot \alpha\br{n}\cdot c\br{LP_{2w\br{V\br{H}}/3}^H}\\
+              &\leq 3\alpha\br{n}\cdot
+              \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_t^H}.
         \end{align*}
-        Secondly consider the contribution of all $B_H$ to the cost. Since it it being cut in a cluster of size $\spr{H}$, we have that it is bounded by $\spr{H}\cdot c\br{B_H}$. Applying Lemma \ref{lem:lp-sdp-bound} again with $d=8$ we get:
+        Secondly consider the contribution of all $B_H$ to the cost. Since it is being cut in a cluster of weight $w\br{V\br{H}}$, we have that it is bounded by $w\br{V\br{H}}\cdot c\br{B_H}$. Applying Lemma \ref{lem:lp-level-bound} again with $d=3$ we get:
         \begin{align*}
-             \spr{H}\cdot c\br{B_H} \leq \spr{H}\cdot \COST\br{SDP_{\spr{H}/4}^H} 
-             \leq 8\beta\br{n}\cdot \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \COST\br{SDP_t^H}
+               w\br{V\br{H}}\cdot c\br{B_H}
+               &\leq w\br{V\br{H}}\cdot \beta\br{n}\cdot c\br{LP_{w\br{V\br{H}}/2}^H}\\
+               &\leq w\br{V\br{H}}\cdot \beta\br{n}\cdot c\br{LP_{2w\br{V\br{H}}/3}^H}\\
+               &\leq 3\beta\br{n}\cdot
+               \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_t^H}
         \end{align*}
-    Since we know that $c\br{S_H}= c\br{F_H\cup B_H}\leq c\br{F_H}+c\br{B_H}$, and we have $\COST_G\br{T, u_H} \leq \spr{H}\cdot c\br{S_H}$, the claim follows.
+    Since we know that $c\br{S_H}= c\br{F_H\cup B_H}\leq c\br{F_H}+c\br{B_H}$, and we have $\COST_G\br{T, u_H} \leq w\br{V\br{H}}\cdot c\br{S_H}$, the claim follows.
     \end{proof}
-    Armed with the above lemma we are ready to sum the contribution of all clusters to the cost of the solution. Let $T$ be the clustering tree returned by the algorithm and let $\cC_T$ be the set of all non-tree clusters for which the recursive procedure was called. We have:
+    Armed with the above lemma we are ready to sum the contribution of all clusters to the cost of the solution. Let $T$ be the clustering tree returned by the algorithm and let $\cC_T$ be the set of all non-$\cF$-clusters for which the recursive procedure was called. We have:
     \begin{align*}
         \COST_G\br{T} &= \sum_{H \in \cC_T}\COST_G\br{T, u_H}
-        \\&\leq 8\cdot\sum_{H \in \cH} \sum_{t=\spr{H}/8+1}^{\spr{H}/4} \br{\alpha\br{n}\cdot \COST\br{LP_t^H} + \beta\br{n}\cdot \COST\br{SDP_t^H}}\\
-        &\leq 8\cdot\br{\alpha\br{n}\cdot\COST\br{LP} + \beta\br{n}\cdot\COST\br{SDP}}\\
-        &\leq 16\cdot\br{\alpha\br{n}+\beta\br{n}}\cdot \OPT
+        \\&\leq 3\cdot\sum_{H \in \cH} \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} \br{\alpha\br{n}\cdot c\br{LP_t^H} + \beta\br{n}\cdot c\br{LP_t^H}}\\
+        &\leq 3\cdot\br{\alpha\br{n}\cdot c\br{LP} + \beta\br{n}\cdot c\br{LP}}\\
+        &\leq 6\cdot\br{\alpha\br{n}+\beta\br{n}}\cdot \OPT
     \end{align*}
      where the first inequality is due to Lemma \ref{lem:recursive-cost}, the second inequality is due to Lemma \ref{lem:relaxation-decomposition} and the third inequality is due to Lemma \ref{lem:lp-rounding}. 
     \end{proof}
 
-We get the following corollaries:
-\begin{corollary}
-    There exists an $O\br{\log n \cdot \log\log n}$-approximation algorithm for the \textsc{HC-$\cT$} problem.
-\end{corollary}
-\begin{corollary}
-    There exists an $O\br{\log n}$-approximation algorithm for the \textsc{HC-$\cD_d$} problem.
-\end{corollary}

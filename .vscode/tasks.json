@@ -4,7 +4,7 @@
 		{
 			"label": "Compile LaTeX",
 			"type": "shell",
-			"command": "cd \"c:\\Users\\micha\\projects\\Hierarchical Acyclic Clustering\" && pdflatex -interaction=nonstopmode main.tex 2>&1 | findstr /i \"error\\|undefined\\|missing\\|runaway\\|fatal\\|!\"",
+			"command": "pdflatex -interaction=nonstopmode main.tex 2>&1 | Select-String -Pattern 'error|undefined|missing|runaway|fatal|!'",
 			"isBackground": false
 		}
 	]

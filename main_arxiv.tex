@@ -24,7 +24,7 @@
 \theoremstyle{definition}
 \newtheorem{observation}[theorem]{Observation}
 
-\title{Hierarchical Clustering into $\cF$-clusters: Approximation and Hardness of clustering into Trees and Bounded Diameter Graphs}
+\title{Hierarchical $\cF$-Clustering: Approximation and Hardness of Clustering into Trees and Bounded Diameter Graphs}
 \author{Michał Szyfelbein \\ Gdańsk University of Technology \and Dariusz Dereniowski \\ Gdańsk University of Technology}
 \date{\today}
 
@@ -32,15 +32,10 @@
 
 \maketitle
 
-\begin{abstract}
-    We consider a variation on the classical \textsc{Hierarchical Clustering} problem, in which we modify the halting condition of the recursive process to stop when the remaining cluster is a graph belonging to a given class $\cF$. We call this problem \textsc{Hierarchical Clustering into $\cF$-clusters} and we measure the quality of a solution using adapted Dasgupta's clustering objective. We study two natural choices of $\cF$: trees, denoted by $\cT$ and graphs of diameter bounded by~$d$, denoted by $\cD_d$ (which includes cliques for $d=1$). 
-    
-    We present polynomial time $O\br{\log n\cdot\log\log n}$-approximation for clustering into $\cT$-clusters and $O\br{\log n}$-approximation for clustering into $\cD_d$-clusters. 
-    The main technical contribution of our work is a novel, two-fold way of relaxing the ILP formulation of \textsc{HC-$\cF$} for both $\cT$ and $\cD_d$. Firstly, we use an \textsc{LP} relaxation of the ILP and a simple arithmetic half-up rounding procedure to find the subsets of vertices which need to belong to a $\cF$-cluster at each level of the recursion. After obtaining this information, we use a further \textsc{SDP} relaxation in order to find the subsets of edges we need to cut in order to decrease the size of the instance efficiently. The key ingredient in our algorithm is that both LP and SDP solutions can be decomposed into several instances of the relaxations of \textsc{Feedback Edge Set}/\textsc{Min-Multicut} and \textsc{$k$-Balanced Partitioning} respectively. This allows us to use already known rounding procedures for the aforementioned problems as essential subroutines in our algorithm. To complement these results, we show that for both $\cT$ and $\cD_d$ the problem cannot be approximated within any constant factor under the \textsc{Small Set Expansion Hypothesis}.
-\end{abstract}
+\input{sections/abstract.tex}
 
 \noindent
-\textbf{Keywords:} Hierarchical Clustering into $\cF$-clusters, Feedback Edge Set, Min-Multicut, $k$-Balanced Partitioning, Approximation Algorithms, Linear Programming, Semidefinite Programming.
+\textbf{Keywords:} Hierarchical $\cF$-Clustering, Feedback Edge Set, Min-Multicut, $\rho$-Separator, Approximation Algorithms, Linear Programming.
 
 \bigskip
 
@@ -49,10 +44,13 @@
 \input{sections/well_behaved.tex}
 \input{sections/framework.tex}
 \input{sections/approximation.tex}
+\input{sections/corollaries.tex}
 \input{sections/hardness.tex}
 \input{sections/conclusions.tex}
 
 \bibliographystyle{plain}
 \bibliography{references}
+
+\input{sections/appendix.tex}
 
 \end{document}

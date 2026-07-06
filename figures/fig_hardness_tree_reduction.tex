@@ -2,7 +2,7 @@
     \centering
     \begin{minipage}[c][8.3cm][c]{0.28\textwidth}
         \centering
-        \begin{tikzpicture}[scale=1.12,every node/.style={circle,draw,inner sep=1.4pt,font=\small}]
+        \begin{tikzpicture}[scale=1.12,every node/.style={circle,draw,fill=white,inner sep=1.4pt,font=\small,preaction={fill=black,opacity=0.18,transform canvas={xshift=0.8pt,yshift=-0.8pt}}}]
             \node (a) at (0.0,1.4) {$a$};
             \node (b) at (-1.7,0.4) {$b$};
             \node (c) at (-1.0,-1.3) {$c$};
@@ -11,7 +11,6 @@
 
             \draw (a) -- (b);
             \draw (a) -- (c);
-            \draw (a) -- (e);
             \draw (b) -- (c);
             \draw (c) -- (d);
             \draw (b) -- (d);
@@ -26,9 +25,9 @@
         \begin{tikzpicture}[
             x=1.15cm,
             y=1.15cm,
-            every node/.style={circle,draw,inner sep=1.2pt,font=\scriptsize},
-            base/.style={circle,draw,fill=white,inner sep=1.2pt,font=\scriptsize},
-            tnode/.style={circle,draw=cutD,fill=cutD!25,inner sep=1.1pt,font=\scriptsize,transform shape=false},
+            every node/.style={circle,draw,fill=white,inner sep=1.2pt,font=\scriptsize,preaction={fill=black,opacity=0.18,transform canvas={xshift=0.8pt,yshift=-0.8pt}}},
+            base/.style={circle,draw,fill=white,inner sep=1.2pt,font=\scriptsize,preaction={fill=black,opacity=0.18,transform canvas={xshift=0.8pt,yshift=-0.8pt}}},
+            tnode/.style={circle,draw=cutD,fill=white,inner sep=1.1pt,font=\scriptsize,transform shape=false,preaction={fill=black,opacity=0.18,transform canvas={xshift=0.8pt,yshift=-0.8pt}}},
             tedge/.style={draw=cutD,very thick}
         ]
             \coordinate (a) at (0.0,1.2);
@@ -39,7 +38,6 @@
 
             \draw (a) -- (b);
             \draw (a) -- (c);
-            \draw (a) -- (e);
             \draw (b) -- (c);
             \draw (c) -- (d);
             \draw (b) -- (d);

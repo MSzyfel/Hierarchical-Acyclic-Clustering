@@ -1,0 +1,265 @@
+\section{Spreading metric for $\rho$-separators with terminals}\label{app:terminal-extension}
+
+This appendix gives the extension of the procedure and analysis of Even et al.~\cite{FastApproximateGraphPartitioningAlgorithms} which gives an $O\br{\log n}$-approximation algorithm for the \textsc{$\rho$-SEP} problem, from the case $X=V$ to a designated terminal set $X\subseteq V$. The algorithm is almost exactly the same, and is based on a region-growing procedure. Whereas the original procedure grows a region around an arbitrary vertex, our modification procedure grows a region around an arbitrary terminal. The rest of the analysis is largely the same. 
+
+\subsection{LP formulation}
+
+For edge lengths $x$ and a vertex set $U\subseteq V$, we write $\dist_{x,U}(a,b)$ for the shortest-path distance between $a$ and $b$ in the induced subgraph $G[U]$ with edge lengths given by $x$.
+
+Recall, the following is the weighted spreading-metrics \textsc{LP} relaxation \textsc{LP-$\rho$-SEP} for the \textsc{$\rho$-SEP} problem with a terminal set $X$:
+\begin{align}
+    \min \quad &\sum_{e\in E} c(e)\cdot x_e \\
+    \text{subject to} \quad &\sum_{u\in S} \dist_{x,V}(v,u)\cdot w(u) \geq w\br{S}-\rho\cdot w\br{G}, \quad \forall S\subseteq V,\; v\in S\cap X, \label{eq:px1-main}\\
+    &0\le x_e\le 1, \quad \forall e\in E.
+\end{align}
+
+Again, the LP can be solved in polynomial time using the ellipsoid method, since there is a polynomial-time separation oracle for the constraints \eqref{eq:px1-main}. Let $\tau_X$ denote the optimal value of \textsc{LP-$\rho$-SEP}.
+
+\subsection{Lower bound}
+Firstly, we claim that $\tau_X$ is a lower bound on the minimum capacity of a $(\rho,X)$-separator.
+\begin{lemma}
+$\tau_X$ is a lower bound on the minimum capacity of a $(\rho,X)$-separator.
+\end{lemma}
+
+\begin{proof}
+Let $F$ be any $(\rho,X)$-separator. Define an integral length assignment by
+\[
+    d(e)=\begin{cases}
+        1,& e\in F,\\
+        0,& e\notin F.
+    \end{cases}
+\]
+Take any constraint \eqref{eq:px1-main}, i.e., any $S\subseteq V$ and any $v\in S\cap X$.
+Let $C$ be the connected component of $v$ in $G'=(V,E\setminus F)$.
+For every $u\in S\setminus C$, every $v$-$u$ path uses at least one edge of $F$, hence $\dist_{x,V}(v,u)\ge 1$.
+Therefore,
+\begin{align*}
+\sum_{u\in S}\dist_{x,V}(v,u)\cdot w(u)
+&\ge \sum_{u\in S\setminus C}\dist_{x,V}(v,u)\cdot w(u)\\
+&\ge w\br{S\setminus C}\\
+&= w\br{S}-w\br{C\cap S}\\
+&\ge w\br{S}-w\br{C}.
+\end{align*}
+Since $v\in X$, the component $C$ contains a terminal, so by definition of $(\rho,X)$-separator,
+$w(C)\le \rho\cdot w\br{G}$. Hence
+\[
+\sum_{u\in S}\dist_{x,V}(v,u)\cdot w(u)\ge w\br{S}-\rho\cdot w\br{G},
+\]
+so every constraint is satisfied. The LP cost equals $c(F)$, thus
+$\tau_X\le c(F)$ for every feasible $(\rho,X)$-separator $F$. Consequently,
+$\tau_X$ is a lower bound on the optimum separator capacity.
+\end{proof}
+
+\subsection{Radius bound}
+
+For a vertex $v\in S\subseteq V$, define $
+\operatorname{radius}(v,S)=\max_{u\in S}\dist_S(v,u).$
+We have the following lemma:
+
+\begin{lemma}
+If $S\subseteq V$ satisfies $w\br{S}>\rho_0\cdot w\br{G}$, then for every terminal $v\in S\cap X$, $
+\operatorname{radius}(v,S)>\frac{\rho_0-\rho}{\rho_0}.
+$
+\end{lemma}
+
+\begin{proof}
+Fix $S$ and terminal $v\in S\cap X$. By \eqref{eq:px1-main}, we have $
+\sum_{u\in S}\dist_{x,V}(v,u)\cdot w(u)\ge w\br{S}-\rho\cdot w\br{G}.
+$
+Hence the weighted average distance from $v$ to vertices in $S$ is at least
+\[
+1-\frac{\rho\cdot w\br{G}}{w\br{S}} > 1-\frac{\rho}{\rho_0}=\frac{\rho_0-\rho}{\rho_0}.
+\]
+By averaging there exists a vetrtex $u\in S$ such that $
+\dist_{x,V}(v,u)>\frac{\rho_0-\rho}{\rho_0}.
+$
+Since $\dist_{x,S}(v,u)\ge \dist_{x,V}(v,u)$, we obtain
+\[
+\operatorname{radius}(v,S)\ge \dist_S(v,u)>\frac{\rho_0-\rho}{\rho_0}.
+\]
+\end{proof}
+
+\subsection{Assigning volumes to spheres}
+
+Fix a connected subgraph $G'=(V',E')$ that we currently process.
+For a vertex $v\in V'$ and radius $r\ge 0$, define an \emph{$r$-sphere} as $
+N(v,r)=\{u\in V'\colon \dist_{V'}(u,v)<r\}.$. Let $
+E(v,r)=E'\cap \bigl(N(v,r)\times N(v,r)\bigr) $ be the set of edges with both endpoints in the $r$-sphere, and let $
+\delta(v,r)=E'\cap \bigl(N(v,r),V'\setminus N(v,r)\bigr)$ be the set of edges with exactly one endpoint in the $r$-sphere.
+
+For a parameter $\varepsilon>0$, define the volume of a sphere by
+\[
+\operatorname{vol}(v,r)=\varepsilon\tau_X
++\sum_{e\in E(v,r)} c(e)\cdot d(e)
++\sum_{(x,y)\in \delta(v,r)} c(x,y)\bigl(r-\dist_{N(v,r)}(v,x)\bigr).
+\]
+
+This quantity consists of 3 terms: a small constant term $\varepsilon\tau_X$ called \emph{seed value}, the contribution of edges inside the sphere, and the contribution of edges crossing the sphere boundary. Specifically, we will choose $\epsilon=\frac{1}{n\ln n}$.
+Now, we observe that $\operatorname{vol}(v,r)$ is monotone and piecewise linear. This is because the first two terms are monotone and piecewise constant, and the last term is monotone and piecewise linear. In particular, $\operatorname{vol}(v,r)$ is continuous, and on each open interval between consecutive vertex distances from $v$,
+\[
+\frac{d}{dr}\operatorname{vol}(v,r)=c\bigl(\delta(v,r)\bigr).
+\]
+
+\subsection{Cut procedure and its correctness}
+
+Here we describe the modified region-growing procedure, which is almost identical to the original procedure of Even et al.~\cite{FastApproximateGraphPartitioningAlgorithms}, except that it grows a region around an arbitrary terminal $v\in V'\cap X$ instead of an arbitrary vertex $v\in V'$. The procedure is given in Algorithm~\ref{alg:terminal-cut-proc}. This procedure is used, whenever there exists at least one terminal in the current subgraph $G'=(V',E')$ and $w\br{V'}>\rho_0\cdot w\br{G}$. The procedure returns a sphere $U=N(v,r)$ for some radius $r\le \tilde r$ such that $w\br{U}\le \rho_0\cdot w\br{G}$ and the ratio between $c\br{\delta\br{v, r}}$ and $\operatorname{vol}(v,r)$ is $O\br{\log n}$.
+
+Pick $
+\tilde r=\frac{\rho_0-\rho}{\rho_0}.$
+
+
+
+\input{pseudocodes/terminal_cut_procedure.tex}
+
+\begin{theorem}
+For every processed subgraph $G'=(V',E')$ with $V'\cap X\neq\emptyset$ and
+$w\br{V'}>\rho_0\cdot w\br{G}$, procedure \textsc{Cut-Proc} returns
+nonempty $U\subsetneq V'$ such that:
+\begin{enumerate}
+    \item $U\cap X\neq\emptyset$,
+    \item $w\br{U}\le \rho_0\cdot w\br{G}$,
+    \item The following inequality holds for the returned radius:
+    \[
+c\bigl(\delta(v,r)\bigr)
+\le
+\frac{1}{\tilde r}\ln\!\left(\frac{\operatorname{vol}(v,\tilde r)}{\operatorname{vol}(v,0)}\right)
+\cdot \operatorname{vol}(v,r).
+\label{eq:terminal-good-radius}
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Fix the chosen terminal center $v\in V'\cap X$. Let
+$z_0=v,z_1,\dots,z_{|V'|-1}$ be vertices sorted by nondecreasing
+distance from $v$ in $G'$. For each $i$, denote
+\[
+I_i=\bigl(\dist_{V'}(v,z_i),\dist_{V'}(v,z_{i+1})\bigr).
+\]
+On each $I_i$, $\operatorname{vol}(v,r)$ is linear and
+\[
+\operatorname{vol}'(v,r)=c\bigl(\delta(v,r)\bigr)
+\qquad\text{for }r\in I_i.
+\]
+
+\begin{lemma}\label{lem:cut-proc-log-derivative-point}
+There exists $r_0\in (0,\tilde r]\cap\bigcup_i I_i$ such that
+\[
+\frac{\operatorname{vol}'(v,r_0)}{\operatorname{vol}(v,r_0)}
+\le
+\frac{1}{\tilde r}
+\ln\!\left(\frac{\operatorname{vol}(v,\tilde r)}{\operatorname{vol}(v,0)}\right).
+\]
+\end{lemma}
+\begin{proof}
+We use an averaging argument for the logarithmic derivative over $[0,\tilde r]$.
+Assume to the contrary that for all admissible $r\in(0,\tilde r]$,
+\[
+\frac{\operatorname{vol}'(v,r)}{\operatorname{vol}(v,r)}
+>
+\frac{1}{\tilde r}
+\ln\!\left(\frac{\operatorname{vol}(v,\tilde r)}{\operatorname{vol}(v,0)}\right).
+\]
+Integrating over $[0,\tilde r]$ gives
+\[
+\int_0^{\tilde r}\frac{\operatorname{vol}'(v,r)}{\operatorname{vol}(v,r)}dr
+>
+\frac{1}{\tilde r}
+\ln\!\left(\frac{\operatorname{vol}(v,\tilde r)}{\operatorname{vol}(v,0)}\right)
+\int_0^{\tilde r}dr.
+\]
+Both sides equal
+\[
+\ln\operatorname{vol}(v,\tilde r)-\ln\operatorname{vol}(v,0)
+=
+\ln\!\left(\frac{\operatorname{vol}(v,\tilde r)}{\operatorname{vol}(v,0)}\right),
+\]
+contradiction.
+\end{proof}
+
+\begin{lemma}\label{lem:cut-proc-scanned-radius}
+There exists a scanned radius $r\le \tilde r$ satisfying \eqref{eq:terminal-good-radius}.
+\end{lemma}
+\begin{proof}
+We first find a good continuous radius and then move to the nearest scanned event radius, keeping the same cut while not increasing the relevant ratio.
+Let $r_0$ be given by Lemma~\ref{lem:cut-proc-log-derivative-point}, and define
+\[
+r_1=\min\{\dist_{V'}(v,u)\colon u\in V',\ \dist_{V'}(v,u)\ge r_0\}.
+\]
+Then $N(v,r_0)=N(v,r_1)$, hence both radii induce the same cut and
+\[
+c\bigl(\delta(v,r_1)\bigr)=\operatorname{vol}'(v,r_0).
+\]
+By monotonicity $\operatorname{vol}(v,r_0)\le \operatorname{vol}(v,r_1)$, so \eqref{eq:terminal-good-radius} holds for $r_1$. Since the procedure scans event radii exhaustively, it returns some scanned radius $r\le r_1\le \tilde r$ satisfying \eqref{eq:terminal-good-radius}.
+\end{proof}
+
+\begin{lemma}\label{lem:cut-proc-weight-bound}
+For the returned set $U=N(v,r)$, we have $w\br{U}\le \rho_0\cdot w\br{G}$.
+\end{lemma}
+\begin{proof}
+We prove this by contradiction: if the returned ball were too heavy, the radius lower bound for terminal-centered sets would force a vertex farther than $\tilde r$ from $v$ inside $U$.
+If $w\br{U}>\rho_0\cdot w\br{G}$, then by terminal radius guarantee applied to $S=U$ and center $v\in U\cap X$,
+\[
+\operatorname{radius}(v,U)>\tilde r.
+\]
+But $U=N(v,r)$ and $r\le \tilde r$, so every $u\in U$ satisfies $\dist_{V'}(v,u)<r\le \tilde r$, contradiction.
+Hence $w\br{U}\le \rho_0\cdot w\br{G}$.
+\end{proof}
+
+By Lemma~\ref{lem:cut-proc-scanned-radius}, property (3) of the theorem holds. By Lemma~\ref{lem:cut-proc-weight-bound}, property (2) holds. Property (1) is immediate since $v\in U\cap X$.
+\end{proof}
+
+\subsection{Global algorithm and approximation factor}
+
+Run \textsc{Cut-Proc} iteratively as in Algorithm~\ref{alg:terminal-global-procedure}.
+
+\input{pseudocodes/terminal_global_procedure.tex}
+
+At termination, every terminal-containing component has weight at most $\rho_0\cdot w\br{G}$, so the produced cut is a feasible $(\rho_0,X)$-separator. 
+Let the procedure be called $q$ times and let $U_1,\dots,U_q$ be returned spheres.
+By construction, these sets are pairwise disjoint.
+
+For each call, by \eqref{eq:terminal-good-radius},
+\[
+c\bigl(\delta(U_j)\bigr)
+\le
+\frac{1}{\tilde r}
+\ln\!\left(\frac{\operatorname{vol}_j(v_j,\tilde r)}{\operatorname{vol}_j(v_j,0)}\right)
+\operatorname{vol}_j(v_j,r_j),
+\]
+where $\operatorname{vol}_j$ is the volume function within the current processed component.
+Since
+\[
+\operatorname{vol}_j(v_j,\tilde r)\le (1+\varepsilon)\tau_X,
+\qquad
+\operatorname{vol}_j(v_j,0)=\varepsilon\tau_X,
+\]
+we get
+\[
+c\bigl(\delta(U_j)\bigr)
+\le
+\frac{1}{\tilde r}\ln\!\left(\frac{1+\varepsilon}{\varepsilon}\right)
+\operatorname{vol}_j(v_j,r_j).
+\]
+
+Summing over calls, edge-length contributions are at most $\tau_X$, and seed terms contribute at most $q\varepsilon\tau_X\le n\varepsilon\tau_X$. Hence
+\[
+\sum_{j=1}^q c\bigl(\delta(U_j)\bigr)
+\le
+\frac{1}{\tilde r}
+\ln\!\left(\frac{1+\varepsilon}{\varepsilon}\right)
+\tau_X(1+\varepsilon n).
+\]
+
+Choosing
+\[
+\varepsilon=\frac{1}{n\ln n},
+\]
+we obtain the following bound.
+
+\begin{theorem}
+The above algorithm computes a $(\rho_0,X)$-separator of capacity at most
+\[
+\left(\frac{\rho_0}{\rho_0-\rho}+o(1)\right)\ln n\cdot \tau_X.
+\]
+\end{theorem}
