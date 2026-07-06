@@ -11,7 +11,7 @@ Solve \textsc{LP-HC-$\cF$} on $G$ and obtain a fractional solution $(\mathbf{x},
     Set $\hat{y}_i^t \gets 1$ if $y_i^t \geq 1/2$, and set $\hat{y}_i^t \gets 0$ otherwise\;
 }
 \ForEach{$t\in [w\br{G}]$ and $uv\in E$}{
-    $\hat{x}_{uv}^t\gets \min\brc{1, 2\cdot x_{uv}^t}$\;
+    $\hat{x}_{uv}^t\gets 2\cdot x_{uv}^t$\;
 }
 \tcp{Clustering phase}
 \Return{\textsc{Recursive-HC-$\cF$}($G,\hat{\mathbf{x}},\hat{\mathbf{y}})$}\;
