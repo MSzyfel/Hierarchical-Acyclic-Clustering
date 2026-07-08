@@ -4,12 +4,12 @@ In this section, we show that approximating \textsc{HC-$\cT$} and \textsc{HC-$\c
 \begin{theorem}[Inapproximability of \textsc{HC} \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}]\label{thm:hc-inapproximability}
     For every $\epsilon > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $G$ of \textsc{HC}:
     \begin{itemize}
-        \item \textbf{YES case:} There exists a HC tree $T$ such that $\COST_G\br{T}\leq \epsilon \cdot n \cdot m$.
+        \item \textbf{YES case:} There exists a clustering tree $T$ such that $\COST_G\br{T}\leq \epsilon \cdot n \cdot m$.
         \item \textbf{NO case:} For every linear arrangement $\pi$ of $V\br{G}$, $\COST_G\br{\pi}\geq c\sqrt{\epsilon} \cdot n \cdot m$, for some constant $c > 0$.
     \end{itemize}
 \end{theorem}
 Note that since the objective of the
- \textsc{MLA} is a lower bound on the cost of any HC tree \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}, the above result implies that in the \textbf{NO} case, every HC tree $T$ has $\COST_G\br{T}\geq c\sqrt{\epsilon} \cdot n \cdot m$.
+ \textsc{MLA} is a lower bound on the cost of any clustering tree \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}, the above result implies that in the \textbf{NO} case, every clustering tree $T$ has $\COST_G\br{T}\geq c\sqrt{\epsilon} \cdot n \cdot m$.
 
 \subsection{Inapproximability of \textsc{HC-$\cD_d$}}
 
@@ -18,8 +18,8 @@ We start with the inapproximability of \textsc{HC-$\cD_d$}. For bounded diameter
 \begin{theorem}[Inapproximability of \textsc{HC-$\cD_d$}]\label{thm:hac-d-inapproximability}
     For every $\delta > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $H$ of \textsc{HC-$\cD_d$} for any given $d\geq 0$:
     \begin{itemize}
-        \item \textbf{YES case:} There exists a HC-$\cD_d$ tree $T$ such that $\COST_H\br{T}\leq \delta \cdot f\br{ n, m, d}$.
-        \item \textbf{NO case:} For every HC-$\cD_d$ tree $T$, $\COST_H\br{T}\geq c'\sqrt{\delta} \cdot f\br{ n, m, d}$, for some constant $c' > 0$.
+        \item \textbf{YES case:} There exists a $\cD_d$-clustering tree $T$ such that $\COST_H\br{T}\leq \delta \cdot f\br{ n, m, d}$.
+        \item \textbf{NO case:} For every $\cD_d$-clustering tree $T$, $\COST_H\br{T}\geq c'\sqrt{\delta} \cdot f\br{ n, m, d}$, for some constant $c' > 0$.
     \end{itemize}
     For some function $f\br{n, m, d}$ which is polynomial in $n$ and $m$ and $d$.
 \end{theorem}
@@ -29,11 +29,11 @@ We start with the inapproximability of \textsc{HC-$\cD_d$}. For bounded diameter
 
     \input{figures/fig_hardness_diameter_reduction.tex}
 
-    Firstly, assume that $G$ is a \textbf{YES} instance and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a HC-$\cD_d$ tree $T'$ for $H$ as follows. We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add all the vertices of $H^v$ to $A$ as well. This transformation increases the cost of $T'$ by a multiplicative factor of $n\br{G}\cdot d+1$, ensures that $T'$ is a hierarchical clustering tree and all of the leaf clusters in $T'$ have diameter at most $d$. We have that \[
+    Firstly, assume that $G$ is a \textbf{YES} instance and $T$ is a clustering tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. We construct a $\cD_d$-clustering tree $T'$ for $H$ as follows. We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add all the vertices of $H^v$ to $A$ as well. This transformation increases the cost of $T'$ by a multiplicative factor of $n\br{G}\cdot d+1$, ensures that $T'$ is a $\cD_d$-clustering tree, in particular all of the leaf clusters in $T'$ have diameter at most $d$. We have that \[
     \COST_H\br{T'} \leq \br{n\br{G}\cdot d+1}\cdot\COST_G\br{T}\leq \epsilon \cdot \br{n\br{G}\cdot d+1}\cdot n\br{G}\cdot m\br{G}.
     \]
 
-    Secondly, assume that $G$ is a \textbf{NO} instance. Observe, that we can assume that the optimal clustering tree never cuts edges of $H^v$. If otherwise, let $\cC$ be the set of edges cut in $H^v$. There are two cases:
+    Secondly, assume that $G$ is a \textbf{NO} instance. Observe, that we can assume that an optimal clustering tree never cuts edges of $H^v$. If otherwise, let $\cC$ be the set of edges cut in $H^v$. There are two cases:
     \begin{enumerate}
         \item $\spr{H^v\setminus \cC}= 1$. Then, we can remove cutting of the edges in $\cC$ from $T$ without affecting the structure of clusters. Since the cluster containing $V\br{H_v}$ had diameter at most $d$ before, then it must have only consisted of vertices of $H^v$ and thus, after transformation it still has diameter at most $d$.
         \item $\spr{H^v\setminus \cC}\geq 2$. 
@@ -46,7 +46,7 @@ We start with the inapproximability of \textsc{HC-$\cD_d$}. For bounded diameter
          By defintion $\cS$ is not a cut of $H^v$, so we can remove cutting of these edges from clusters of $T$ without affecting the structure of clusters. We replace this by cutting all of the remaining edges of $N_G\br{v}$ in $C$. Observe, that there are at most $\deg_G\br{v}<\spr{\cS}$ such edges, and thus, the cost of $T$ is strictly less then at the beginning. Moreover, upon doing so, all clusters containing vertices $V\br{H_v}$ become $\cD_d$-clusters and therefore, we can remove their child clusters from $T$. Finally, each other child cluster of $C$ is a subgraph of some child of $C$ in the original tree, so $T$ is still a valid clustering tree.
         \end{enumerate}
 
-    Therefore, the only edges which can be cut in any sensible clustering tree are the edges of $G$. However, in such case the cost of any clustering tree $T'$ obtained by repeating the cuts of some clustering tree $T$ for $G$ is at lower bounded by
+    Therefore, the only edges which can be cut in any sensible clustering tree are the edges of $G$. However, in such case the cost of any $\cD_d$-clustering tree $T'$ obtained by repeating the cuts of the clustering tree $T$ for $G$ is lower-bounded by
     \[
     \COST_H\br{T'} = \br{n\br{G}\cdot d+1}\cdot\COST_G\br{T} \geq c\sqrt{\epsilon} \cdot \br{n\br{G}\cdot d+1}\cdot n\br{G}\cdot m\br{G}.
     \]
@@ -58,12 +58,12 @@ We start with the inapproximability of \textsc{HC-$\cD_d$}. For bounded diameter
 
 \subsection{Inapproximability of \textsc{HC-$\cT$}}
 
-Here, in order to prove the inapproximability of \textsc{HC-$\cT$}, we will use a similar approach as in the previous section. However, now the gadgets we use serve a different purpose. In order for the below reduction to work, we need to use the fact that the cost of the optimal \textsc{MLA} is a lower bound on the cost of any HC tree. However, this might not be a case for all instances of \textsc{HC-$\cT$}. The purpose of gadgets in our reduction is to ensure that such a lower bound can also be established for the graphs obtained after the reduction.
+Here, in order to prove the inapproximability of \textsc{HC-$\cT$}, we will use a similar approach as in the previous section. However, now the gadgets we use serve a different purpose. In order for the below reduction to work, we need to use the fact that the cost of the optimal \textsc{MLA} is a lower bound on the cost of any clustering tree. However, this might not be a case for all instances of \textsc{HC-$\cT$}. The purpose of gadgets in our reduction is to ensure that such a lower bound can also be established for the graphs obtained after the reduction.
 \begin{theorem}[Inapproximability of \textsc{HC-$\cT$}]\label{thm:hac-inapproximability}
     For every $\delta > 0$, it is \textsc{SSEH}-hard to distinguish between the following two cases for a given (uniform cost) instance $H$ of \textsc{HC-$\cT$}:
     \begin{itemize}
-        \item \textbf{YES case:} There exists a HC-$\cT$ tree $T$ such that $\COST_H\br{T}\leq \delta \cdot n \cdot m$.
-        \item \textbf{NO case:} Every HC-$\cT$ tree $T$, $\COST_H\br{T}\geq c'\sqrt{\delta} \cdot n \cdot m$, for some constant $c' > 0$.
+        \item \textbf{YES case:} There exists a $\cT$-clustering tree $T$ such that $\COST_H\br{T}\leq \delta \cdot n \cdot m$.
+        \item \textbf{NO case:} Every $\cT$-clustering tree $T$, $\COST_H\br{T}\geq c'\sqrt{\delta} \cdot n \cdot m$, for some constant $c' > 0$.
     \end{itemize}
 \end{theorem}
 \begin{proof}
@@ -73,13 +73,13 @@ Here, in order to prove the inapproximability of \textsc{HC-$\cT$}, we will use 
 
     \input{figures/fig_hardness_tree_reduction.tex}
     
-    Firstly, assume that $G$ is a \textbf{YES} instance and $T$ is the HC tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. Then, we show how to construct a good HC-$\cT$ tree $T'$ for $H$: We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add $v_1$ and $v_2$ to $A$ as well. This transformation increases the cost of $T'$ be a multiplicative factor of $3$, ensures that all of the clusters in $T'$ satisfy hierarchical clustering properties except that every leaf cluster in $T'$ is a triangle. To fix this, we add a new level of the tree, in which we cut each such triangle using one, arbitrarily chosen edge. It is easy to see that 
+    Firstly, assume that $G$ is a \textbf{YES} instance and $T$ is a clustering tree such that $\COST_G\br{T}\leq \epsilon \cdot n\br{G} \cdot m\br{G}$. Then, we show how to construct a good $\cT$-clustering tree $T'$ for $H$: We start with $T'=T$ and we modify all clusters in the following way: for every cluster $A\in \cC^{T'}$ and a vertex $v\in A$ we add $v_1$ and $v_2$ to $A$ as well. This transformation increases the cost of $T'$ be a multiplicative factor of $3$, ensures that all of the clusters in $T'$ satisfy hierarchical clustering properties except that every leaf cluster in $T'$ is a triangle. To fix this, we add a new level of the tree, in which we cut each such triangle using one, arbitrarily chosen edge. It is easy to see that
     \[
     \COST_H\br{T'} = 3\COST_G\br{T}+ 3n\br{G} \leq 3\epsilon \cdot n\br{G} \cdot m\br{G} + 3n\br{G} \leq \epsilon \cdot n \cdot m+n\leq \delta \cdot n \cdot m
     \]
     where we used the fact that $\epsilon \geq 1/m$ for any fixed $\epsilon$ and large enough $m$. 
     
-    Secondly, assume that $G$ is a \textbf{NO} instance. We want to show that the cost of any clustering tree $T$ for $H$ is lower bounded by the cost of some linear arrangement of $G$. To do so, fix some clustering tree $T$ for $G$, pick all original vertices of $G$ and project them onto a line according to the order in which they occur in the leaf clusters of $T$, thus obtaining a linear arrangement of $G$, $\pi$ (assume that each cluster has some arbitrary order of vertices in it). Consider an edge $uv \in E\br{G}$. There are two cases:
+    Secondly, assume that $G$ is a \textbf{NO} instance. We want to show that the cost of any clustering tree $T$ for $H$ is lower bounded by the cost of some linear arrangement of $G$. To do so, fix some clustering tree $T$ for $G$, pick all original vertices of $G$ and project them onto a line according to the order in which they occur in the leaf clusters of $T$, thus obtaining a linear arrangement of $G$, $\pi$ (assume that each cluster has some arbitrary order of vertices in it). Consider an edge $uv \in E$. There are two cases:
     \begin{enumerate}
     \item $u$ and $v$ belong to different leaf clusters in $T$. Then, we know that the edge $uv$ had to be cut in $T$ and the stretch of $u$ and $v$ in $\pi$, i.~e., $\spr{\pi\br{u}-\pi\br{v}}$, is at most the size of the cluster $C$ in which $uv$ was cut. On the other hand, the contribution of $uv$ to $c_G\br{T}$ is $\spr{\cC}\geq \spr{\pi\br{u}-\pi\br{v}}$.
     \item $u$ and $v$ belong to the same leaf cluster in $T$. Consider the cluster $C$ in which $u$ and $v$ belong. Let $C'$ be this cluster restricted to the vertices of $G$. Since $C'$ is a tree, we know that the contribution of edges of $C'$ to the cost of $\pi$ is at most $\br{\spr{C'}-1}\cdot \spr{C'}\leq \spr{C'}^2$. On the other hand, we know that for each vertex $v\in C'$, at least one of the edges $vv_1, vv_2$ has to be cut in $T$ and every such edge is cut in a cluster of size at least $\spr{C'}$ so the contribution of these edges to $c_H\br{T}$ is at least $\spr{C'}^2$. Therefore contribution of edges of $C$ to the cost of $T$ is at least the contribution of edges of $C'$ to the cost of $\pi$. Figure~\ref{fig:hardness-tree-no-case2} illustrates the above argument on a small example.

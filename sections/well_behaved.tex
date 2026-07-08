@@ -11,9 +11,4 @@ Any class of graphs $\cF$ that satisfies the following will be called \emph{$\al
     \item There exists an algorithm which given an instance of the problem \textsc{$p_{\cF}$-P} and a solution to the LP relaxation of the above ILP, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution to \textsc{$p_{\cF}$-P} and $\sum_{e\in S} c(e) \leq \alpha(n)\cdot \sum_{e\in E} c(e) \cdot x_e$, where $\alpha\br{n}$ is the approximation ratio of the algorithm.
 \end{enumerate}
 
-\DD{zakomentowalem zdanie, gdyz jest powtorzeniem sprzed enum'a}
-%We call such a class of graphs $\cF$, the ILP and its LP-relaxation \emph{$\alpha\br{n}$-well-behaved}.
-\DD{nastepne zdanie niejako bylo przed enum'em:}
-Although the above constraints may seem restrictive, they are satisfied by many natural classes of graphs including trees and bounded diameter graphs (See Section \ref{sec:applying-framework}).
-\DD{tutaj nie jest jasne co czytelnik ma sprawdzic (sam ulozy LP czy bedzie pozniej?}
-We encourage the reader to check that those LPs are indeed $\alpha\br{n}$-well-behaved. From now on by \textsc{$p_{\cF}$-P-ILP} and \textsc{$p_{\cF}$-P-LP} we denote any such ILP and its LP-relaxation for \textsc{$p_{\cF}$-P}. It should be noted that whenever there are multiple choices for the ILP and its LP-relaxation, one can pick arbitrarily among them, and by a slight abuse of notation the above symbols represent any of them/the one desirable for our purposes.
+From now on by \textsc{$p_{\cF}$-P-ILP} and \textsc{$p_{\cF}$-P-LP} we denote any such ILP and its LP-relaxation for \textsc{$p_{\cF}$-P}. It should be noted that whenever there are multiple choices for the ILP and its LP-relaxation, one can pick arbitrarily among them, and by a slight abuse of notation the above symbols represent any of them/the one desirable for our purposes.
