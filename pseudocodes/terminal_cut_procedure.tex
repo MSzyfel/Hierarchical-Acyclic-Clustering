@@ -2,13 +2,13 @@
 \caption{\textsc{Cut-Proc} for Terminal-Constrained Region Growing}
 \label{alg:terminal-cut-proc}
 \DontPrintSemicolon
-\KwIn{A connected subgraph $G'=(V',E')$, edge capacities $c$, LP lengths $d$, terminal set $X\subseteq V'$, with $V'\cap X\neq\emptyset$ and $w(V')>\rho_0 w(V)$}
+\KwIn{A connected subgraph $G'=(V',E')$, edge capacities $c$, LP lengths $d$, terminal set $X\subseteq V'$, with $V'\cap X\neq\emptyset$ and $w(V')>\rho_0\cdot w(V)$}
 \KwOut{A nontrivial set $U\subsetneq V'$ satisfying \eqref{eq:terminal-good-radius}}
 Set $\tilde r\gets (\rho_0-\rho)/\rho_0$\;
 Choose an arbitrary center $v\in V'\cap X$\;
 Set $U\gets\{v\}$\;
 Set $v_0\gets$ closest vertex to $U$ in $V'\setminus U$ with respect to $\dist_{d,V'}$\;
-\While{$c\br{U, V'\setminus U} > \frac{1}{\tilde r}\ln\!\left(\frac{\operatorname{vol}(v,\tilde r)}{\operatorname{vol}(v,0)}\right)\cdot \operatorname{vol}\br{v,\dist_{d,V'}\br{v,v_0}}$}{
+\While{$c\br{U, V'\setminus U} > \frac{1}{\tilde r}\cdot\ln\left(\frac{\operatorname{vol}(v,\tilde r)}{\operatorname{vol}(v,0)}\right)\cdot \operatorname{vol}\br{v,\dist_{d,V'}\br{v,v_0}}$}{
 	$U\gets U\cup\{v_0\}$\;
 	Set $v_0\gets$ closest vertex to $U$ in $V'\setminus U$ with respect to $\dist_{d,V'}$\;
 }

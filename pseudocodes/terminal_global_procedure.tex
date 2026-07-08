@@ -5,7 +5,7 @@
 \KwIn{A weighted graph $G=(V,E,c,w)$, terminal set $X\subseteq V$, and parameters $0<\rho<\rho_0<1$}
 \KwOut{A feasible $(\rho_0,X)$-separator $F\subseteq E$}
 Initialize $F\gets\emptyset$\;
-\While{there exists a connected component $C$ of $(V,E\setminus F)$ with $C\cap X\neq\emptyset$ and $w(C)>\rho_0 w(V)$}{
+\While{there exists a connected component $C$ of $(V,E\setminus F)$ with $C\cap X\neq\emptyset$ and $w(C)>\rho_0\cdot w(V)$}{
     Run Algorithm~\ref{alg:terminal-cut-proc} on $G[C]$ with terminal set $X\cap C$ and obtain $U\subsetneq C$\;
     Add boundary edges of $U$ in $G[C]$ to $F$, i.e.,
     $F\gets F\cup \delta_{G[C]}(U).$

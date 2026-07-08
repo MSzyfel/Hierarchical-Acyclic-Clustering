@@ -3,49 +3,31 @@
 Now, we showcase that the graph classes of interest are indeed $\alpha\br{n}$-well-behaved for suitable $\alpha\br{n}$. To do so, we invoke some well-known LP-based approximation algorithms for the \textsc{FES} and \textsc{MMC} problems and we show that they certify the well-behavedness of the relevant classes. 
 We start by invoking a well-known \textsc{LP} relaxation \textsc{LP-FES} of the \textsc{FES} problem:
     \begin{align}
-        \min \quad &\sum_{ij\in E} c\br{i,j} \cdot x_{ij}\\
-        \text{subject to} \quad &\sum_{ij\in C} x_{ij} \geq 1, \quad \forall \text{ cycles } C \text{ going through vertex } i\in X,\\
-        &0\leq x_{ij} \leq 1, \quad \forall ij\in E.
+        \min \quad &\sum_{ij\in E} c\br{i,j} \cdot y_{ij}\\
+        \text{subject to} \quad &\sum_{ij\in C} y_{ij} \geq 1, \quad \forall \text{ cycles } C \text{ going through vertex } i\in X,\\
+        &0\leq y_{ij} \leq 1, \quad \forall ij\in E.
     \end{align}
     The authors of \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} show that there exists a rounding procedure for this \textsc{LP} with an $O\br{\log n\cdot\log\log n}$ loss of quality:
     \begin{theorem}[Even et al. \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}]\label{thm:fes-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n \cdot \log\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n \cdot \log\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
     \end{theorem}
 
     Note that originally, this theorem is stated for the more general problem of finding an feedback arc set of a directed graph. For undirected graphs, constant factor approximation algorithm, also based on mathematical programming is known \cite{ConstantFactorApproximationForSubsetFeedbackSetProblemsViaANewLPRelaxation}. However, the ILP formulation used is not $\alpha\br{n}$-well-behaved, and thus it cannot be incorporated in our framework\footnote{Specifically, the issue is that this ILP formulation relies on the fact that the size of $\spr{X}$ is known a-priori, which is not the case in our setting since the number of interesting vertices at each level is not known in advance.}.
 
     Similarly, the following \textsc{LP} relaxation \textsc{LP-MMC} for the \textsc{MMC} is well-studied:
     \begin{align}
-        \min \quad &\sum_{ij\in E} c\br{i,j} \cdot x_{ij}\\
-        \text{subject to} \quad &\sum_{ij\in P} x_{ij} \geq 1, \quad \forall \text{ paths } P \text{ from } s_i \text{ to } t_i, i\in [k],\\
-        &0\leq x_{ij} \leq 1, \quad \forall ij\in E.
+        \min \quad &\sum_{ij\in E} c\br{i,j} \cdot y_{ij}\\
+        \text{subject to} \quad &\sum_{ij\in P} y_{ij} \geq 1, \quad \forall \text{ paths } P \text{ from } s_i \text{ to } t_i, i\in [k],\\
+        &0\leq y_{ij} \leq 1, \quad \forall ij\in E.
     \end{align}
     In \cite{ApproximateMaxFlowMinMultiCut1993} an algorithm with $O\br{\log n}$-approximation loss using this LP is given:
     \begin{theorem}[Garg et al. \cite{ApproximateMaxFlowMinMultiCut1993}]\label{thm:mmc-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{MMC} problem and a solution to the above \textsc{LP-MMC}, finds a subset of edges $S$ such that $G\setminus S$ contains no path from $s_i$ to $t_i$ for any $i\in [k]$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log k}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{MMC} problem and a solution to the above \textsc{LP-MMC}, finds a subset of edges $S$ such that $G\setminus S$ contains no path from $s_i$ to $t_i$ for any $i\in [k]$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log k}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
     \end{theorem}
     As a corollary of this theorem we obtain that:
     \begin{corollary}
-        There exists a polynomial time algorithm which given an instance of the \textsc{P-$\cD_d$} problem and a solution to the above \textsc{LP-P-$\cD_d$}, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution for \textsc{P-$\cD_d$} and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot x_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{P-$\cD_d$} problem and a solution to the above \textsc{LP-P-$\cD_d$}, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution for \textsc{P-$\cD_d$} and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
     \end{corollary}
-
-    For the \textsc{$\rho$-SEP} problem with a terminal set $X$, we use the following weighted spreading-metrics \textsc{LP} relaxation \textsc{LP-$\rho$-SEP}:
-    \begin{align}
-        \min \quad &\sum_{e\in E} c(e)\cdot x_e\\
-        \text{subject to} \quad &\sum_{u\in S} \dist_V(v,u)\cdot w(u) \geq w\br{S}-\rho\cdot w\br{G}, \quad \forall S\subseteq V,\; v\in S\cap X,\\
-        &0\leq x_e\leq 1,\quad \forall e\in E.
-    \end{align}
-
-    The analysis in \cite{FastApproximateGraphPartitioningAlgorithms} is stated for the special case $X=V$. In our framework, we use the corresponding extension for \textsc{$\rho$-SEP} with terminals: the same sphere-growing argument is applied only around centers in $X$. We state the resulting guarantee below and defer the full extension from $X=V$ to $X\neq V$ to Appendix~\ref{app:terminal-extension}.
-
-    We use the following bicriteria rounding guarantee for \textsc{$\rho$-SEP}:
-    \begin{theorem}[Even et al.~\cite{FastApproximateGraphPartitioningAlgorithms}]\label{thm:ksep-rounding}
-        There exists a polynomial-time algorithm which, given an instance of \textsc{$\rho$-SEP} and a solution to the above \textsc{LP-$\rho$-SEP}, returns a subset of edges $S$ such that every connected component of $G\setminus S$ that contains a terminal has total weight at most $\rho_0\cdot w\br{G}$ and
-        \[
-            \sum_{ij\in S} c\br{i,j} \leq O\br{\log n}\cdot \sum_{e\in E} c(e)\cdot x_e,
-        \]
-        for any fixed constants $0<\rho<\rho_0<1$. In our framework we use $\rho=1/2$ and $\rho_0=2/3$.
-    \end{theorem}
 
     We get the following well-behavedness corollaries for the three classes of interest:
     \begin{corollary}\label{cor:tree-well-behaved}
