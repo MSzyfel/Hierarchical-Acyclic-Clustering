@@ -5,11 +5,10 @@ In the preprocessing step we encode the problem using an \textsc{ILP}. We obtain
 
 After solving \textsc{LP-HC-$\cF$}, we use a rounding routine to get a partially integral solution which at each level corresponds to choosing which vertices should satisfy the $\cF$-predicate.
 
-During the recursive step, we process clusters in a top-down manner starting from $H=G$. For a cluster $H$, we set $t=w\br{V\br{H}}/2$. Then, we look which vertices satisfy the $\cF$-predicate at level $t$ and which do not
-(For a formal level definition see Section~\ref{sec:levels} below).
-According to this, we partition them into two sets $X_1$ (satisfying the predicate) and $X_0$ (not satisfying the predicate). The solution of \textsc{LP-HC-$\cF$} at level $t$ is then used as a valid solution to \textsc{$p_{\cF}$-P-LP} with $X=X_1$, yielding a cut $F_H$ with $\alpha\br{n}$ loss. The same level-$t$ fragment is also used as a valid guide for \textsc{$\rho$-SEP} with $\rho=1/2$, $\rho_0=2/3$ and $X=X_0$, yielding a cut $B_H$, such that each connected component of $H\setminus B_H$ that contains a terminal, has total weight at most $2w\br{V\br{H}}/3$ and the cut cost is within a factor $\beta\br{n}=O\br{\log n}$ of the guide. After cutting edges in $F_H\cup B_H$, we recursively process all connected components.
+During the recursive step, we process clusters in a top-down manner starting from $H=G$. For a cluster $H$, we set $t=w\br{V\br{H}}/2$. Then, we look which vertices satisfy the $\cF$-predicate at level $t$ and which do not (For a formal level definition see Section~\ref{sec:levels} below).
+According to this, we partition them into two sets $X_1$ (satisfying the predicate) and $X_0$ (not satisfying the predicate). The solution of \textsc{LP-HC-$\cF$} at level $t$ is then used as a valid solution to \textsc{$p_{\cF}$-P-LP} with $X=X_1$, yielding a cut $F_H$ with $\alpha\br{n}$ loss. The same level-$t$ fragment is also used as a valid guide for \textsc{$\rho$-SEP} with $\rho=1/2$, $\rho_0=2/3$ and $X=X_0$, yielding a cut $B_H$, such that each connected component of $H\setminus B_H$ that contains a terminal, has total weight at most $2w\br{V\br{H}}/3$ and the cut cost is within a factor $\beta\br{n}=\bigo\br{\log n}$ of the guide. After cutting edges in $F_H\cup B_H$, we recursively process all connected components.
 
-Since we decompose the \textsc{LP} into separate levels, by summing up over all of them we will be able to show that our algorithm achieves an approximation ratio of $O\br{\alpha\br{n}+\beta\br{n}}$.
+Since we decompose the \textsc{LP} into separate levels, by summing up over all of them we will be able to show that our algorithm achieves an approximation ratio of $\bigo\br{\alpha\br{n}+\beta\br{n}}$.
 
 \subsection{Level decomposition of \textsc{HC-$\cF$}} \label{sec:levels}
 
@@ -164,7 +163,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
     \begin{theorem}\label{thm:ksep-rounding}
         There exists a polynomial-time algorithm which, given an instance of \textsc{$\rho$-SEP} and a solution to the above \textsc{LP-$\rho$-SEP}, returns a subset of edges $S$ such that every connected component of $G\setminus S$ that contains a terminal has total weight at most $\rho_0\cdot w\br{G}$ and
         \[
-            \sum_{ij\in S} c\br{i,j} \leq O\br{\log n}\cdot \sum_{e\in E} c(e)\cdot y_e,
+            \sum_{ij\in S} c\br{i,j} \leq \bigo\br{\log n}\cdot \sum_{e\in E} c(e)\cdot y_e,
         \]
         for any fixed constants $0<\rho<\rho_0<1$.
     \end{theorem}
