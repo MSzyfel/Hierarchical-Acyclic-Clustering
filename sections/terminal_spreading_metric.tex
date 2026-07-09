@@ -84,14 +84,14 @@ N(v,r)=\{u\in V'\colon \dist_{V'}(u,v)<r\}$. Let $
 E(v,r)=E'\cap \bigl(N(v,r)\times N(v,r)\bigr) $ be the set of edges with both endpoints in the $r$-sphere, and let $
 \delta(v,r)=E'\cap \bigl(N(v,r),V'\setminus N(v,r)\bigr)$ be the set of edges with exactly one endpoint in the $r$-sphere.
 
-For a parameter $\varepsilon>0$, define the volume of a sphere by
+For a parameter $\epsilon>0$, define the volume of a sphere by
 \[
-\operatorname{vol}(v,r)=\varepsilon\tau_X
+\operatorname{vol}(v,r)=\epsilon\cdot \tau_X
 +\sum_{e\in E(v,r)} c(e)\cdot y_e
-+\sum_{(x,y)\in \delta(v,r)} c(x,y)\cdot y_{x,y}\bigl(r-\dist_{N(v,r)}(v,x)\bigr).
++\sum_{(x,y)\in \delta(v,r)} c(x,y)\cdot y_{x,y}\cdot \br{r-\dist_{N(v,r)}(v,x)}.
 \]
 
-This quantity consists of 3 terms: a small constant term $\varepsilon\tau_X$ called \emph{seed value}, the contribution of edges inside the sphere, and the contribution of edges crossing the sphere boundary. We will choose $\epsilon=\frac{1}{n\ln n}$.
+This quantity consists of 3 terms: a small constant term $\epsilon\cdot\tau_X$ called \emph{seed value}, the contribution of edges inside the sphere, and the contribution of edges crossing the sphere boundary. We will choose $\epsilon=\frac{1}{n\cdot\ln n}$.
 Now, we observe that $\operatorname{vol}(v,r)$ is monotone and piecewise linear. This is because the first two terms are monotone and piecewise constant, and the last term is monotone and piecewise linear. In particular, $\operatorname{vol}(v,r)$ is continuous, and on each open interval between consecutive vertex distances from $v$,
 \[
 \frac{d}{dr}\operatorname{vol}(v,r)=c\bigl(\delta(v,r)\bigr).
@@ -225,30 +225,30 @@ c\bigl(\delta(U_j)\bigr)
 where $\operatorname{vol}_j$ is the volume function within the current processed component.
 Since
 \[
-\operatorname{vol}_j(v_j,\tilde r)\le (1+\varepsilon)\cdot\tau_X,
+\operatorname{vol}_j(v_j,\tilde r)\le (1+\epsilon)\cdot\tau_X,
 \qquad
-\operatorname{vol}_j(v_j,0)=\varepsilon\cdot\tau_X,
+\operatorname{vol}_j(v_j,0)=\epsilon\cdot\tau_X,
 \]
 we get
 \[
 c\bigl(\delta(U_j)\bigr)
 \le
-\frac{1}{\tilde r}\cdot\ln\left(\frac{1+\varepsilon}{\varepsilon}\right)\cdot
+\frac{1}{\tilde r}\cdot\ln\left(\frac{1+\epsilon}{\epsilon}\right)\cdot
 \operatorname{vol}_j(v_j,r_j).
 \]
 
-Summing over calls, edge-length contributions are at most $\tau_X$, and seed terms contribute at most $q\cdot\varepsilon\tau_X\le n\varepsilon\tau_X$. Hence
+Summing over calls, edge-length contributions are at most $\tau_X$, and seed terms contribute at most $q\cdot\epsilon\cdot\tau_X\le n\epsilon\cdot\tau_X$. Hence
 \[
 \sum_{j=1}^q c\bigl(\delta(U_j)\bigr)
 \le
 \frac{1}{\tilde r}\cdot 
-\ln\left(\frac{1+\varepsilon}{\varepsilon}\right)
-\cdot \tau_X(1+\varepsilon n).
+\ln\left(\frac{1+\epsilon}{\epsilon}\right)
+\cdot \tau_X(1+\epsilon n).
 \]
 
 Choosing
 \[
-\varepsilon=\frac{1}{n\ln n},
+\epsilon=\frac{1}{n\cdot\ln n},
 \]
 we obtain the following bound.
 

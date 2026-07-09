@@ -212,12 +212,14 @@ In order to obtain quality approximation ratios we employ a charging scheme, whe
         X_1:=\brc{v\in V\br{H}\colon \hat{x}_v^t=1}, \qquad X_0:=\brc{v\in V\br{H}\colon \hat{x}_v^t=0}.
     \]
 
-    The next lemma allows us to decompose a solution to \textsc{LP-HC-$\cF$} into several instances of \textsc{LP-$p_{\cF}$-P}:
+    The next two lemmas allows us to decompose a solution to \textsc{LP-HC-$\cF$} into several instances of \textsc{LP-$p_{\cF}$-P} and \textsc{LP-$\rho$-SEP} with terminal sets $X_1$ and $X_0$, respectively.
     \begin{lemma}\label{lem:lp-fes}
         Let $H$ be cluster that does not belong to $\cF$, with weight $r=w\br{V\br{H}}$ and let $t\leq r$ be some fixed level. Then $LP_r^H$ is a valid solution for the \textsc{$p_{\cF}$-P} for $X=X_1$.
     \end{lemma}
     \begin{proof}
-        In $LP_r^H$ there are additional metric/spreading constraints for vertices $v$ such that $p_{\cF}^t(v)=0$. This is acceptable since additional constraints yield a stricter relaxation. Now consider any $v\in V$. If $p_{\cF}^t(v)=0$, then the $p_{\cF}$-P constraint is always satisfied, which corresponds to the fact that $v$ does not need to belong to a $\cF$-cluster. If $p_{\cF}^t(v)=1$, then the $p_{\cF}$-P constraint is satisfied since it is explicitly included in the \textsc{LP-HC-$\cF$} formulation. Moreover, since $v\in X_1$, we have that all $p_{\cF}$-P constraints in the \textsc{LP-$p_{\cF}$-P} formulation are included in the \textsc{LP-HC-$\cF$} formulation. Therefore, the claim follows.
+        In $LP_r^H$ there are additional metric/spreading constraints for vertices $v$ such that $p_{\cF}^t(v)=0$. This is acceptable since additional constraints yield a stricter relaxation. Now consider any $v\in V$. If $p_{\cF}^t(v)=0$, then the $p_{\cF}$-P constraint is always satisfied, which corresponds to the fact that $v$ does not need to belong to a $\cF$-cluster. If $p_{\cF}^t(v)=1$, then the $p_{\cF}$-P constraint is satisfied since it is explicitly included in the \textsc{LP-HC-$\cF$} formulation. Moreover, since $v\in X_1$, we have that all $p_{\cF}$-P constraints in the \textsc{LP-$p_{\cF}$-P} formulation are included in the \textsc{LP-HC-$\cF$} formulation. 
+        We note, that whenever there exists a variable $y_e^t>1$, we can always set it $1$ while plugging it into the \textsc{LP-$p_{\cF}$-P} formulation (without increase in the cost), since the constraints will still be satisfied\footnote{Here, the technical issue is that during our partial rounding step some values of $y_e^t$ might exceed $1$.}.
+        Therefore, the claim follows.
     \end{proof}
     \begin{lemma}\label{lem:lp-ksep}
         Let $H$ be a non $\cF$-cluster of weight $r=w\br{V\br{H}}$ and let $t<r$. Then $LP_t^H$ is a valid guide for the weighted spreading-metrics \textsc{LP-$\rho$-SEP} with $\rho=t/r$ for $X=X_0$.
