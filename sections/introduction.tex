@@ -4,11 +4,9 @@ Hierarchical clustering is a way to recursively partition a dataset into cluster
 The main advantage of the hierarchical clustering over various kinds of flat clustering is that it provides a decomposition of the data which is not reliant on the granularity of subdivision one wishes to acquire. Since the clusters are refined until they become singletons, the hierarchy encodes various granularity levels into it. However, it is often implicitly assumed that eventually all of them need to become singletons. In this work we ask the following question: What would happen if we relax the halting condition of the recursive partitioning process and allow it to stop whenever the remaining cluster is a graph of some class $\cF$? 
 We will assume, that the graph class $\cF$ is a part of the input and represents some kind of structural property which is deemed `simple' enough so that there is no need to further refine the clusters\footnote{Here, we assume that $\cF$ is non-empty and closed under taking subgraphs, which ensures that any subcluster of a cluster in $\cF$ also belongs to $\cF$. Moreover, for the sake of practicality it is reasonable to assume that the class $\cF$ is recognizable in polynomial time. Otherwise, the task of constructing any clustering tree at all becomes intractable and the pursuit of approximation algorithms becomes futile as well.}.
 Therefore we only require that for each leaf node $l\in V\br{T}$, $G_l\in \cF$. We call this problem \textsc{Hierarchical $\cF$-Clustering} (HC-$\cF$). The goal is again to minimize $\COST_G\br{T} = \sum_{u\in V\br{T}} c(S_u) \cdot |V(G_u)|$. For a visual example of a clustering tree for \textsc{HC-$\cT$}, where $\cT$ denotes the class of trees see Figure~\ref{fig:hac-intro-example}.
-\DDfix{
 We note that the objective value for HC-$\cF$ may be quite different from that of the classical hierarchical clustering.
 If the input graph $G$ belongs to $\cF$, then $\COST_G\br{T}=0$ for a single-node $T$ with root representing $G$.
-On the other hand, one may have $\COST_G\br{T}=\Omega\br{n^2}$ for $T$ whose leaves are singletons.
-}
+On the other hand, $\COST_G\br{T}=\Omega\br{n\cdot \log n}$ for any $T$ whose leaves are required to be singletons (assuming uniform costs).
 \input{figures/fig_hac_intro_example.tex}
 
 \subsection{Motivations and applications}

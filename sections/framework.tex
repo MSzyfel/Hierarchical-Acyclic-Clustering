@@ -5,8 +5,8 @@ In the preprocessing step we encode the problem using an \textsc{ILP}. We obtain
 
 After solving \textsc{LP-HC-$\cF$}, we use a rounding routine to get a partially integral solution which at each level corresponds to choosing which vertices should satisfy the $\cF$-predicate.
 
-During the recursive step, we process clusters in a top-down manner starting from $H=G$. For a cluster $H$, we set $t=w\br{V\br{H}}/2$. Then, we look which vertices satisfy the $\cF$-predicate at level $t$ and which do not.
-\DDfix{(For a formal level definition see Section~\ref{sec:levels} below).}
+During the recursive step, we process clusters in a top-down manner starting from $H=G$. For a cluster $H$, we set $t=w\br{V\br{H}}/2$. Then, we look which vertices satisfy the $\cF$-predicate at level $t$ and which do not
+(For a formal level definition see Section~\ref{sec:levels} below).
 According to this, we partition them into two sets $X_1$ (satisfying the predicate) and $X_0$ (not satisfying the predicate). The solution of \textsc{LP-HC-$\cF$} at level $t$ is then used as a valid solution to \textsc{$p_{\cF}$-P-LP} with $X=X_1$, yielding a cut $F_H$ with $\alpha\br{n}$ loss. The same level-$t$ fragment is also used as a valid guide for \textsc{$\rho$-SEP} with $\rho=1/2$, $\rho_0=2/3$ and $X=X_0$, yielding a cut $B_H$, such that each connected component of $H\setminus B_H$ that contains a terminal, has total weight at most $2w\br{V\br{H}}/3$ and the cut cost is within a factor $\beta\br{n}=O\br{\log n}$ of the guide. After cutting edges in $F_H\cup B_H$, we recursively process all connected components.
 
 Since we decompose the \textsc{LP} into separate levels, by summing up over all of them we will be able to show that our algorithm achieves an approximation ratio of $O\br{\alpha\br{n}+\beta\br{n}}$.
@@ -80,7 +80,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         \]
         which is exactly \eqref{spreading_constraint_ILP} for $x_v^t=0$. Thus $(y,x)$ is ILP-feasible and
         \[
-            \sum_{t=1}^{w\br{G}}\sum_{e\in E} c(e)y_e^t
+            \sum_{t=1}^{w\br{G}}\sum_{e\in E} c(e)\cdot y_e^t
             = \sum_{t=1}^{w\br{G}} c(S_t^T)
             = \COST_G(T)
         \]
@@ -90,7 +90,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         \[
             E_t^0:=\brc{e\in E\colon y_e^t=0},
         \]
-        and let $\Pi_t$ be the partition of \DDfix{$V$ into connected components of $G\setminus \br{E\setminus E_t^0}$. (Note that $E\setminus E_t^0$ are exactly the edges that are considered to be cut at level $t$).} Because $y_e^t\le y_e^{t-1}$, we have $E_{t-1}^0\subseteq E_t^0$, so $\Pi_{t-1}$ refines $\Pi_t$ and the family $(\Pi_t)_{t=1}^{w\br{G}}$ is laminar; therefore it defines a $\cF$-clustering tree $T$.
+        and let $\Pi_t$ be the partition of $V$ into connected components of $G\setminus \br{E\setminus E_t^0}$. (Note that $E\setminus E_t^0$ are exactly the edges that are considered to be cut at level $t$). Because $y_e^t\le y_e^{t-1}$, we have $E_{t-1}^0\subseteq E_t^0$, so $\Pi_{t-1}$ refines $\Pi_t$ and the family $(\Pi_t)_{t=1}^{w\br{G}}$ is laminar; therefore it defines a $\cF$-clustering tree $T$.
 
         Consider any level $t$ and any component $C\in \Pi_t$. For every $v\in C$, all vertices of $C$ are at zero $\dist_{y,V}^t$-distance from $v$, so plugging $S=C$ into \eqref{spreading_constraint_ILP} gives
         \[
@@ -101,7 +101,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         Finally, the level cut induced by $\Pi_t$ is precisely $\brc{e\in E\colon y_e^t=1}$, so
         \[
             \COST_G(T)=\sum_{t=1}^{w\br{G}} c\br{\brc{e\in E\colon y_e^t=1}}
-            =\sum_{t=1}^{w\br{G}}\sum_{e\in E} c(e)y_e^t.
+            =\sum_{t=1}^{w\br{G}}\sum_{e\in E} c(e)\cdot y_e^t.
         \]
         Therefore every integral ILP solution maps to a feasible $\cF$-clustering tree of the same cost, implying $\OPT_{\cF}\le \OPT_{ILP}$, which completes the proof.
     \end{proof}
