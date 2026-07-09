@@ -7,9 +7,9 @@ We start by invoking a well-known \textsc{LP} relaxation \textsc{LP-FES} of the 
         \text{subject to} \quad &\sum_{ij\in C} y_{ij} \geq 1, \quad \forall \text{ cycles } C \text{ going through vertex } i\in X,\\
         &0\leq y_{ij} \leq 1, \quad \forall ij\in E.
     \end{align}
-    The authors of \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} show that there exists a rounding procedure for this \textsc{LP} with an $O\br{\log n\cdot\log\log n}$ loss of quality:
+    The authors of \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} show that there exists a rounding procedure for this \textsc{LP} with an $\bigo\br{\log n\cdot\log\log n}$ loss of quality:
     \begin{theorem}[Even et al. \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}]\label{thm:fes-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n \cdot \log\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c\br{i,j} \leq \bigo\br{\log n \cdot \log\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
     \end{theorem}
 
     Note that originally, this theorem is stated for the more general problem of finding an feedback arc set of a directed graph. For undirected graphs, constant factor approximation algorithm, also based on mathematical programming is known \cite{ConstantFactorApproximationForSubsetFeedbackSetProblemsViaANewLPRelaxation}. However, the ILP formulation used is not $\alpha\br{n}$-well-behaved, and thus it cannot be incorporated in our framework\footnote{Specifically, the issue is that this ILP formulation relies on the fact that the size of $\spr{X}$ is known a-priori, which is not the case in our setting since the number of interesting vertices at each level is not known in advance.}.
@@ -20,32 +20,32 @@ We start by invoking a well-known \textsc{LP} relaxation \textsc{LP-FES} of the 
         \text{subject to} \quad &\sum_{ij\in P} y_{ij} \geq 1, \quad \forall \text{ paths } P \text{ from } s_i \text{ to } t_i, i\in [k],\\
         &0\leq y_{ij} \leq 1, \quad \forall ij\in E.
     \end{align}
-    In \cite{ApproximateMaxFlowMinMultiCut1993} an algorithm with $O\br{\log n}$-approximation loss using this LP is given:
+    In \cite{ApproximateMaxFlowMinMultiCut1993} an algorithm with $\bigo\br{\log n}$-approximation loss using this LP is given:
     \begin{theorem}[Garg et al. \cite{ApproximateMaxFlowMinMultiCut1993}]\label{thm:mmc-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{MMC} problem and a solution to the above \textsc{LP-MMC}, finds a subset of edges $S$ such that $G\setminus S$ contains no path from $s_i$ to $t_i$ for any $i\in [k]$ and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log k}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{MMC} problem and a solution to the above \textsc{LP-MMC}, finds a subset of edges $S$ such that $G\setminus S$ contains no path from $s_i$ to $t_i$ for any $i\in [k]$ and $\sum_{ij\in S} c\br{i,j} \leq \bigo\br{\log k}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
     \end{theorem}
     As a corollary of this theorem we obtain that:
     \begin{corollary}
-        There exists a polynomial time algorithm which given an instance of the \textsc{P-$\cD_d$} problem and a solution to the above \textsc{LP-P-$\cD_d$}, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution for \textsc{P-$\cD_d$} and $\sum_{ij\in S} c\br{i,j} \leq O\br{\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{P-$\cD_d$} problem and a solution to the above \textsc{LP-P-$\cD_d$}, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution for \textsc{P-$\cD_d$} and $\sum_{ij\in S} c\br{i,j} \leq \bigo\br{\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
     \end{corollary}
 
     We get the following well-behavedness corollaries for the three classes of interest:
     \begin{corollary}\label{cor:tree-well-behaved}
-        The class $\cT$ of trees is $O\br{\log n\cdot\log\log n}$-well-behaved.
+        The class $\cT$ of trees is $\bigo\br{\log n\cdot\log\log n}$-well-behaved.
     \end{corollary}
     \begin{proof}
         This follows directly from Theorem~\ref{thm:fes-rounding} and the definition of well-behavedness.
     \end{proof}
 
     \begin{corollary}\label{cor:diameter-well-behaved}
-        For every fixed $d\in\mathbb{N}^+$, the class $\cD_d$ of graphs of diameter at most $d$ is $O\br{\log n}$-well-behaved.
+        For every fixed $d\in\mathbb{N}^+$, the class $\cD_d$ of graphs of diameter at most $d$ is $\bigo\br{\log n}$-well-behaved.
     \end{corollary}
     \begin{proof}
         This follows from Theorem~\ref{thm:mmc-rounding} and the above corollary for \textsc{P-$\cD_d$}.
     \end{proof}
 
     \begin{corollary}\label{cor:clique-well-behaved}
-        The class of cliques is $O\br{\log n}$-well-behaved.
+        The class of cliques is $\bigo\br{\log n}$-well-behaved.
     \end{corollary}
     \begin{proof}
         Cliques are exactly $\cD_1$, so this is the case $d=1$ of Corollary~\ref{cor:diameter-well-behaved}.
@@ -54,14 +54,14 @@ We start by invoking a well-known \textsc{LP} relaxation \textsc{LP-FES} of the 
     As immediate consequences of Theorem~\ref{thm:main-approximation}, we obtain approximation guarantees for the corresponding \textsc{HC-$\cF$} problems.
 
     \begin{corollary}
-        There exists an $O\br{\log n \cdot \log\log n}$-approximation algorithm for the \textsc{HC-$\cT$} problem.
+        There exists an $\bigo\br{\log n \cdot \log\log n}$-approximation algorithm for the \textsc{HC-$\cT$} problem.
     \end{corollary}
     \begin{proof}
         Combine Corollary~\ref{cor:tree-well-behaved} with Theorem~\ref{thm:main-approximation}.
     \end{proof}
 
     \begin{corollary}
-        There exists an $O\br{\log n}$-approximation algorithm for the \textsc{HC-$\cD_d$} problem.
+        There exists an $\bigo\br{\log n}$-approximation algorithm for the \textsc{HC-$\cD_d$} problem.
     \end{corollary}
     \begin{proof}
         Combine Corollary~\ref{cor:diameter-well-behaved} with Theorem~\ref{thm:main-approximation}.
