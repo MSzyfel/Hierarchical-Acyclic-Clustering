@@ -6,7 +6,7 @@
 \KwIn{A weighted graph $G=(V,E,c,w)$}
 \KwOut{A clustering tree for $G$}
 \tcp{Preprocessing}
-Solve \textsc{LP-HC-$\cF$} on $G$ and obtain a fractional solution $(\mathbf{y},\mathbf{x})$\;
+Solve \textsc{LP-HC-$\cF$} on $G$ and obtain a fractional solution $(\mathbf{x},\mathbf{y})$\;
 \ForEach{$t\in [w\br{G}]$ and $i\in V$}{
     Set $\hat{x}_i^t \gets 1$ if $x_i^t \geq 1/2$, and set $\hat{x}_i^t \gets 0$ otherwise\;
 }
@@ -14,5 +14,5 @@ Solve \textsc{LP-HC-$\cF$} on $G$ and obtain a fractional solution $(\mathbf{y},
     $\hat{y}_{uv}^t\gets 2\cdot y_{uv}^t$\;
 }
 \tcp{Clustering phase}
-\Return{\textsc{Recursive-HC-$\cF$}($G,\hat{\mathbf{y}},\hat{\mathbf{x}})$}\;
+\Return{\textsc{Recursive-HC-$\cF$}($G,\hat{\mathbf{x}},\hat{\mathbf{y}})$}\;
 \end{algorithm}

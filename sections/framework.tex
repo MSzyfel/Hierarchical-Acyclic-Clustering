@@ -78,7 +78,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
             \ge w(S)-w(C)
             \ge w(S)-t,
         \]
-        which is exactly \eqref{spreading_constraint_ILP} for $x_v^t=0$. Thus $(y,x)$ is ILP-feasible and
+        which is exactly \eqref{spreading_constraint_ILP} for $x_v^t=0$. Thus $(\mathbf{x},\mathbf{y})$ is ILP-feasible and
         \[
             \sum_{t=1}^{w\br{G}}\sum_{e\in E} c(e)\cdot y_e^t
             = \sum_{t=1}^{w\br{G}} c(E_t^T)
@@ -86,7 +86,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         \]
         by Observation~\ref{obs:cost-decomposition}. Hence $\OPT_{ILP}\le \OPT_{\cF}$.
 
-        $(\Leftarrow)$ Let $(y,x)$ be any integral feasible ILP solution. For each level $t$, define
+        $(\Leftarrow)$ Let $(\mathbf{x},\mathbf{y})$ be any integral feasible ILP solution. For each level $t$, define
         \[
             E_t^0:=\brc{e\in E\colon y_e^t=0},
         \]
@@ -132,7 +132,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
 
     \begin{lemma}\label{lem:lp-rounding}
         Round the values of $x_v^t$ to get $\hat{x}_v^t = 1$ if $x_v^t \geq 1/2$ and $\hat{x}_v^t = 0$ otherwise
-        and $\hat{y}_{e}^t=2\cdot y_{e}^t$. Then, $\br{\hat{y}, \hat{x}}$ is a feasible solution for \textsc{LP-HC-$\cF$} with cost at most $2\cdot \OPT_{LP}$.
+        and $\hat{y}_{e}^t=2\cdot y_{e}^t$. Then, $\br{\hat{\mathbf{x}}, \hat{\mathbf{y}}}$ is a feasible solution for \textsc{LP-HC-$\cF$} with cost at most $2\cdot \OPT_{LP}$.
     \end{lemma}
     \begin{proof}
         Firstly, observe that the refinement constraints are satisfied since $\hat{y}_{e}^t \leq \hat{y}_{e}^{t-1}$ and $\hat{x}_v^t \leq \hat{x}_v^{t-1}$ for all $e\in E$, $v\in V$ and $t\in [w\br{G}]$. The $p_{\cF}$-P constraints are satisfied since if $\hat{x}_v^t=1$, then $x_v^t\geq 1/2$ and hence $\sum_{e\in R} y_{e}^t \geq x_v^t \geq 1/2$ for all $R\in \cR_v$. Therefore, $\sum_{e\in R} \hat{y}_{e}^t = 2\cdot \sum_{e\in R} y_{e}^t \geq 1$. If $\hat{x}_v^t=0$, then the $p_{\cF}$-P constraint is trivially satisfied. The spreading-metrics constraints are satisfied since if $\hat{x}_v^t=0$, then $x_v^t<1/2$ and hence
