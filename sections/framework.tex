@@ -1,12 +1,12 @@
 \section{General algorithmic framework for approximating \textsc{HC-$\cF$}}
 
 Having characterized the kinds of graph classes that will fit into our framework we can now move on towards describing how to use the properties of $\alpha\br{n}$-well-behavedness to construct a general approximation algorithm for \textsc{HC-$\cF$}. The main idea is that we use a level-based \textsc{LP} relaxation to guide the recursive algorithm.
-In the preprocessing step we encode the problem using an \textsc{ILP}. We obtain this formulation by combining any $\alpha\br{n}$-well-behaved \textsc{ILP} with the level decomposition approach of Charikar et. al in \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}. Our \textsc{ILP} consists of multiple variable levels which encode levels of a $\cF$-clustering tree. It should be noted that these levels are indexed by the size of the clusters, rather than the depth of the tree.
+In the preprocessing step we encode the problem using an \textsc{ILP}. We obtain this formulation by combining any $\alpha\br{n}$-well-behaved \textsc{ILP} with the level decomposition approach from \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}. Our \textsc{ILP} consists of multiple variable levels which encode levels of an $\cF$-clustering tree. It should be noted that these levels are indexed by the size of the clusters, rather than the depth of the tree.
 
 After solving \textsc{LP-HC-$\cF$}, we use a rounding routine to get a partially integral solution which at each level corresponds to choosing which vertices should satisfy the $\cF$-predicate.
 
 During the recursive step, we process clusters in a top-down manner starting from $H=G$. For a cluster $H$, we set $t=w\br{V\br{H}}/2$. Then, we look which vertices satisfy the $\cF$-predicate at level $t$ and which do not (For a formal level definition see Section~\ref{sec:levels} below).
-According to this, we partition them into two sets $X_1$ (satisfying the predicate) and $X_0$ (not satisfying the predicate). The solution of \textsc{LP-HC-$\cF$} at level $t$ is then used as a valid solution to \textsc{$p_{\cF}$-P-LP} with $X=X_1$, yielding a cut $F_H$ with $\alpha\br{n}$ loss. The same level-$t$ fragment is also used as a valid guide for \textsc{$\rho$-SEP} with $\rho=1/2$, $\rho_0=2/3$ and $X=X_0$, yielding a cut $B_H$, such that each connected component of $H\setminus B_H$ that contains a terminal, has total weight at most $2w\br{V\br{H}}/3$ and the cut cost is within a factor $\beta\br{n}=\bigo\br{\log n}$ of the guide. After cutting edges in $F_H\cup B_H$, we recursively process all connected components.
+According to this, we partition them into two sets $X_1$ (satisfying the predicate) and $X_0$ (not satisfying the predicate). The solution of \textsc{LP-HC-$\cF$} at level $t$ is then used as a valid solution to \textsc{$p_{\cF}$-P-LP} with $X=X_1$, yielding a cut $F_H$ with $\alpha\br{n}$ factor loss. The same level-$t$ fragment is also used as a valid guide for \textsc{$\rho$-SEP} with $\rho=1/2$, $\rho_0=2/3$ and $X=X_0$, yielding a cut $B_H$, such that each connected component of $H\setminus B_H$ that contains a terminal, has total weight at most $2w\br{V\br{H}}/3$ and the cut cost is within a factor $\beta\br{n}=\bigo\br{\log n}$ of the guide. After cutting the edges in $F_H\cup B_H$, we recursively process all connected components.
 
 Since we decompose the \textsc{LP} into separate levels, by summing up over all of them we will be able to show that our algorithm achieves an approximation ratio of $\bigo\br{\alpha\br{n}+\beta\br{n}}$.
 
@@ -58,14 +58,15 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
     We denote by $\OPT_{ILP}$ the value of an optimal solution to the above ILP for a given graph $G$.
 
     \begin{lemma}\label{lem:ilp-exact}
-        \textsc{ILP-HC-$\cF$} is an exact formulation of \textsc{HC-$\cF$} which implies that $\OPT_{ILP}=\OPT_{\cF}$
+        \textsc{ILP-HC-$\cF$} is an exact formulation of \textsc{HC-$\cF$} which implies that $\OPT_{ILP}=\OPT_{\cF}$.
     \end{lemma}
     \begin{proof}
-        $(\Rightarrow)$ Let $T$ be any feasible $\cF$-clustering tree. For each level $t\in [w\br{G}]$, let $E_t^T$ be the level cut from the level decomposition and set
+        $(\Rightarrow)$ Let $T$ be any feasible $\cF$-clustering tree.
+        Recall that, for each level $t\in [w\br{G}]$, $E_t^T$ is the level cut from the level decomposition and set
         \[
             y_e^t:=\mathbf{1}[e\in E_t^T].
         \]
-        Also set $x_v^t:=1$ iff the level-$t$ cluster of $v$ satisfies $p_{\cF}$.
+        Also set $x_v^t:=1$ if and only if the level-$t$ cluster of $v$ satisfies $p_{\cF}$.
 
         The refinement constraints hold because level cuts are nested. The constraints on $x$ hold by monotonicity of the predicate along the refinement. The $p_{\cF}$-P constraints hold by definition of the family $\cR_v$: whenever $x_v^t=1$, each required $p_{\cF}$-P constraint for $v$ at level $t$ is satisfied by the cut pattern encoded by $y^t$.
 
