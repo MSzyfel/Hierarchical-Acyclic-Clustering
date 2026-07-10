@@ -11,7 +11,7 @@
     \begin{proof}
         It is straightforward to see that the algorithm runs in polynomial time and returns a valid $\cF$-clustering tree. It remains to bound the cost of the solution. We start with the following lemma, which shows that each cluster produced by the recursive procedure is either in $\cF$ or has weight at most $2/3$ of its parent cluster. This allows us to charge the cost of each cluster to levels of the \textsc{LP} solution that are not used by any of its children, and hence bound the total cost of the solution by a constant factor times the cost of the \textsc{LP} solution.
     \begin{lemma}\label{lem:child-cluster-valid-or-small}
-        Fix a recursive call on a non-$\cF$ cluster $H$, let $t=w\br{V\br{H}}/2$, and let $E_{\cF},E_{\rho}$ be the cuts returned by the two rounding steps in Algorithm~\ref{alg:recursive-procedure}. Then every connected component $A$ of $H\setminus \br{E_{\cF}\cup E_{\rho}}$ satisfies at least one of the following:
+        Fix a recursive call on a cluster $H\notin\cF$, let $t=w\br{V\br{H}}/2$, and let $E_{\cF},E_{\rho}$ be the cuts returned by the two rounding steps in Algorithm~\ref{alg:recursive-procedure}. Then, every connected component $A$ of $H\setminus \br{E_{\cF}\cup E_{\rho}}$ satisfies one of the following:
         \begin{enumerate}
             \item $A\in \cF$,
             \item $w\br{V\br{A}}\leq 2w\br{V\br{H}}/3$.
@@ -20,11 +20,11 @@
     \begin{proof}
         Recall that $X_1=\brc{i\in V\br{H}\colon \hat x_i^t=1}$ and $X_0=\brc{i\in V\br{H}\colon \hat x_i^t=0}$.
 
-        By Lemma~\ref{lem:lp-fes}, the guide $LP_t^H$ is feasible for \textsc{$p_{\cF}$-P} on terminal set $X_1$. Hence, by the $\alpha\br{n}$-well-behaved rounding guarantee, after removing $E_{\cF}$ every vertex of $X_1$ satisfies the $\cF$-predicate.
+        By Lemma~\ref{lem:lp-fes}, the guide $LP_t^H$ is feasible for \textsc{$p_{\cF}$-P} on terminal set $X_1$. Hence, by the $\alpha\br{n}$-well-behaved rounding guarantee, the removal of $E_{\cF}$ gives that every vertex of $X_1$ satisfies the $\cF$-predicate.
 
-        Now consider the additional deletion of $E_{\rho}$. Since in a well-behaved formulation the predicate is encoded only via $p_{\cF}$-P constraints, deleting extra edges cannot destroy already-satisfied constraints. Therefore every vertex in $X_1$ still satisfies the $\cF$-predicate in $H\setminus\br{E_{\cF}\cup E_{\rho}}$.
+        Now consider the additional deletion of $E_{\rho}$. Since in a well-behaved formulation, the predicate is encoded only via $p_{\cF}$-P constraints, deleting extra edges cannot destroy already-satisfied constraints. Therefore every vertex in $X_1$ still satisfies the $\cF$-predicate in $H\setminus\br{E_{\cF}\cup E_{\rho}}$.
 
-        Fix a connected component $A$ of $H\setminus\br{E_{\cF}\cup E_{\rho}}$. If $A\cap X_0=\emptyset$, then $A\subseteq X_1$, so every vertex of $A$ satisfies the $\cF$-predicate in $A$. By definition of a $\cF$-predicate, this implies $A\in\cF$.
+        Fix a connected component $A$ of $H\setminus\br{E_{\cF}\cup E_{\rho}}$. If $A\cap X_0=\emptyset$, then $A\subseteq X_1$, so every vertex of $A$ satisfies the $\cF$-predicate in $A$. By definition of an $\cF$-predicate, this implies $A\in\cF$.
 
         Otherwise, $A\cap X_0\neq\emptyset$. Let $C$ be the connected component of $H\setminus E_{\rho}$ containing $A$. Then $C\cap X_0\neq\emptyset$. By Lemma~\ref{lem:lp-ksep}, $LP_t^H$ is a feasible \textsc{LP-$\rho$-SEP} guide for $X_0$ with $\rho=1/2$, and by the bicriteria guarantee with $\rho_0=2/3$, every connected component of $H\setminus E_{\rho}$ containing a vertex of $X_0$ has weight at most $2w\br{V\br{H}}/3$. Hence $w\br{V\br{A}}\leq w\br{V\br{C}}\leq 2w\br{V\br{H}}/3.$
         This proves the claim.
@@ -39,7 +39,7 @@
     \begin{proof}
         By Lemma~\ref{lem:child-cluster-valid-or-small}, every child component $A$ created from $H$ is either already in $\cF$ or has weight at most $2w\br{V\br{H}}/3$. Since recursive calls continue only on non-$\cF$ children, the largest relevant child weight satisfies $r\br{H}\leq 2w\br{V\br{H}}/3$, so levels from $2w\br{V\br{H}}/3+1$ up to $w\br{V\br{H}}$ are available in the charging scheme.
 
-        Firstly, consider the contribution of edges in $E_{\cF}$ to the cost. Since it is being cut in a cluster of weight $w\br{V\br{H}}$, we have that it is bounded by $w\br{V\br{H}}\cdot c\br{E_{\cF}}$. By applying Lemma \ref{lem:lp-level-bound} with $d=3$ and $b=2$ we get that:
+        Firstly, consider the contribution of the edges in $E_{\cF}$ to the cost. Since this cut is done in a cluster of weight $w\br{V\br{H}}$, we have that it is bounded by $w\br{V\br{H}}\cdot c\br{E_{\cF}}$. By applying Lemma \ref{lem:lp-level-bound} with $d=3$ and $b=2$ we get that:
         \begin{align*}
               w\br{V\br{H}}\cdot c\br{E_{\cF}}
               &\leq w\br{V\br{H}}\cdot \alpha\br{n}\cdot c\br{LP_{\fl{w\br{V\br{H}}/2}}^H}\\
