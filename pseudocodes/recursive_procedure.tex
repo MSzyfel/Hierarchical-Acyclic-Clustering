@@ -10,12 +10,12 @@
 }
 Set $r\gets w\br{V\br{H}}$ and $t\gets r/2$\;
 Set $X_1\gets \brc{i\in V\br{H}: \hat{x}_i^t = 1}$\;
-Run the \textsc{$p_{\cF}$-P} rounding algorithm on \textsc{LP-$p_{\cF}$-P} guide on $H$ at level $t$ from $(\hat{\mathbf{y}},\hat{\mathbf{x}})$ with $X=X_1$ and let $F_H\subseteq E(H)$ be the returned cut\;
+Run the \textsc{$p_{\cF}$-P} rounding algorithm on \textsc{LP-$p_{\cF}$-P} guide on $H$ at level $t$ from $(\hat{\mathbf{y}},\hat{\mathbf{x}})$ with $X=X_1$ and let $E_{\cF}\subseteq E(H)$ be the returned cut\;
 
 Set $X_0\gets \brc{i\in V\br{H}: \hat{x}_i^t = 0}$\;
-Run the weighted \textsc{$\rho$-SEP} rounding algorithm with $\rho=1/2$ and $\rho_0=2/3$ on \textsc{LP-$\rho$-SEP} guide on $H$ at level $t$ from $\hat{\mathbf{y}}$ with $X=X_0$ and let $B_H\subseteq E(H)$ be the returned cut\;
+Run the weighted \textsc{$\rho$-SEP} rounding algorithm with $\rho=1/2$ and $\rho_0=2/3$ on \textsc{LP-$\rho$-SEP} guide on $H$ at level $t$ from $\hat{\mathbf{y}}$ with $X=X_0$ and let $E_{\rho}\subseteq E(H)$ be the returned cut\;
 
-$S_H\gets F_H\cup B_H$\;
+$S_H\gets E_{\cF}\cup E_{\rho}$\;
 
 Initialize a root node $u_H$ of the output tree $T$ and label $u_H$ by $S_H$\;
 \ForEach{$A\in H\setminus S_H$}{

@@ -9,7 +9,7 @@ We start by invoking a well-known \textsc{LP} relaxation \textsc{LP-FES} of the 
     \end{align}
     The authors of \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs} show that there exists a rounding procedure for this \textsc{LP} with an $\bigo\br{\log n\cdot\log\log n}$ loss of quality:
     \begin{theorem}[Even et al. \cite{ApproximatingMinimumFeedbackSetsAndMulticutsInDirectedGraphs}]\label{thm:fes-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds a subset of edges $S$ such that $G\setminus S$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in S} c\br{i,j} \leq \bigo\br{\log n \cdot \log\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{FES} problem and a solution to the above \textsc{LP-FES}, finds $E'\subseteq E$ such that $G\setminus E'$ contains no cycles going through any vertex in $X$ and $\sum_{ij\in E'} c\br{i,j} \leq \bigo\br{\log n \cdot \log\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
     \end{theorem}
 
     Note that originally, this theorem is stated for the more general problem of finding an feedback arc set of a directed graph. For undirected graphs, constant factor approximation algorithm, also based on mathematical programming is known \cite{ConstantFactorApproximationForSubsetFeedbackSetProblemsViaANewLPRelaxation}. However, the ILP formulation used is not $\alpha\br{n}$-well-behaved, and thus it cannot be incorporated in our framework\footnote{Specifically, the issue is that this ILP formulation relies on the fact that the size of $\spr{X}$ is known a-priori, which is not the case in our setting since the number of interesting vertices at each level is not known in advance.}.
@@ -22,11 +22,11 @@ We start by invoking a well-known \textsc{LP} relaxation \textsc{LP-FES} of the 
     \end{align}
     In \cite{ApproximateMaxFlowMinMultiCut1993} an algorithm with $\bigo\br{\log n}$-approximation loss using this LP is given:
     \begin{theorem}[Garg et al. \cite{ApproximateMaxFlowMinMultiCut1993}]\label{thm:mmc-rounding}
-        There exists a polynomial time algorithm which given an instance of the \textsc{MMC} problem and a solution to the above \textsc{LP-MMC}, finds a subset of edges $S$ such that $G\setminus S$ contains no path from $s_i$ to $t_i$ for any $i\in [k]$ and $\sum_{ij\in S} c\br{i,j} \leq \bigo\br{\log k}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{MMC} problem and a solution to the above \textsc{LP-MMC}, finds $E'\subseteq E$ such that $G\setminus E'$ contains no path from $s_i$ to $t_i$ for any $i\in [k]$ and $\sum_{ij\in E'} c\br{i,j} \leq \bigo\br{\log k}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
     \end{theorem}
     As a corollary of this theorem we obtain that:
     \begin{corollary}
-        There exists a polynomial time algorithm which given an instance of the \textsc{P-$\cD_d$} problem and a solution to the above \textsc{LP-P-$\cD_d$}, finds a subset of edges $S$ such that $G\setminus S$ is a valid solution for \textsc{P-$\cD_d$} and $\sum_{ij\in S} c\br{i,j} \leq \bigo\br{\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
+        There exists a polynomial time algorithm which given an instance of the \textsc{P-$\cD_d$} problem and a solution to the above \textsc{LP-P-$\cD_d$}, finds $E'\subseteq E$ such that $G\setminus E'$ is a valid solution for \textsc{P-$\cD_d$} and $\sum_{ij\in E'} c\br{i,j} \leq \bigo\br{\log n}\cdot \sum_{ij\in E} c\br{i,j} \cdot y_{ij}$.
     \end{corollary}
 
     We get the following well-behavedness corollaries for the three classes of interest:
