@@ -15,20 +15,20 @@ Since we decompose the \textsc{LP} into separate levels, by summing up over all 
 In order to analyze the structure of $\cF$-clustering trees, we introduce the notion of \emph{level decomposition}, which for a given $\cF$-clustering tree $T$ is defined as follows.
 Let $\cC^T$ denote the family of all clusters in $T$, $\cC^T=\brc{G_u\colon u\in V(T)}$.
 For $t\in [w\br{G}]$, denote by $\cL_t^T$ the set of all maximal clusters in $\cC^T$ of total weight at most $t$. We call $\cL_t^T$ the $t$-th \emph{level} of the decomposition.
-Observe that for each $t$, $\cL_t^T$ is a partition of $V\br{G}$. By $S_t^T$ denote the set of edges with endpoints in different clusters of $\cL_t^T$. We call $S_t^T$ the $t$-th \emph{level cut}.
+Observe that for each $t$, $\cL_t^T$ is a partition of $V\br{G}$. By $E_t^T$ denote the set of edges with endpoints in different clusters of $\cL_t^T$. We call $E_t^T$ the $t$-th \emph{level cut}.
 It is easy to see that the cost of $T$ can be expressed as:
 \begin{observation}\label{obs:cost-decomposition}
-    $\COST_G\br{T} = \sum_{t=1}^{w\br{G}} c\br{S_t^T}$.
+    $\COST_G\br{T} = \sum_{t=1}^{w\br{G}} c\br{E_t^T}$.
 \end{observation}
 
 Since we use the above levels to decompose a $\cF$-clustering tree and its cost, we would also like to do the same for the $\cF$-predicate. This is because eventually, all vertices satisfy the $\cF$-predicate, but whether a vertex $v\in V$ satisfies the $\cF$-predicate, when it belongs to a cluster at the $t$-th level depends on the structure of the $\cF$-clustering tree.
-For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the level-indexed $\cF$-predicate indicator by setting $p_{\cF}^t\br{v}$ to be true iff $p_{\cF}\br{v}$ is true in $G\setminus S_t^T$. 
+For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the level-indexed $\cF$-predicate indicator by setting $p_{\cF}^t\br{v}$ to be true iff $p_{\cF}\br{v}$ is true in $G\setminus E_t^T$. 
 \subsection{\textsc{ILP} formulation of \textsc{HC-$\cF$} and its relaxation}
     We now move towards a description of the constraints of the \textsc{ILP} along with an explanation of the role they play. We use the well-known \emph{spreading-metrics} framework which in recent years have come particularly useful for approximating many problems regarding graph cutting \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,PartitioningGraphsIntoBalancedComponents,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,FastApproximateGraphPartitioningAlgorithms,DivideAndConquerApproximationAlgorithmsViaSpreadingMetrics}.
     Spreading metrics are a way to encode the structure of a graph into a metric space, which can then be used to find cuts in the graph. The task of a mathematical program (usually LP or SDP) is to find a metric that spreads out the vertices of the graph in a way that reflects the structure of the graph. Here, the idea is to merge such constraints with our level-indexed formulation to encode \textsc{HC-$\cF$} as a linear program.
 
     % By our definition, for every level $t\in [w\br{G}]$, each cluster is either of total weight at most $t$ or it is an $\cF$-cluster. Moreover, we observe, that the partition at level $t-1$ refines the partition at level $t$.
-    For each edge $e\in E$ and level $t\in [w\br{G}]$ we use a variable $y_e^t\in[0,1]$ which encodes whether $e\in S_t^T$.
+    For each edge $e\in E$ and level $t\in [w\br{G}]$ we use a variable $y_e^t\in[0,1]$ which encodes whether $e\in E_t^T$.
     We also define a variable $x_v^t=1$ iff $p_{\cF}^t\br{v}$ is true and $0$ otherwise.  Let $\dist_{y, V}^{t}\colon V\times V\to \mathbb{R}_{\geq 0}$ denote shortest-path distances in $G$ induced by lengths $\{y_e^t\}_{e\in E}$.
     We first explain all constraints and then we give the full ILP. 
     These are as follows:
@@ -61,9 +61,9 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         \textsc{ILP-HC-$\cF$} is an exact formulation of \textsc{HC-$\cF$} which implies that $\OPT_{ILP}=\OPT_{\cF}$
     \end{lemma}
     \begin{proof}
-        $(\Rightarrow)$ Let $T$ be any feasible $\cF$-clustering tree. For each level $t\in [w\br{G}]$, let $S_t^T$ be the level cut from the level decomposition and set
+        $(\Rightarrow)$ Let $T$ be any feasible $\cF$-clustering tree. For each level $t\in [w\br{G}]$, let $E_t^T$ be the level cut from the level decomposition and set
         \[
-            y_e^t:=\mathbf{1}[e\in S_t^T].
+            y_e^t:=\mathbf{1}[e\in E_t^T].
         \]
         Also set $x_v^t:=1$ iff the level-$t$ cluster of $v$ satisfies $p_{\cF}$.
 
@@ -80,7 +80,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         which is exactly \eqref{spreading_constraint_ILP} for $x_v^t=0$. Thus $(y,x)$ is ILP-feasible and
         \[
             \sum_{t=1}^{w\br{G}}\sum_{e\in E} c(e)\cdot y_e^t
-            = \sum_{t=1}^{w\br{G}} c(S_t^T)
+            = \sum_{t=1}^{w\br{G}} c(E_t^T)
             = \COST_G(T)
         \]
         by Observation~\ref{obs:cost-decomposition}. Hence $\OPT_{ILP}\le \OPT_{\cF}$.
@@ -115,13 +115,13 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         It remains to separate the spreading-metrics constraints. Fix a level $t\in [w\br{G}]$ and a vertex $v\in V$. Using the current values of the variables $y_e^t$, we compute all distances $\dist_{y,V}^{t}(v,u)$ for $u\in V$ by a shortest-path algorithm. Then the left-hand side minus the right-hand side of \eqref{spreading_constraint_ILP} can be rewritten as
         \[
             \sum_{u\in S} w(u)\cdot \dist_{y,V}^{t}(v,u) - \br{1-x_v^t}\cdot \br{w\br{S}-t}
-            = \br{1-x_v^t}\cdot t - \sum_{u\in S} w(u)\cdot \br{\br{1-x_v^t}-\dist_{y,V}^{t}(v,u)}.
+            = \br{1-x_v^t}\cdot t - \sum_{u\in S} w(u)\cdot \br{\br{1-x_v^t}-\dist_{y,V}^{t}(v,u)}\geq 0.
         \]
         Therefore, for fixed $v$ and $t$, the most violated constraint is obtained by taking
         \[
-            S=\brc{u\in V\colon \dist_{y,V}^{t}(v,u)<1-x_v^t},
+            S_{v,t}=\brc{u\in V\colon \dist_{y,V}^{t}(v,u)<1-x_v^t},
         \]
-        since every vertex with positive contribution to the second term should be included, while vertices with non-positive contribution should be excluded. Hence, after one shortest-path computation, we can test in polynomial time whether any spreading-metrics constraint for this pair $(v,t)$ is violated and, if so, output a violated one.
+        since every vertex with positive contribution to the second term should be included, while vertices with non-positive contribution should be excluded. Hence, after one shortest-path computation, we can test in polynomial time whether any spreading-metrics constraint for $S=S_{v,t}$ is violated, and if so, we return it as a separating hyperplane.
 
         Repeating this for all polynomially many pairs $(v,t)$ yields a polynomial-time separation oracle for constraints of type \eqref{spreading_constraint_ILP}. Consequently, \textsc{LP-HC-$\cF$} admits a polynomial-time separation oracle, and thus it can be solved in polynomial time by the ellipsoid method.
     \end{proof}
