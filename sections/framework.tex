@@ -163,11 +163,11 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
 
     The following bicriteria rounding guarantee for \textsc{$\rho$-SEP} is a direct corollary of \cite{FastApproximateGraphPartitioningAlgorithms}:
     \begin{theorem}\label{thm:ksep-rounding}
+        Let $\rho$ and $\rho_0$, $0<\rho<\rho_0<1$, be any fixed constants.
         There exists a polynomial-time algorithm which, given an instance of \textsc{$\rho$-SEP} and a solution to the above \textsc{LP-$\rho$-SEP}, returns a subset of edges $E'$ such that every connected component of $G\setminus E'$ that contains a terminal has total weight at most $\rho_0\cdot w\br{G}$ and
         \[
-            \sum_{ij\in E'} c\br{i,j} \leq \bigo\br{\log n}\cdot \sum_{e\in E} c(e)\cdot y_e,
+            \sum_{ij\in E'} c\br{i,j} \leq \bigo\br{\log n}\cdot \sum_{e\in E} c(e)\cdot y_e.
         \]
-        for any fixed constants $0<\rho<\rho_0<1$.
     \end{theorem}
 
 \subsection{Restricting the solutions}
