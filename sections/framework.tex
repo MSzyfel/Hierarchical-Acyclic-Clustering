@@ -59,14 +59,15 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
     We denote by $\OPT_{ILP}$ the value of an optimal solution to the above ILP for a given graph $G$.
 
     \begin{lemma}\label{lem:ilp-exact}
-        \textsc{ILP-HC-$\cF$} is an exact formulation of \textsc{HC-$\cF$} which implies that $\OPT_{ILP}=\OPT_{\cF}$
+        \textsc{ILP-HC-$\cF$} is an exact formulation of \textsc{HC-$\cF$} which implies that $\OPT_{ILP}=\OPT_{\cF}$.
     \end{lemma}
     \begin{proof}
-        $(\Rightarrow)$ Let $T$ be any feasible $\cF$-clustering tree. For each level $t\in [w\br{G}]$, let $S_t^T$ be the level cut from the level decomposition and set
+        $(\Rightarrow)$ Let $T$ be any feasible $\cF$-clustering tree.
+        Recall that, for each level $t\in [w\br{G}]$, $S_t^T$ is the level cut from the level decomposition and set
         \[
             y_e^t:=\mathbf{1}[e\in S_t^T].
         \]
-        Also set $x_v^t:=1$ iff the level-$t$ cluster of $v$ satisfies $p_{\cF}$.
+        Also set $x_v^t:=1$ if and only if the level-$t$ cluster of $v$ satisfies $p_{\cF}$.
 
         The refinement constraints hold because level cuts are nested. The constraints on $x$ hold by monotonicity of the predicate along the refinement. The $p_{\cF}$-P constraints hold by definition of the family $\cR_v$: whenever $x_v^t=1$, each required $p_{\cF}$-P constraint for $v$ at level $t$ is satisfied by the cut pattern encoded by $y^t$.
 

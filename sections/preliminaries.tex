@@ -1,6 +1,6 @@
 \section{Preliminaries}
 
-Throughout this paper, each considered set of points along the similarity function is treated as an undirected weighted graph $G=\br{V,E,c,w}$, where $c\colon E\to \mathbb{N}$ is the similarity function (if $uv\notin E$, we may assume as a convention that $c(uv)=0$) and $w\colon V\to \mathbb{N}^+$ are vertex weights\footnote{The inclusion of weights serves the purpose of obtaining a more general solution, however its occurrence does not impact the techniques nor the results in a significant way.}. We write $n\br{G}=\spr{V}$, $m\br{G}=\spr{E}$, and $n=n\br{G}$, $m=m\br{G}$ when $G$ is clear from context. For $U\subseteq V$, let $w\br{U}=\sum_{v\in U} w(v)$ and let $w\br{G}=w\br{V}$. For a set of edges $F\subseteq E$, we use $c\br{F}=\sum_{e\in F} c(e)$. Let $[n]=\brc{1,\dots, n}$.
+Throughout this paper, each considered set of points along the similarity function is treated as an undirected weighted graph $G=\br{V,E,c,w}$, where $c\colon E\to \mathbb{N}$ is the similarity function (if $uv\notin E$, we may assume as a convention that $c(uv)=0$) and $w\colon V\to \mathbb{N}^+$ are vertex weights. We write $n\br{G}=\spr{V}$, $m\br{G}=\spr{E}$, and $n=n\br{G}$, $m=m\br{G}$ when $G$ is clear from context. For $U\subseteq V$, let $w\br{U}=\sum_{v\in U} w(v)$ and let $w\br{G}=w\br{V}$. For a set of edges $F\subseteq E$, we use $c\br{F}=\sum_{e\in F} c(e)$. Let $[n]=\brc{1,\dots, n}$.
 By a permutation $\pi$ of $V$ we mean a bijection $\pi\colon V\to [n]$.
 
 Consider a tree $T$ constructed for a graph $G$ in which each node $u$ corresponds to a \emph{cluster} $G_u$ (an induced subgraph of $G$), the root corresponds to $G$, and the children of a node $u$ form a partition of $G_u$ into connected components.
@@ -24,6 +24,10 @@ Given a weighted graph $G=\br{V, E, c, w}$, we define the following combinatoria
     \end{enumerate}
     \item \textsc{Minimum Linear Arrangement} (\textsc{MLA}): find a permutation $\pi$ of the vertices of $G$ that minimizes $\COST_G\br{\pi} = \sum_{uv\in E} c(uv) \cdot \spr{\pi(u) - \pi(v)}$.
 \end{itemize}
+
+The inclusion of weights serves the purpose of obtaining a more general solution, however its occurrence does not impact the techniques nor the results in a significant way.
+On the other hand, we point out that our working assumption will be that the value $w\br{G}$ is polynomial in $n$.
+If this assumption is not met for a given input, then the algorithms work correctly but become pseudo-polynomial in the size of the graph.
 
 For any node $u\in V(T)$ of a clustering (or $\cF$-clustering) tree $T$, we denote by $\COST_G\br{T, u} = c(S_u) \cdot w\br{V\br{G_u}}$ the contribution of the node $u$ to the total cost of the tree.
 By $\OPT_{\cF}$ we denote the cost of an optimal solution to \textsc{HC-$\cF$}.
