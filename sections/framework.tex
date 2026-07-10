@@ -172,7 +172,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
 
 \subsection{Restricting the solutions}
     
-In order to obtain quality approximation ratios we employ a charging scheme, where we split the $LP$ into several solutions restricted to the clusters of the $\cF$-clustering tree $T$ we are building. Fix some cluster $H$ of $G$ and a level $t$. By $LP_t^H$ denote the solution of \textsc{LP-HC-$\cF$} restricted to the set of vertices $H$ at level $t$ which is done by discarding all of the variables $y_{uv}^t$, such that $\brc{u,v}\cap V\br{H}\neq \brc{u,v}$ or levels other than $t$. We call each such restricted part $LP_t^H$ a \emph{guide}. For any target problem $\Pi$ with LP relaxation \textsc{LP-$\Pi$} (on the same graph fragment and terminal set), we say that $LP_t^H$ is a \emph{valid guide} for $\Pi$ if the restricted values from $LP_t^H$ satisfy all constraints of \textsc{LP-$\Pi$}. In other words, a valid guide is simply a feasible LP point for the target problem, inherited from \textsc{LP-HC-$\cF$}. This restriction is also performed on the cost function and this is reflected in the accordingly defined quantities $\COST\br{LP_t^H} = \sum_{uv\in E\br{H}} c\br{u,v} \cdot y_{uv}^t$. We have the following lemma:
+In order to obtain quality approximation ratios we employ a charging scheme, where we split the $LP$ into several solutions restricted to the clusters of the $\cF$-clustering tree $T$ we are building. Fix some cluster $H$ of $G$ and a level $t$. By $LP_t^H$ denote the solution of \textsc{LP-HC-$\cF$} restricted to the set of vertices $H$ at level $t$ which is done by discarding all variables $y_{uv}^z$, such that $\brc{u,v}\cap V\br{H}\neq \brc{u,v}$ or $z\neq t$. We call each such restricted part $LP_t^H$ a \emph{guide}. For any target problem $\Pi$ with LP relaxation \textsc{LP-$\Pi$} (on the same graph fragment and terminal set), we say that $LP_t^H$ is a \emph{valid guide} for $\Pi$ if the restricted values from $LP_t^H$ satisfy all constraints of \textsc{LP-$\Pi$}. In other words, a valid guide is simply a feasible LP point for the target problem, inherited from \textsc{LP-HC-$\cF$}. This restriction is also performed on the cost function and this is reflected in the accordingly defined quantities $\COST\br{LP_t^H} = \sum_{uv\in E\br{H}} c\br{u,v} \cdot y_{uv}^t$. We have the following lemma:
 
     \begin{lemma}\label{lem:relaxation-decomposition}
         Let $T$ be any $\cF$-clustering tree. For any cluster $H \in \cC^T$, let $r\br{H}$ be the weight of the heaviest child cluster of $H$ if it exists or $0$ otherwise. Moreover, fix some constant $g\in \mathbb{N}$. Then:
@@ -181,7 +181,7 @@ In order to obtain quality approximation ratios we employ a charging scheme, whe
         \end{align*}
     \end{lemma}
     \begin{proof}
-        For convenience, define $y_{u}^0=y_{u}^1$ for all $u\in V$. The value $c\br{LP_{0}}$ is defined analogously as before. 
+        For convenience, define $y_{u}^0=y_{u}^1$ for all $u\in V$. The value $c\br{LP_{0}}$ is defined analogously as before.
         We start by showing that 
         \[
         \sum_{H\in \cC^T}\sum_{t=r\br{H}+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/g}}^H}\leq \sum_{i=0}^{w\br{G}} c\br{LP_{\fl{i/g}}^G}.
