@@ -33,7 +33,7 @@
     \begin{lemma}\label{lem:recursive-cost}
         Fix some cluster $H$ for which the recursive procedure was called. Then, 
         \[
-        \COST_G\br{T, u_H}\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/2}}^H}.
+        w\br{V\br{H}}\cdot c\br{E_H}\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/2}}^H}.
         \]
     \end{lemma}
     \begin{proof}
@@ -52,17 +52,17 @@
                \leq 3\beta\br{n}\cdot
                \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/2}}^H}.
         \]
-    Since we know that $c\br{E_H}= c\br{E_{\cF}\cup E_{\rho}}\leq c\br{E_{\cF}}+c\br{E_{\rho}}$, and we have $\COST_G\br{T, u_H} \leq w\br{V\br{H}}\cdot c\br{E_H}$, the claim follows.
+    Since we know that $c\br{E_H}= c\br{E_{\cF}\cup E_{\rho}}\leq c\br{E_{\cF}}+c\br{E_{\rho}}$, the claim follows.
     \end{proof}
     Armed with the above lemma we are ready to sum the contribution of all clusters to the cost of the solution. Let $T$ be the $\cF$-clustering tree returned by the algorithm and let $\cC_T$ be the set of all non-$\cF$-clusters for which the recursive procedure was called. For each such cluster $H$, let $E_H:=E_{\cF}\cup E_{\rho}$ be the set of edges cut in the recursive call on $H$. We have:
     \begin{align*}
         \COST_G\br{T} &= \sum_{H \in \cC_T}\COST_G\br{T, u_H}
-        \\&\leq \sum_{H \in \cC_T} w\br{V\br{H}}\cdot c\br{E_H}\\
+        \\&= \sum_{H \in \cC_T} w\br{V\br{H}}\cdot c\br{E_H}\\
         &\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot\sum_{H \in \cH} \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}}  c\br{LP_{\fl{t/2}}^H}\\
         &\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot\sum_{H \in \cH} \sum_{t=r\br{H}+1}^{w\br{V\br{H}}} \br{c\br{LP_{\fl{t/2}}^H}}\\
         &\leq 6\cdot\br{\alpha\br{n}+ \beta\br{n}}\cdot \OPT_{LP}\\
         &\leq 12\cdot\br{\alpha\br{n}+\beta\br{n}}\cdot \OPT_{ILP}.
     \end{align*}
-    where the first inequality follows from $\COST_G\br{T,u_H}\leq w\br{V\br{H}}\cdot c\br{E_H}$, the second inequality is due to Lemma \ref{lem:recursive-cost}, the third inequality follows by plugging $r\br{H}\leq 2w\br{V\br{H}}/3$, the fourth inequality is due to Lemma \ref{lem:relaxation-decomposition} applied with $g=2$, and the fifth inequality follows from Lemma \ref{lem:lp-rounding}. 
+    where the first inequality is due to Lemma \ref{lem:recursive-cost}, the second inequality follows by plugging $r\br{H}\leq 2w\br{V\br{H}}/3$, the third inequality is due to Lemma \ref{lem:relaxation-decomposition} applied with $g=2$, and the last inequality follows from Lemma \ref{lem:lp-rounding}. 
     \end{proof}
 
