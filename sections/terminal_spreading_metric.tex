@@ -1,6 +1,6 @@
 \section{Spreading metric for $\rho$-separators with terminals}\label{app:terminal-extension}
 
-This appendix serves as an extension of the procedure and analysis of Even et al.~\cite{FastApproximateGraphPartitioningAlgorithms} which gave an $\bigo\br{\log n}$-approximation algorithm for the \textsc{$\rho$-SEP} problem. In their algorithm it is assumed that $X=V$, we show to extend the rounding procedure to work for designated terminal set $X\subseteq V$. The algorithm is almost exactly the same, and is based on a region-growing procedure. Whereas the original procedure grows a region around an arbitrary vertex, our modified algorithm grows a region around an arbitrary terminal. The rest of the analysis is largely the same. 
+This appendix serves as an extension of the procedure and analysis in~\cite{FastApproximateGraphPartitioningAlgorithms} which gives an $\bigo\br{\log n}$-approximation algorithm for the \textsc{$\rho$-SEP} problem. In their algorithm it is assumed that $X=V$, we show to extend the rounding procedure to work for designated terminal set $X\subseteq V$. The algorithm is almost exactly the same, and is based on a region-growing procedure. Whereas the original procedure grows a region around an arbitrary vertex, our modified algorithm grows a region around an arbitrary terminal. The rest of the analysis is largely the same.
 
 \subsection{LP formulation}
 Recall, the following is the weighted spreading-metrics \textsc{LP} relaxation \textsc{LP-$\rho$-SEP} for the \textsc{$\rho$-SEP} problem with a terminal set $X$:
@@ -99,7 +99,7 @@ Now, we observe that $\operatorname{vol}(v,r)$ is monotone and piecewise linear.
 
 \subsection{Cut procedure and its correctness}
 
-Here we describe the modified region-growing rounding algorithm, which is almost identical to the original procedure of Even et al.~\cite{FastApproximateGraphPartitioningAlgorithms}, except that it grows a region around an arbitrary terminal $v\in V'\cap X$ instead of an arbitrary vertex $v\in V'$. The procedure is given in Algorithm~\ref{alg:terminal-cut-proc}. It is used, whenever there exists at least one terminal in the current subgraph $G'=(V',E')$ and $w\br{V'}>\rho_0\cdot w\br{G}$. The procedure returns a sphere $U=N(v,r)$ for some radius $r\le \tilde r$ such that $w\br{U}\le \rho_0\cdot w\br{G}$ and the ratio between $c\br{\delta\br{v, r}}$ and $\operatorname{vol}(v,r)$ is $\bigo\br{\log n}$. Pick $
+Here we describe the modified region-growing rounding algorithm, which is almost identical to the original procedure in~\cite{FastApproximateGraphPartitioningAlgorithms}, except that it grows a region around an arbitrary terminal $v\in V'\cap X$ instead of an arbitrary vertex $v\in V'$. The procedure is given in Algorithm~\ref{alg:terminal-cut-proc}. It is used, whenever there exists at least one terminal in the current subgraph $G'=(V',E')$ and $w\br{V'}>\rho_0\cdot w\br{G}$. The procedure returns a sphere $U=N(v,r)$ for some radius $r\le \tilde r$ such that $w\br{U}\le \rho_0\cdot w\br{G}$ and the ratio between $c\br{\delta\br{v, r}}$ and $\operatorname{vol}(v,r)$ is $\bigo\br{\log n}$. Pick $
 \tilde r=\frac{\rho_0-\rho}{\rho_0}.$
 
 

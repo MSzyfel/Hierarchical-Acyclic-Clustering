@@ -62,15 +62,15 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
     \end{lemma}
     \begin{proof}
         $(\Rightarrow)$ Let $T$ be any feasible $\cF$-clustering tree.
-        Recall that, for each level $t\in [w\br{G}]$, $E_t^T$ is the level cut from the level decomposition and set
+        Recall that, for each level $t\in [w\br{G}]$, $E_t^T$ is the level cut from the level decomposition. Define a solution by setting
         \[
-            y_e^t:=\mathbf{1}[e\in E_t^T].
+            y_e^t:=\mathbf{1}[e\in E_t^T],
         \]
-        Also set $x_v^t:=1$ if and only if the level-$t$ cluster of $v$ satisfies $p_{\cF}$.
+        and $x_v^t:=1$ if and only if the level-$t$ cluster of $v$ satisfies $p_{\cF}$.
 
         The refinement constraints hold because level cuts are nested. The constraints on $x$ hold by monotonicity of the predicate along the refinement. The $p_{\cF}$-P constraints hold by definition of the family $\cR_v$: whenever $x_v^t=1$, each required $p_{\cF}$-P constraint for $v$ at level $t$ is satisfied by the cut pattern encoded by $y^t$.
 
-        For spreading constraints, fix $v\in V$, $t\in [w\br{G}]$, and $S\subseteq V$ with $v\in S$. If $x_v^t=1$, the right-hand side is $0$. Assume $x_v^t=0$ and let $C$ be the level-$t$ cluster containing $v$. Then $C$ is not an $\cF$-cluster, so by level definition $w(C)\le t$. Every $u\in S\setminus C$ is separated from $v$ by level-$t$ cuts, hence $\dist_{y, V}^{t}(v,u)\ge 1$. Therefore,
+        For spreading constraints, fix $v\in V$, $t\in [w\br{G}]$, and $S\subseteq V$ with $v\in S$. If $x_v^t=1$, the right-hand side in~\eqref{spreading_constraint_ILP} is $0$. Hence assume $x_v^t=0$ and let $C$ be the level-$t$ cluster containing $v$. Then $C$ is not an $\cF$-cluster, so by level definition $w(C)\le t$. Every $u\in S\setminus C$ is separated from $v$ by level-$t$ cuts, hence $\dist_{y, V}^{t}(v,u)\ge 1$. Therefore,
         \[
             \sum_{u\in S} w(u)\cdot \dist_{y,V}^{t}(v,u)
             \ge \sum_{u\in S\setminus C} w(u)
@@ -106,12 +106,13 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         Therefore every integral ILP solution maps to a feasible $\cF$-clustering tree of the same cost, implying $\OPT_{\cF}\le \OPT_{ILP}$, which completes the proof.
     \end{proof}
 
-    We now wish to show that it is possible to solve the relaxation of \textsc{ILP-HC-$\cF$} in polynomial time. We denote this relaxation by \textsc{LP-HC-$\cF$}, which is obtained by replacing the integrality constraints on $x_v^t$ and $y_e^t$ with $x_v^t\in [0,1]$ and $y_e^t\geq 0$ for all $v\in V$, $e\in E$, and $t\in [w\br{G}]$. The following lemma shows that \textsc{LP-HC-$\cF$} can be solved in polynomial time.
+    We now wish to show that it is possible to solve a relaxation of \textsc{ILP-HC-$\cF$} in polynomial time. We denote this relaxation by \textsc{LP-HC-$\cF$}, which is obtained by replacing the integrality constraints on $x_v^t$ and $y_e^t$ with $x_v^t\in [0,1]$ and $y_e^t\geq 0$ for all $v\in V$, $e\in E$, and $t\in [w\br{G}]$.
     \begin{lemma}\label{lem:lp-polytime}
         The relaxation \textsc{LP-HC-$\cF$} can be solved in polynomial time.
     \end{lemma}
     \begin{proof}
-        The only potentially exponential families of constraints are \eqref{cover_constraint_ILP} and \eqref{spreading_constraint_ILP}. For constraints of type \eqref{cover_constraint_ILP}, a polynomial-time separation oracle is part of the assumptions of a well-behaved formulation.
+        First, we recall our assumption on $w\br{G}$ being polynomial in $n$.
+        Thus, the only potentially exponential families of constraints are \eqref{cover_constraint_ILP} and \eqref{spreading_constraint_ILP}. For constraints of type \eqref{cover_constraint_ILP}, a polynomial-time separation oracle is part of the assumptions of a well-behaved formulation.
 
         It remains to separate the spreading-metrics constraints. Fix a level $t\in [w\br{G}]$ and a vertex $v\in V$. Using the current values of the variables $y_e^t$, we compute all distances $\dist_{y,V}^{t}(v,u)$ for $u\in V$ by a shortest-path algorithm. Then the left-hand side minus the right-hand side of \eqref{spreading_constraint_ILP} can be rewritten as
         \[
@@ -154,11 +155,11 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
     We now state the linear programming relaxation for the \textsc{$\rho$-SEP} which is a modified LP of \cite{FastApproximateGraphPartitioningAlgorithms} that will be required in order to reduce the size of the instance efficiently. For the \textsc{$\rho$-SEP} problem on a graph $G=(V,E)$ with a terminal set $X\subseteq V$, we use the following weighted spreading-metrics \textsc{LP} relaxation \textsc{LP-$\rho$-SEP}:
     \begin{align}
         \min \quad &\sum_{e\in E} c(e)\cdot y_e\\
-        \text{subject to} \quad &\sum_{u\in S} \dist_{y,V}(v,u)\cdot w(u) \geq w\br{S}-\rho\cdot w\br{G}, \quad \forall S\subseteq V,\; v\in S\cap X,\\
+        \text{subject to} \quad &\sum_{u\in S} \dist_{y,V}(v,u)\cdot w(u) \geq w\br{S}-\rho\cdot w\br{G} \quad \forall S\subseteq V,\; v\in S\cap X,\\
         &0\leq y_e\quad \forall e\in E.
     \end{align}
 
-    The analysis in \cite{FastApproximateGraphPartitioningAlgorithms} is stated for the special case $X=V$. In our framework, we use the corresponding extension for the case $X\neq V$: the same sphere-growing argument is applied, the only important modification is that we grow the spheres around centers in $X$, rather than around arbitrary vertices in $V$. We state the resulting guarantee below and defer the full extension from $X=V$ to $X\neq V$ to Appendix~\ref{app:terminal-extension}.
+    The analysis in \cite{FastApproximateGraphPartitioningAlgorithms} is stated for the special case $X=V$. In our framework, we use the corresponding extension for the case $X\neq V$: the same sphere-growing argument is applied, the only important modification is that we grow the spheres around the centers in $X$, rather than around arbitrary vertices in $V$. We state the resulting guarantee below and defer the full extension from $X=V$ to $X\neq V$ to Appendix~\ref{app:terminal-extension}.
 
     The following bicriteria rounding guarantee for \textsc{$\rho$-SEP} is a direct corollary of \cite{FastApproximateGraphPartitioningAlgorithms}:
     \begin{theorem}\label{thm:ksep-rounding}
