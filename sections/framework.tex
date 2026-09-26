@@ -3,10 +3,10 @@
 Having characterized the kinds of graph classes that will fit into our framework we can now move on towards describing how to use the properties of $\alpha\br{n}$-well-behavedness to construct a general approximation algorithm for \textsc{HC-$\cF$}. The main idea is that we use a level-based \textsc{LP} relaxation to guide a recursive algorithm.
 In the preprocessing step we encode the problem using an \textsc{ILP}. We obtain this formulation by combining any $\alpha\br{n}$-well-behaved \textsc{ILP} with the level decomposition approach from \cite{ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics}. Our \textsc{ILP} consists of multiple variable levels which encode levels of an $\cF$-clustering tree. It should be noted that these levels are indexed by the size of the clusters, rather than the depth of the tree.
 
-After solving \textsc{LP-HC-$\cF$}, \DD{$\Leftarrow$ nie mamy tego skrotu.} we use a rounding routine to get a partially integral solution which at each level corresponds to choosing which vertices should satisfy the $\cF$-predicate.
+After solving the \textsc{LP} relaxation, denoted by \textsc{LP-HC-$\cF$}, of the above \textsc{ILP}, we use a rounding routine to get a partially integral solution which at each level corresponds to choosing which vertices should satisfy the $\cF$-predicate.
 
-During the recursive step, we process clusters in a top-down manner starting from $H=G$. For a cluster $H$, we set $t=w\br{V\br{H}}/2$. Then, we look which vertices satisfy the $\cF$-predicate at level $t$ and which do not (For a formal level definition see Section~\ref{sec:levels} below).
-According to this, we partition them into two sets $X_1$ (satisfying the predicate) and $X_0$ (not satisfying the predicate). The solution of \textsc{LP-HC-$\cF$} at level $t$ is then used as a valid solution to \textsc{$p_{\cF}$-P-LP} with $X=X_1$, yielding a cut $E_{\cF}$ with $\alpha\br{n}$ factor loss. The same level-$t$ fragment is also used as a valid guide for \textsc{$\rho$-SEP} with $\rho=1/2$, $\rho_0=2/3$ and $X=X_0$, yielding a cut $E_{\rho}$, such that each connected component of $H\setminus E_{\rho}$ that contains a terminal, has total weight at most $2w\br{V\br{H}}/3$ and the cut cost is within a factor $\beta\br{n}=\bigo\br{\log n}$ of the guide. After cutting the edges in $E_{\cF}\cup E_{\rho}$, we recursively process all connected components.
+During the recursive step, we process clusters in a top-down manner starting from $H=G$. For a cluster $H$, we set $t=w\br{H}/2$. Then, we look which vertices satisfy the $\cF$-predicate at level $t$ and which do not (For a formal level definition see Section~\ref{sec:levels} below).
+According to this, we partition them into two sets $X_1$ (satisfying the predicate) and $X_0$ (not satisfying the predicate). The solution to \textsc{LP-HC-$\cF$} at level $t$ is then used as a valid solution to \textsc{$p_{\cF}$-P-LP} with $X=X_1$, yielding a cut $E_{\cF}$ with $\alpha\br{n}$ factor loss. The same level-$t$ fragment is also used as a valid guide for \textsc{$\rho$-SEP} with $\rho=1/2$, $\rho_0=2/3$ and $X=X_0$, yielding a cut $E_{\rho}$, such that each connected component of $H\setminus E_{\rho}$ that contains a terminal, has total weight at most $2w\br{H}/3$ and the cut cost is within a factor $\beta\br{n}=\bigo\br{\log n}$ of the guide. After cutting the edges in $E_{\cF}\cup E_{\rho}$, we recursively process all connected components.
 
 Since we decompose the \textsc{LP} into separate levels, by summing up over all of them we will be able to show that our algorithm achieves an approximation ratio of $\bigo\br{\alpha\br{n}+\beta\br{n}}$.
 
@@ -14,9 +14,10 @@ Since we decompose the \textsc{LP} into separate levels, by summing up over all 
 
 In order to analyze the structure of $\cF$-clustering trees, we introduce the notion of \emph{level decomposition}, which for a given $\cF$-clustering tree $T$ is defined as follows.
 Let $\cC^T$ denote the family of all clusters in $T$, $\cC^T=\brc{G_u\colon u\in V(T)}$.
-For $t\in [w\br{G}]$, denote by $\cL_t^T$ the set of all maximal clusters in $\cC^T$ of total weight at most $t$. We call $\cL_t^T$ the $t$-th \emph{level} of the decomposition.
+For $t\in [w\br{G}]$ let
+\[\cL_t^T=\brc{H\in\cC^T\colon w\br{H}\leq t\textup{ or }H\in\cF}.\]
+We call $\cL_t^T$ the $t$-th \emph{level} of the decomposition.
 Observe that for each $t$, $\cL_t^T$ is a partition of $V\br{G}$.
-\DD{uwaga: to w sumie nie jest partycja. Przyklad: wezmy $t=1$ i jesli $\cF$ to nie singletony, to level $1$ moze byc pusty. Czyli, jesli $t$ przekracza rozmiar komponentu w jakims lisciu to tracimy wlasnosc, ze to partycja (a jedynie kolekcja parami rozlacznych klastrow).}
 By $E_t^T$ denote the set of edges with endpoints in different clusters of $\cL_t^T$. We call $E_t^T$ the $t$-th \emph{level cut}.
 It is easy to see that the cost of $T$ can be expressed as:
 \begin{observation}\label{obs:cost-decomposition}
@@ -26,13 +27,13 @@ It is easy to see that the cost of $T$ can be expressed as:
 Since we use the levels to decompose a $\cF$-clustering tree and its cost, we would also like to do the same for $\cF$-predicates. This is because eventually, all vertices satisfy the $\cF$-predicate, but whether a vertex $v\in V$ satisfies the $\cF$-predicate, when it belongs to a cluster at the $t$-th level depends on the structure of the $\cF$-clustering tree.
 For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the level-indexed $\cF$-predicate indicator by setting $p_{\cF}^t\br{v}$ to be true iff $p_{\cF}\br{v}$ is true in $G\setminus E_t^T$. 
 \subsection{\textsc{ILP} formulation of \textsc{HC-$\cF$} and its relaxation}
-    We now move towards a description of the constraints of the \textsc{ILP} along with an explanation of the role they play. We use the well-known \emph{spreading-metrics} framework which in recent years have come particularly useful for approximating many problems regarding graph cutting \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,PartitioningGraphsIntoBalancedComponents,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,FastApproximateGraphPartitioningAlgorithms,DivideAndConquerApproximationAlgorithmsViaSpreadingMetrics}.
+    We now move towards a description of the constraints of the \textsc{ILP} along with an explanation of the role they play. We use the well-known \emph{spreading-metrics} framework which in recent years has come particularly useful for approximating many problems regarding graph cutting \cite{ExpanderFlowsGeometricEmbeddingsAndGraphPartitioning,PartitioningGraphsIntoBalancedComponents,ApproximateHierarchicalClusteringViaSparsestCutAndSpreadingMetrics,FastApproximateGraphPartitioningAlgorithms,DivideAndConquerApproximationAlgorithmsViaSpreadingMetrics}.
     Spreading metrics are a way to encode the structure of a graph into a metric space, which can then be used to find cuts in the graph. The task of a mathematical program (usually LP or SDP) is to find a metric that spreads out the vertices of the graph in a way that reflects the structure of the graph. Here, the idea is to merge such constraints with our level-indexed formulation to encode \textsc{HC-$\cF$} as a linear program.
 
     % By our definition, for every level $t\in [w\br{G}]$, each cluster is either of total weight at most $t$ or it is an $\cF$-cluster. Moreover, we observe, that the partition at level $t-1$ refines the partition at level $t$.
-    For each edge $e\in E$ and level $t\in [w\br{G}]$ we use a variable $y_e^t\in[0,1]$ which encodes whether $e\in E_t^T$.
+    For each edge $e\in E$ and level $t\in [w\br{G}]$ we use a variable $y_e^t\in\brc{0,1}$ which encodes whether $e\in E_t^T$.
     We also define a variable $x_v^t=1$ iff $p_{\cF}^t\br{v}$ is true and $0$ otherwise.  Let $\dist_{y, V}^{t}\colon V\times V\to \mathbb{R}_{\geq 0}$ denote shortest-path distances in $G$ induced by lengths $\{y_e^t\}_{e\in E}$.
-    We first explain all constraints and then we give the full ILP. 
+    We first explain all constraints and then we give the full ILP.
     These are as follows:
     \begin{enumerate}
         \item \textbf{refinement:} $y_{e}^t \leq y_{e}^{t-1}$ for all $e\in E$ and $t\in [w\br{G}]$, because the partition at level $t-1$ refines the partition at level $t$. Moreover, $x_v^t \leq x_v^{t-1}$ for all $v\in V$ and $t\in [w\br{G}]$, since $p_{\cF}^t\br{v}$ implies $p_{\cF}^{t-1}\br{v}$.
@@ -130,7 +131,7 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         Repeating this for all polynomially many pairs $(v,t)$ yields a polynomial-time separation oracle for constraints of type \eqref{spreading_constraint_ILP}. Consequently, \textsc{LP-HC-$\cF$} admits a polynomial-time separation oracle, and thus it can be solved in polynomial time by the ellipsoid method.
     \end{proof}
     %Note that in our relaxation we allow each $y_e^t\geq 0$ and each $x_v^t$ to take any value in $[0,1]$.
-    Let $LP$ be a solution to \textsc{LP-HC-$\cF$} and let $\OPT_{LP}$ be the optimal value of its objective function. We now show how to round the solution of \textsc{LP-HC-$\cF$} to get a partially integral solution without excessive increase in cost.
+    Let $LP$ be a solution to \textsc{LP-HC-$\cF$} and let $\OPT_{LP}$ be the optimal value of its objective function. We now show how to round the solution to \textsc{LP-HC-$\cF$} to get a partially integral solution without excessive increase in cost.
 
     \begin{lemma}\label{lem:lp-rounding}
         Round the values of $x_v^t$ to get $\hat{x}_v^t = 1$ if $x_v^t \geq 1/2$ and $\hat{x}_v^t = 0$ otherwise
@@ -150,11 +151,11 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         Finally, the cost of the new solution is at most $2\cdot \OPT_{LP}$ since $\sum_{t=1}^{w\br{G}} \sum_{e\in E} c(e) \cdot \hat{y}_{e}^t = 2\cdot \sum_{t=1}^{w\br{G}} \sum_{e\in E} c(e) \cdot y_{e}^t = 2\cdot \OPT_{LP}$.
     \end{proof}
 
-    Overall, we obtain a partially integral point where all of the $x$ values are integral, which translates to the fact that we have decided which vertices need to satisfy the $\cF$-predicate at each level of the $\cF$-clustering tree. From now on we will thus assume that for every $v\in V$ and $t\in[w\br{G}]$, the value of $p_{\cF}^t\br{v}$ is fixed and we can remove all of the $x$ variables from the \textsc{LP}. Since we will not use the original values in further considerations, by a slight abuse of notation from now on we will refer to this solution simply by $LP$.
+    Overall, we obtain a partially integral point where the $x$ values are integral, which translates to the fact that it has been decided which vertices need to satisfy the $\cF$-predicate at each level of the $\cF$-clustering tree. From now on we will thus assume that for every $v\in V$ and $t\in[w\br{G}]$, the value of $p_{\cF}^t\br{v}$ is fixed and we can remove all of the $x$ variables from the \textsc{LP}. Since we will not use the original values in further considerations, by a slight abuse of notation from now on we will refer to this solution simply by $LP$.
 
 \subsection{LP relaxation for $\rho$-separators}\label{sec:lp-rho-sep}
 
-    We now state the linear programming relaxation for the \textsc{$\rho$-SEP} which is a modified LP of \cite{FastApproximateGraphPartitioningAlgorithms} that will be required in order to reduce the size of the instance efficiently. For the \textsc{$\rho$-SEP} problem on a graph $G=(V,E)$ with a terminal set $X\subseteq V$, we use the following weighted spreading-metrics \textsc{LP} relaxation \textsc{LP-$\rho$-SEP}:
+    We now state the linear programming relaxation for the \textsc{$\rho$-SEP} which is a modified LP of \cite{FastApproximateGraphPartitioningAlgorithms} that will be required in order to reduce the size of the instance efficiently. For the \textsc{$\rho$-SEP} problem on a graph $G=(V,E)$ with a terminal set $X\subseteq V$, we use the following weighted spreading-metrics \textsc{LP} relaxation denoted by \textsc{LP-$\rho$-SEP}:
     \begin{align}
         \min \quad &\sum_{e\in E} c(e)\cdot y_e\\
         \text{subject to} \quad &\sum_{u\in S} \dist_{y,V}(v,u)\cdot w(u) \geq w\br{S}-\rho\cdot w\br{G} \quad \forall S\subseteq V,\; v\in S\cap X,\\
@@ -168,29 +169,31 @@ For every level $t\in [w\br{G}]$ and every vertex $v\in V\br{G}$, we define the 
         Let $\rho$ and $\rho_0$, $0<\rho<\rho_0<1$, be any fixed constants.
         There exists a polynomial-time algorithm which, given an instance of \textsc{$\rho$-SEP} and a solution to the above \textsc{LP-$\rho$-SEP}, returns a subset of edges $E'$ such that every connected component of $G\setminus E'$ that contains a terminal has total weight at most $\rho_0\cdot w\br{G}$ and
         \[
-            \sum_{ij\in E'} c\br{i,j} \leq \bigo\br{\log n}\cdot \sum_{e\in E} c(e)\cdot y_e.
+            \sum_{e\in E'} c\br{e} \leq \bigo\br{\log n}\cdot \sum_{e\in E} c(e)\cdot y_e.
         \]
     \end{theorem}
 
 \subsection{Restricting the solutions}
     
-In order to obtain quality approximation ratios we employ a charging scheme, where we split the $LP$ into several solutions restricted to the clusters of the $\cF$-clustering tree $T$ we are building. Fix some cluster $H$ of $G$ and a level $t$. By $LP_t^H$ denote the solution of \textsc{LP-HC-$\cF$} restricted to the set of vertices $H$ at level $t$ which is done by discarding all variables $y_{uv}^z$, such that $\brc{u,v}\cap V\br{H}\neq \brc{u,v}$ or $z\neq t$. We call each such restricted part $LP_t^H$ a \emph{guide}. For any target problem $\Pi$ with LP relaxation \textsc{LP-$\Pi$} (on the same graph fragment and terminal set), we say that $LP_t^H$ is a \emph{valid guide} for $\Pi$ if the restricted values from $LP_t^H$ satisfy all constraints of \textsc{LP-$\Pi$}. In other words, a valid guide is simply a feasible LP point for the target problem, inherited from \textsc{LP-HC-$\cF$}. This restriction is also performed on the cost function and this is reflected in the accordingly defined quantities $\COST\br{LP_t^H} = \sum_{uv\in E\br{H}} c\br{u,v} \cdot y_{uv}^t$. We have the following lemma:
+In order to obtain quality approximation ratios we employ a charging scheme, where we split the $LP$ into several solutions restricted to the clusters of the $\cF$-clustering tree $T$ we are building. Fix some cluster $H$ of $G$ and a level $t$. By $LP_t^H$ denote the solution to \textsc{LP-HC-$\cF$} restricted to the set of vertices $H$ at level $t$ which is done by discarding all variables $y_{uv}^z$, such that $\brc{u,v}\cap V\br{H}\neq \brc{u,v}$ or $z\neq t$. We call each such restricted part $LP_t^H$ a \emph{guide}. For any target problem $\Pi$ with LP relaxation \textsc{LP-$\Pi$} (on the same graph fragment and terminal set), we say that $LP_t^H$ is a \emph{valid guide} for $\Pi$ if the restricted values from $LP_t^H$ satisfy all constraints of \textsc{LP-$\Pi$}. In other words, a valid guide is simply a feasible LP point for the target problem, inherited from \textsc{LP-$\Pi$}. This restriction is also performed on the cost function and this is reflected in the accordingly defined quantities $\COST\br{LP_t^H} = \sum_{e\in E\br{H}} c\br{e} \cdot y_{e}^t$. We have the following lemma:
+
+\DD{Do dyskusji: zmiana $r$ na cos innego, by sie nie kojarzylo z ``root''. Druga sprawa, czy $r(H)$ nie powinno byc zero takze gdy $H\in\cF$?}
 
     \begin{lemma}\label{lem:relaxation-decomposition}
         Let $T$ be any $\cF$-clustering tree. For any cluster $H \in \cC^T$, let $r\br{H}$ be the weight of the heaviest child cluster of $H$ if it exists or $0$ otherwise. Moreover, fix some constant $g\in \mathbb{N}$. Then:
         \begin{align*}
-            \sum_{H\in \cC^T}\sum_{t=r\br{H}+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/g}}^H}\leq g\cdot \OPT_{LP}
+            \sum_{H\in \cC^T}\sum_{t=r\br{H}+1}^{w\br{H}} c\br{LP_{\fl{t/g}}^H}\leq g\cdot \OPT_{LP}.
         \end{align*}
     \end{lemma}
     \begin{proof}
         For convenience, define $y_{u}^0=y_{u}^1$ for all $u\in V$. The value $c\br{LP_{0}}$ is defined analogously as before.
         We start by showing that 
         \[
-        \sum_{H\in \cC^T}\sum_{t=r\br{H}+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/g}}^H}\leq \sum_{i=0}^{w\br{G}} c\br{LP_{\fl{i/g}}^G}.
+        \sum_{H\in \cC^T}\sum_{t=r\br{H}+1}^{w\br{H}} c\br{LP_{\fl{t/g}}^H}\leq \sum_{i=0}^{w\br{G}} c\br{LP_{\fl{i/g}}^G}.
         \]
-        It suffices to show that for any fixed edge $uv\in E$ and level $t\in [w\br{G}]$, the term $c\br{u,v}\cdot y_{uv}^t$ is counted at most once in the above sum. Assume for contradiction that there are two clusters $H$ and $B$ both contributing this term at level $t$. By definition of hierarchical clustering, one of $H$, $B$ must be an ancestor of the other; without loss of generality assume $H$ is an ancestor of $B$. Then
+        It suffices to show that for any fixed edge $uv\in E$ and level $t\in [w\br{G}]$, the term $c\br{uv}\cdot y_{uv}^t$ is counted at most once in the above sum. Assume for contradiction that there are two clusters $H$ and $B$ both contributing this term at level $t$. By definition of hierarchical clustering, one of $H$, $B$ must be an ancestor of the other; without loss of generality assume $H$ is an ancestor of $B$. Then
         \[
-            t \in \left(r\br{H}, w\br{V\br{H}}\right]\quad \text{and} \quad
+            t \in \left(r\br{H}, w\br{H}\right]\quad \text{and} \quad
             t \in \left(r\br{B}, w\br{V\br{B}}\right].
         \]
         Since $H$ is an ancestor of $B$, we have $r\br{H} \geq w\br{V\br{B}}.$
@@ -204,21 +207,23 @@ In order to obtain quality approximation ratios we employ a charging scheme, whe
     \begin{lemma}\label{lem:lp-level-bound}
         Let $H$ be any cluster and let $d, b\in\mathbb{N}^+$. Then
         \[
-        w\br{V\br{H}}\cdot c\br{LP_{\fl{w\br{V\br{H}}}/b}^H}\leq d\cdot \sum_{t=\br{1-1/d}\cdot w\br{V\br{H}}+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/b}}^H}.
+        w\br{H}\cdot c\br{LP_{\fl{w\br{H}}/b}^H}\leq d\cdot \sum_{t=\br{1-1/d}\cdot w\br{H}+1}^{w\br{H}} c\br{LP_{\fl{t/b}}^H}.
         \]
     \end{lemma}
     \begin{proof}
     The inequality follows from monotonicity of level cuts: as $t$ decreases, more edges belong to the cut.
     \end{proof}
 
-    Fix a subgraph $H$ of $G$ with weight $r=w\br{V\br{H}}$ and a level $t\in [r]$. Define
+    Fix a subgraph $H$ of $G$ with weight $r=w\br{H}$ and a level $t\in [r]$. Define
     \[
         X_1:=\brc{v\in V\br{H}\colon \hat{x}_v^t=1}, \qquad X_0:=\brc{v\in V\br{H}\colon \hat{x}_v^t=0}.
     \]
 
     The next two lemmas allows us to decompose a solution to \textsc{LP-HC-$\cF$} into several instances of \textsc{LP-$p_{\cF}$-P} and \textsc{LP-$\rho$-SEP} with terminal sets $X_1$ and $X_0$, respectively.
+    \DD{w lemacie ponizej do korekty: definiujemy $t$, ale nie uzywamy.}
+    \DD{do sprawdzenia: czy ``valid solution to \textsc{$p_{\cF}$-P}'' jest dobrym skrotem LP?}
     \begin{lemma}\label{lem:lp-fes}
-        Let $H$ be cluster that does not belong to $\cF$, with weight $r=w\br{V\br{H}}$ and let $t\leq r$ be some fixed level. Then $LP_r^H$ is a valid solution for the \textsc{$p_{\cF}$-P} for $X=X_1$.
+        Let $H$ be a cluster that does not belong to $\cF$, with weight $r=w\br{H}$ and let $t\leq r$ be some fixed level. Then $LP_r^H$ is a valid solution to \textsc{$p_{\cF}$-P} for $X=X_1$.
     \end{lemma}
     \begin{proof}
         In $LP_r^H$ there are additional metric/spreading constraints for vertices $v$ such that $p_{\cF}^t(v)=0$. This is acceptable since additional constraints yield a stricter relaxation. Now consider any $v\in V$. If $p_{\cF}^t(v)=0$, then the $p_{\cF}$-P constraint is always satisfied, which corresponds to the fact that $v$ does not need to belong to a $\cF$-cluster. If $p_{\cF}^t(v)=1$, then the $p_{\cF}$-P constraint is satisfied since it is explicitly included in the \textsc{LP-HC-$\cF$} formulation. Moreover, since $v\in X_1$, we have that all $p_{\cF}$-P constraints in the \textsc{LP-$p_{\cF}$-P} formulation are included in the \textsc{LP-HC-$\cF$} formulation. 
@@ -226,7 +231,7 @@ In order to obtain quality approximation ratios we employ a charging scheme, whe
         Therefore, the claim follows.
     \end{proof}
     \begin{lemma}\label{lem:lp-ksep}
-        Let $H$ be a non $\cF$-cluster of weight $r=w\br{V\br{H}}$ and let $t<r$. Then $LP_t^H$ is a valid guide for the weighted spreading-metrics \textsc{LP-$\rho$-SEP} with $\rho=t/r$ for $X=X_0$.
+        Let $H$ be a cluster that does not belong to $\cF$ and has weight $r=w\br{H}$, and let $t<r$. Then $LP_t^H$ is a valid guide for the weighted spreading-metrics \textsc{LP-$\rho$-SEP} with $\rho=t/r$ for $X=X_0$.
     \end{lemma}
     \begin{proof}
         The statement is analogous to Lemma~\ref{lem:lp-fes}, but with the complement terminal set.
