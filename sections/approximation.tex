@@ -11,58 +11,60 @@
     \begin{proof}
         It is straightforward to see that the algorithm runs in polynomial time and returns a valid $\cF$-clustering tree. It remains to bound the cost of the solution. We start with the following lemma, which shows that each cluster produced by the recursive procedure is either in $\cF$ or has weight at most $2/3$ of its parent cluster. This allows us to charge the cost of each cluster to levels of the \textsc{LP} solution that are not used by any of its children, and hence bound the total cost of the solution by a constant factor times the cost of the \textsc{LP} solution.
     \begin{lemma}\label{lem:child-cluster-valid-or-small}
-        Fix a recursive call on a cluster $H\notin\cF$, let $t=w\br{V\br{H}}/2$, let $E_{\cF},E_{\rho}$ be the cuts returned by the two rounding steps in Algorithm~\ref{alg:recursive-procedure}, and define $E_H:=E_{\cF}\cup E_{\rho}$. Then every connected component $A$ of $H\setminus E_H$ satisfies at least one of the following:
+        Fix a recursive call on a cluster $H\notin\cF$, let $t=w\br{H}/2$, let $E_{\cF},E_{\rho}$ be the cuts returned by the two rounding steps in Algorithm~\ref{alg:recursive-procedure}, and define $E_H:=E_{\cF}\cup E_{\rho}$. Then every connected component $A$ of $H\setminus E_H$ satisfies at least one of the following:
         \begin{enumerate}
             \item $A\in \cF$,
-            \item $w\br{V\br{A}}\leq 2w\br{V\br{H}}/3$.
+            \item $w\br{A}\leq 2w\br{H}/3$.
         \end{enumerate}
     \end{lemma}
     \begin{proof}
         Recall that $X_1=\brc{i\in V\br{H}\colon \hat x_i^t=1}$ and $X_0=\brc{i\in V\br{H}\colon \hat x_i^t=0}$.
 
-        By Lemma~\ref{lem:lp-fes}, the guide $LP_t^H$ is feasible for \textsc{$p_{\cF}$-P} on terminal set $X_1$. Hence, by the $\alpha\br{n}$-well-behaved rounding guarantee, the removal of $E_{\cF}$ gives that every vertex of $X_1$ satisfies the $\cF$-predicate.
+        By Lemma~\ref{lem:lp-fes}, the guide $LP_t^H$ is feasible for \textsc{$p_{\cF}$-P} on the terminal set $X_1$. Hence, by the $\alpha\br{n}$-well-behaved rounding guarantee, the removal of $E_{\cF}$ gives that every vertex of $X_1$ satisfies the $\cF$-predicate.
 
         Now consider the additional deletion of $E_{\rho}$. Since in a well-behaved formulation the predicate is encoded only via $p_{\cF}$-P constraints, deleting extra edges cannot destroy already-satisfied constraints. Therefore every vertex in $X_1$ still satisfies the $\cF$-predicate in $H\setminus E_H$.
 
-        Fix a connected component $A$ of $H\setminus E_H$. If $A\cap X_0=\emptyset$, then $A\subseteq X_1$, so every vertex of $A$ satisfies the $\cF$-predicate in $A$. By definition of a $\cF$-predicate, this implies $A\in\cF$.
+        Fix a connected component $A$ of $H\setminus E_H$. If $A\cap X_0=\emptyset$, then $V\br{A}\subseteq X_1$, so every vertex of $A$ satisfies the $\cF$-predicate in $A$. By definition of a $\cF$-predicate, this implies $A\in\cF$.
 
-        Otherwise, $A\cap X_0\neq\emptyset$. Let $C$ be the connected component of $H\setminus E_{\rho}$ containing $A$. Then $C\cap X_0\neq\emptyset$. By Lemma~\ref{lem:lp-ksep}, $LP_t^H$ is a feasible \textsc{LP-$\rho$-SEP} guide for $X_0$ with $\rho=1/2$, and by the bicriteria guarantee with $\rho_0=2/3$, every connected component of $H\setminus E_{\rho}$ containing a vertex of $X_0$ has weight at most $2w\br{V\br{H}}/3$. Hence $w\br{V\br{A}}\leq w\br{V\br{C}}\leq 2w\br{V\br{H}}/3.$
+        Otherwise, $A\cap X_0\neq\emptyset$. Let $C$ be the connected component of $H\setminus E_{\rho}$ containing $A$. Then $V\br{C}\cap X_0\neq\emptyset$. By Lemma~\ref{lem:lp-ksep}, $LP_t^H$ is a feasible \textsc{LP-$\rho$-SEP} guide for $X_0$ with $\rho=1/2$, and by the bicriteria guarantee with $\rho_0=2/3$, every connected component of $H\setminus E_{\rho}$ containing a vertex of $X_0$ has weight at most $2w\br{H}/3$. Hence $w\br{A}\leq w\br{C}\leq 2w\br{H}/3.$
         This proves the claim.
     \end{proof}
 
     \begin{lemma}\label{lem:recursive-cost}
         Fix some cluster $H$ for which the recursive procedure was called. Then, 
         \[
-        w\br{V\br{H}}\cdot c\br{E_H}\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/2}}^H}.
+        w\br{H}\cdot c\br{E_H}\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot \sum_{t=2w\br{H}/3+1}^{w\br{H}} c\br{LP_{\fl{t/2}}^H}.
         \]
     \end{lemma}
     \begin{proof}
-        By Lemma~\ref{lem:child-cluster-valid-or-small}, every child component $A$ created from $H$ is either already in $\cF$ or has weight at most $2w\br{V\br{H}}/3$. Since recursive calls continue only on non-$\cF$ children, the largest relevant child weight satisfies $r\br{H}\leq 2w\br{V\br{H}}/3$, so levels from $2w\br{V\br{H}}/3+1$ up to $w\br{V\br{H}}$ are available in the charging scheme.
+        By Lemma~\ref{lem:child-cluster-valid-or-small}, every child component $A$ created from $H$ is either already in $\cF$ or has weight at most $2w\br{H}/3$. Since recursive calls continue only on non-$\cF$ children, the largest relevant child weight satisfies $r\br{H}\leq 2w\br{H}/3$, so levels from $2w\br{H}/3+1$ up to $w\br{H}$ are available in the charging scheme.
 
-        Firstly, consider the contribution of the edges in $E_{\cF}$ to the cost. Since this cut is done in a cluster of weight $w\br{V\br{H}}$, we have that it is bounded by $w\br{V\br{H}}\cdot c\br{E_{\cF}}$. By applying Lemma \ref{lem:lp-level-bound} with $d=3$ and $b=2$ we get that:
+        Firstly, consider the contribution of the edges in $E_{\cF}$ to the cost. Since this cut is done in a cluster of weight $w\br{H}$, we have that it is bounded by $w\br{H}\cdot c\br{E_{\cF}}$. By applying Lemma \ref{lem:lp-level-bound} with $d=3$ and $b=2$ we get that:
         \begin{align*}
-              w\br{V\br{H}}\cdot c\br{E_{\cF}}
-              &\leq w\br{V\br{H}}\cdot \alpha\br{n}\cdot c\br{LP_{\fl{w\br{V\br{H}}/2}}^H}\\
+              w\br{H}\cdot c\br{E_{\cF}}
+              &\leq w\br{H}\cdot \alpha\br{n}\cdot c\br{LP_{\fl{w\br{H}/2}}^H}\\
               &\leq 3\alpha\br{n}\cdot
-              \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/2}}^H}.
+              \sum_{t=2w\br{H}/3+1}^{w\br{H}} c\br{LP_{\fl{t/2}}^H}.
         \end{align*}
-        Secondly, the contribution of all $E_{\rho}$ is bounded analogously (using the $\beta\br{n}$-guarantee and Lemma \ref{lem:lp-level-bound} with $d=3$ and $b=2$):
+        Secondly, the contribution of all edges in $E_{\rho}$ is bounded analogously (using the $\beta\br{n}$-guarantee and Lemma \ref{lem:lp-level-bound} with $d=3$ and $b=2$):
         \[
-               w\br{V\br{H}}\cdot c\br{E_{\rho}}
+               w\br{H}\cdot c\br{E_{\rho}}
                \leq 3\beta\br{n}\cdot
-               \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}} c\br{LP_{\fl{t/2}}^H}.
+               \sum_{t=2w\br{H}/3+1}^{w\br{H}} c\br{LP_{\fl{t/2}}^H}.
         \]
     Since we know that $c\br{E_H}= c\br{E_{\cF}\cup E_{\rho}}\leq c\br{E_{\cF}}+c\br{E_{\rho}}$, the claim follows.
     \end{proof}
-    Armed with the above lemma we are ready to sum the contribution of all clusters to the cost of the solution. Let $T$ be the $\cF$-clustering tree returned by the algorithm and let $\cC_T$ be the set of all non-$\cF$-clusters for which the recursive procedure was called. For each such cluster $H$, let $E_H:=E_{\cF}\cup E_{\rho}$ be the set of edges cut in the recursive call on $H$. We have:
+    Armed with the above lemma we are ready to sum the contribution of all clusters to the cost of the solution. Let $T$ be the $\cF$-clustering tree returned by the algorithm and let $\cC'\subseteq\cC^{T}$ be the set of all clusters that are not in $\cF$, $\cC'=\cC^{T}\setminus\cF$.
+    In other words, those are the clusters constructed by the recursive procedure.
+    For each such cluster $H\in\cC'$, let $E_H:=E_{\cF}\cup E_{\rho}$ be the set of edges cut in the recursive call on $H$. We have:
     \begin{align*}
-        \COST_G\br{T} &= \sum_{H \in \cC_T}\COST_G\br{T, u_H}
-        \\&= \sum_{H \in \cC_T} w\br{V\br{H}}\cdot c\br{E_H}\\
-        &\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot\sum_{H \in \cH} \sum_{t=2w\br{V\br{H}}/3+1}^{w\br{V\br{H}}}  c\br{LP_{\fl{t/2}}^H}\\
-        &\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot\sum_{H \in \cH} \sum_{t=r\br{H}+1}^{w\br{V\br{H}}} \br{c\br{LP_{\fl{t/2}}^H}}\\
+        \COST_G\br{T} &= \sum_{H \in \cC'}\COST_G\br{T, u_H}
+        \\&= \sum_{H \in \cC'} w\br{H}\cdot c\br{E_H}\\
+        &\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot\sum_{H \in \cH} \sum_{t=2w\br{H}/3+1}^{w\br{H}}  c\br{LP_{\fl{t/2}}^H}\\
+        &\leq 3\br{\alpha\br{n}+\beta\br{n}}\cdot\sum_{H \in \cH} \sum_{t=r\br{H}+1}^{w\br{H}} \br{c\br{LP_{\fl{t/2}}^H}}\\
         &\leq 6\cdot\br{\alpha\br{n}+ \beta\br{n}}\cdot \OPT_{LP}\\
         &\leq 12\cdot\br{\alpha\br{n}+\beta\br{n}}\cdot \OPT_{ILP}.
     \end{align*}
-    where the first inequality is due to Lemma \ref{lem:recursive-cost}, the second inequality follows by plugging $r\br{H}\leq 2w\br{V\br{H}}/3$, the third inequality is due to Lemma \ref{lem:relaxation-decomposition} applied with $g=2$, and the last inequality follows from Lemma \ref{lem:lp-rounding}. 
+    where the first inequality is due to Lemma \ref{lem:recursive-cost}, the second inequality follows by plugging $r\br{H}\leq 2w\br{H}/3$, the third inequality is due to Lemma \ref{lem:relaxation-decomposition} applied with $g=2$, and the last inequality follows from Lemma \ref{lem:lp-rounding}.
     \end{proof}
 

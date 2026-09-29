@@ -8,7 +8,7 @@
 \If{$H\in \cF$}{
     \Return{a clustering tree $T$ consisting of a single node labeled by $H$}\;
 }
-Set $r\gets w\br{V\br{H}}$ and $t\gets r/2$\;
+Set $r\gets w\br{H}$ and $t\gets r/2$\;
 Set $X_1\gets \brc{i\in V\br{H}: \hat{x}_i^t = 1}$\;
 Run the \textsc{$p_{\cF}$-P} rounding algorithm on \textsc{LP-$p_{\cF}$-P} guide on $H$ at level $t$ from $(\hat{\mathbf{x}},\hat{\mathbf{y}})$ with $X=X_1$ and let $E_{\cF}\subseteq E(H)$ be the returned cut\;
 
@@ -18,7 +18,7 @@ Run the weighted \textsc{$\rho$-SEP} rounding algorithm with $\rho=1/2$ and $\rh
 $E_H\gets E_{\cF}\cup E_{\rho}$\;
 
 Initialize a root node $u_H$ of the output tree $T$ and label $u_H$ by $E_H$\;
-\ForEach{$A\in H\setminus E_H$}{
+\ForEach{connected component $A$ of $H\setminus E_H$}{
     Recursively compute $T_A\gets $\textsc{Recursive-HC-$\cF$}($A,\hat{\mathbf{x}},\hat{\mathbf{y}})$\;
         Attach $T_A$ as a child of $u_H$ in $T$
 }
